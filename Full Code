@@ -1,8 +1,13 @@
 ---
-title: "Hunger No Comparison Results"
+title: "No Comparison Analysis Results"
 author: "UDEP Project"
 output: pdf_document
 ---
+
+```{r}
+########## DOCUMENT KEY ##########
+# I AM WORKING ON THIS AND WILL UPDATE THE KEY IN THIS DOCUMENT HOPEFULLY LATER TODAY
+```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -30,19 +35,165 @@ data$Q25b <- ifelse(data$Q25=="Rural",0, ifelse(data$Q25=="Urban" | data$Q25=="S
 data$Q133b <- ifelse(data$Q133 %like% "Employed for wages%",1, ifelse(data$Q133 %like% "Out of work%",0,0)) # Binary measure of employment status (needs to be recoded to ordinal later)
 ```
 
+<!-- 1. POVERTY -->
+
 ```{r}
-# Set up for Hunger analysis:
+# Set up for Poverty analysis:
 N <- dim(data)[1]
-# Convert Yes/No answers to binary variable (0=No, 1=Yes)
-data$Q54b <- ifelse(data$Q54.1=="Yes",1,ifelse(data$Q54.1=="No" | data$Q54.1=="Don't know",0,NA))
-data$Q56b <- ifelse(data$Q56.1=="Yes",1,ifelse(data$Q56.1=="No" | data$Q56.1=="Don't know",0,NA))
-data$Q58b <- ifelse(data$Q58=="Yes",1,ifelse(data$Q58=="No" | data$Q58=="Don't know",0,NA))
-data$Q60b <- ifelse(data$Q60=="Yes",1,ifelse(data$Q60=="No" | data$Q60=="Don't know",0,NA))
-data$Q62b <- ifelse(data$Q62=="Yes",1,ifelse(data$Q62=="No" | data$Q62=="Don't know",0,NA))
-data$Q64b <- ifelse(data$Q64=="Yes",1,ifelse(data$Q64=="No" | data$Q64=="Don't know",0,NA))
-data$Q66b <- ifelse(data$Q66=="Yes",1,ifelse(data$Q66=="No" | data$Q66=="Don't know",0,NA))
-data$Q68b <- ifelse(data$Q68=="Yes",1,ifelse(data$Q68=="No" | data$Q68=="Don't know",0,NA))
+data$Q28pd <- rep(NA,N) # create new variable for per day income
+data$Q28[15] <- "250,000" # remove once $ is not allowed in answer - NEED TO ONLY ALLOW NUMBERS IN THIS ANSWER IN THE SURVEY
+data$Q28 <- as.numeric(gsub(",","",data$Q28)) # take out commas from income values - THIS CAN ALSO BE REMOVED AFTER ONLY NUMBERS ARE ALLOWED
+for(i in 1:N){
+  # Convert income (Poverty 28) into per day 
+  # Note: need to convert units of income into actual currency/USD
+  if(data$Q32[i]=="1 year") data$Q28pd[i] <- data$Q28[i]/262
+  if(data$Q32[i]=="1 month") data$Q28pd[i] <- data$Q28[i]/21.74
+  if(data$Q32[i]=="1 week") data$Q28pd[i] <- data$Q28[i]/5
+}
+
+# Convert Yes/No answers to binary variable (0=No/Don't know, 1=Yes)
+data$Q173b <- ifelse(data$Q173=="Yes",1, ifelse(data$Q173=="No",0,NA)) # access to electricity
+data$Q174b <- ifelse(data$Q174=="Yes",1, ifelse(data$Q174=="No",0,NA)) # access to water and sanitation
+data$Q175b <- ifelse(data$Q175=="Yes",1, ifelse(data$Q175=="No",0,NA)) # access to waste removal
+data$Q40b <- ifelse(data$Q40=="Yes",1, ifelse(data$Q40=="No" | data$Q40=="Don't know",0,NA)) # land ownership 
+data$Q42b <- ifelse(data$Q42=="Yes",1,0) # legal documentation of land ownership
 ```
+
+```{r}
+# Poverty No Comparison Analysis
+
+#### Poverty 28 (Income per day) ####
+# Overall and disaggregated averages
+Poverty28.ovrlavg <- mean(data$Q28pd,na.rm=TRUE) # Overall Average
+Poverty28.genderavg <- aggregate(Q28pd ~ Q9b, data=data, mean) # Averages for men and women
+Poverty28.ageavg <- aggregate(Q28pd ~ Q6b, data=data, mean) # Averages for 0-40 and 40+
+Poverty28.locavg <- aggregate(Q28pd ~ Q25b, data=data, mean) # Averages for Urban vs. Rural
+Poverty28.emplavg <- aggregate(Q28pd ~ Q133b, data=data, mean) # Averages based on employment status
+# t tests for disaggregated averages: 
+# Gender, Age, Location, and Employment Status
+Poverty28.gendert <- t.test(Q28pd ~ Q9b, data=data) # male vs. female
+Poverty28.aget <- t.test(Q28pd ~ Q6b, data=data) # child vs. adult
+# Poverty28.loct <- t.test(Q28pd ~ Q25b, data=data) # rural vs. urban/suburban
+# Poverty28.emplt <- t.test(Q28pd ~ Q133b, data=data) # unemployed vs. employed
+# NEED MORE DATA IN ORDER TO USE THESE TWO ^^
+  
+#### Poverty 173 (Access to electiricy/energy) ####
+# Percentage of participants
+Poverty173.ovrlavg <- mean(data$Q173b) * 100
+  
+#### Poverty 174 (Access to water and sanitation) ####
+# Percentage of participants
+Poverty174.ovrlavg <- mean(data$Q174b) * 100
+  
+#### Poverty 175 (Access to refuse and waste removal) ####
+# Percentage of participants
+Poverty175.ovrlavg <- mean(data$Q175b) * 100
+  
+#### Poverty 40 (Land ownership) ####
+# Percentage of participants, overall and disaggregated by sex
+Poverty40.ovrlavg <- mean(data$Q40b) * 100
+Poverty40.genderavg <- aggregate(Q40b ~ Q9b, data=data, mean) * 100
+# t test for sex disaggreagated values
+Poverty40.gendert <- t.test(Q40b ~ Q9b, data=data)
+  
+#### Poverty 42 (Legal documentation of land ownership)
+# Percentage of participants, overall and disaggregated by sex
+Poverty42.ovrlavg <- mean(data$Q42b) * 100
+Poverty42.genderavg <- aggregate(Q42b ~ Q9b, data=data, mean) * 100
+# t test for sex disaggreagated values
+Poverty42.gendert <- t.test(Q42b ~ Q9b, data=data)
+```
+
+<!-- NO COMPARISON POVERTY DATA RESULTS -->
+
+# 1. Poverty 
+
+## 1a. Income
+
+The overall average income per day is \$`r round(Poverty28.ovrlavg,2)`.
+
+The average income per day for men is \$`r round(Poverty28.genderavg[1,2],2)`, and the average income per day for women is \$`r round(Poverty28.genderavg[2,2],2)`. `r if(Poverty28.gendert$p.value<=0.05 & Poverty28.genderavg[1,2] > Poverty28.genderavg[2,2]) { "A difference of means test indicates that men make a significantly higher income per day on average than women." }` `r if(Poverty28.gendert$p.value<=0.05 & Poverty28.genderavg[1,2] < Poverty28.genderavg[2,2]) { "A difference of means test indicates that women make a significantly higher income per day on average than men."}` `r if(Poverty28.gendert$p.value>0.05) { "However, the difference is not significant." }` 
+
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+data$Q9b <- as.factor(data$Q9b)
+plot1 <- ggplot(data, aes(Q9b, Q28pd)) + geom_boxplot()+ 
+  ggtitle("Income Trends by Gender") + 
+  xlab("Gender") + ylab("Income ($ per day)") + 
+  scale_x_discrete(labels= c("Male","Female"))
+plot2 <- ggplot(data, aes(x = Q28pd, fill=Q9b)) +
+  geom_density(alpha = 0.7) +
+  theme(legend.position = c(0.8, 0.8)) +
+  ggtitle("Density of Income by Gender") +
+  ylab("Density") + xlab("Income ($ per day)") +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
+grid.arrange(plot1, plot2, ncol=2)
+```
+
+The average income per day for the population ages 0 to 40 is $`r round(Poverty28.ageavg[1,2],2)`, and the average income per day for adults is `r round(Poverty28.ageavg[2,2],2)`. `r if(Poverty28.aget$p.value<=0.05 & Poverty28.ageavg[1,2] > Poverty28.ageavg[2,2]) { "A difference of means test indicates that children live with a significantly higher income per day on average than adults." }` `r if(Poverty28.aget$p.value<=0.05 & Poverty28.ageavg[1,2] < Poverty28.ageavg[2,2]) {"A difference of means test indicates that adults live with a significantly higher income per day on average than children."}` `r if(Poverty28.aget$p.value>0.05) {"However, the difference is not significant."}` 
+
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+data$Q6b <- as.factor(data$Q6b)
+plot1 <- ggplot(data, aes(Q6b, Q28pd)) + geom_boxplot()+ 
+  ggtitle("Income Trends by Age") + 
+  xlab("Age") + ylab("Income ($ per day)") + 
+  scale_x_discrete(labels= c("0-40","40+"))
+plot2 <- ggplot(data, aes(x = Q28pd, fill=Q6b)) +
+  geom_density(alpha = 0.7) +
+  theme(legend.position = c(0.8, 0.8)) +
+  ggtitle("Density of Income by Age") +
+  ylab("Density") + xlab("Income ($ per day)") +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Age Range",
+                         breaks=c(0, 1),
+                         labels=c("0-40", "40+"))
+grid.arrange(plot1, plot2, ncol=2)
+```
+
+
+<!-- ACCESS TO FACILITIES-->
+
+## 1b. Access to Facilities
+
+In this sample, `r round(Poverty173.ovrlavg,2)`% of the participants have access to electricity or energy, `r round(Poverty174.ovrlavg,2)`% of the participants have access to water and sanitation, and `r round(Poverty175.ovrlavg,2)`% of the participants have access to refuse and waste removal. 
+
+<!-- LAND OWNERSHIP -->
+
+## 1c. Land Ownership
+
+`r round(Poverty40.ovrlavg,2)`% of all the participants own land. `r round(Poverty40.genderavg[1,2],2)`% of men in the sample own land and `r round(Poverty40.genderavg[2,2],2)`% of women in the sample own land. `r if(Poverty40.gendert$p.value<=0.05 & Poverty40.genderavg[1,2] > Poverty40.genderavg[2,2]) {"A difference of means indicates that significantly more men own land than women."}` `r if(Poverty40.gendert$p.value<=0.05 & Poverty40.genderavg[1,2] < Poverty40.genderavg[2,2]) {"A difference of means test indicates that significantly more women own land than men."}` `r if(Poverty40.gendert$p.value>0.05) {"However, the difference in land ownership between men and women is not significant."}`
+
+<!-- LEGAL DECLARATION OF LAND OWNERSHIP -->
+
+Additionally, `r round(Poverty42.ovrlavg,2)`% of the participants who indicated they own land also have legal documentation that proves the land ownership. `r round(Poverty42.genderavg[1,2],2)`% of men and `r round(Poverty42.genderavg[2,2],2)`% of women in this smaller sample have the legal documentation. `r if(Poverty42.gendert$p.value<=0.05 & Poverty42.genderavg[1,2] > Poverty42.genderavg[2,2]) {"A difference of means test indicates that significantly more men who own land have legal documentation of it than women."}` `r if(Poverty42.gendert$p.value<=0.05 & Poverty42.genderavg[1,2] < Poverty42.genderavg[2,2]) {"A difference of means indicates that significantly more women who own land have legal documentation of it than men."}` `r if(Poverty42.gendert$p.value>0.05) {"However, the difference in legal documentation given land ownership between men and women is not significant."}`
+
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+plot1 <- ggplot(data, aes(x=Q40, fill=Q9b))+
+  geom_bar(position="dodge") +
+  ggtitle("Land Ownership by Gender") + 
+  xlab("Land Ownership") + ylab("Count") + 
+  scale_x_discrete(labels= c("No","Yes")) +
+  theme(legend.position = c(0.8, 0.8)) +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
+plot2 <- ggplot(data, aes(x=Q42, fill=Q9b))+
+  geom_bar(position="dodge") +
+  ggtitle("Legal Declaration of Ownership by Gender") + 
+  xlab("Legal Land Ownership") + ylab("Count") + 
+  scale_x_discrete(labels= c("No","Yes")) +
+  theme(legend.position = c(0.8, 0.8)) +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
+grid.arrange(plot1, plot2, ncol=2)
+```
+
+<!-- 2. HUNGER -->
 
 ```{r}
 # Hunger No Comparison Analysis
@@ -99,4 +250,152 @@ At some point in the past 12 months, `r round(Hunger54.ovrlavg,2)`% of the parti
 Additionally, in the past 12 months, `r round(Hunger60.ovrlavg,2)`% of the participants had to skip a meal, `r round(Hunger62.ovrlavg,2)`% ate less than they should, and `r round(Hunger64.ovrlavg,2)`% ran out of food, all because they did not have enough money. 
 
 Finally, in the past 12 months, `r round(Hunger66.ovrlavg,2)`% of the participants were hungry at some point but did not eat and `r round(Hunger68.ovrlavg,2)`% went hungry for an entire day.
+
+
+<!-- 3. HEALTHY LIVES -->
+
+```{r}
+# Set up for Healthy Lives analysis:
+N <- dim(data)[1]
+# Convert Yes/No answers to binary variable (0=No, 1=Yes)
+data$Q89b <- ifelse(data$Q89=="Yes", 1, ifelse(data$Q89=="No", 0, NA))
+data$Q89ab <- ifelse(data$Q89b==1 & data$Q6>14 & data$Q6<20,1, ifelse(data$Q89b==0 & data$Q6>14 & data$Q6<20,0,NA))
+data$Q91b <- ifelse(data$Q91=="Skilled Staff", 1, ifelse(is.na(data$Q91), NA, 0)) 
+# Need to figure out how to identify "Skilled Staff" - who is qualified?
+# data$Rand226b <- ifelse(data$Rand226=="Yes", 1, ifelse(data$HealthyF89=="No", 0, NA)) # data on someone else passing away
+data$Q65b <- ifelse(data$Q65=="No one in my household has been infected by any of these diseases in the last 12 months", 0, ifelse(is.na(data$Q65), NA, 1))
+data$HIV <- ifelse(data$Q65=="HIV or AIDS",1, ifelse(is.na(data$Q65), NA, 0))
+data$tuberculosis <- ifelse(data$Q65=="Tuberculosis",1, ifelse(is.na(data$Q65), NA, 0))
+data$malaria <- ifelse(data$Q65=="Malaria",1, ifelse(is.na(data$Q65), NA, 0))
+data$hepatitisb <- ifelse(data$Q65=="Hepatitis B",1, ifelse(is.na(data$Q65), NA, 0))
+# data$Rand224b <- ifelse(is.na(data$Rand224),NA,1) # data on someone else passing away
+# data$ccdc <- ifelse(data$Rand224=="Cardiovascular disease" | data$Rand224=="Cancer" | data$Rand224=="Diabetes" | data$Rand224=="Chronic respiratory disease",1, ifelse(is.na(data$Rand224),NA,0))
+# data$suicide <- ifelse(data$Rand224=="Suicide",1, ifelse(is.na(data$Rand224),NA,0))
+# data$traffic <- ifelse(data$Rand224=="Traffic accident",1, ifelse(is.na(data$Rand224),NA,0))
+# data$aap <- ifelse(data$Rand224=="Ambient air pollution",1,ifelse(is.na(data$Rand224),NA,0))
+# data$wsh <- ifelse(data$Rand224=="Unsafe water, sanitation, lack of hygiene",1, ifelse(is.na(data$Rand224),NA,0))
+# data$poisoning <- ifelse(data$Rand224=="Unintentional poisoning",1, ifelse(is.na(data$Rand224),NA,0))
+data$Q69b <- ifelse(data$Q69=="Yes",1, ifelse(data$Q69=="No",0,NA))
+data$Q83b <- ifelse(data$Q83=="Yes",1, ifelse(data$Q83=="No" | data$Q83=="Don't know",0,NA))
+data$Q85b <- ifelse(data$Q85=="Yes",1, ifelse(data$Q85=="No" | data$Q85=="Don't know",0,NA))
+data$Q67b <- ifelse(data$Q67=="Yes",1, ifelse(data$Q67=="No" | data$Q67=="Don't know",0,NA))
+data$Q73b <- ifelse(data$Q73=="None of the above",0, ifelse(is.na(data$Q73),NA,1))
+data$Q75b <- ifelse(data$Q75=="Yes",1, ifelse(data$Q75=="No" | data$Q75=="Don't know",0,NA))
+data$Q77b <- ifelse(data$Q77=="Yes",1, ifelse(data$Q77=="No" | data$Q77=="Don't know",0,NA))
+```
+
+```{r}
+# Healthy Lives No Comparison Analysis
+
+#### HealthyF 89 (Given birth in the past 12 months) ####
+# Proportion of participants
+HealthyF89.ovrlavg <- mean(data$Q89b, na.rm = TRUE) * 100
+# Propotion of participants between 15-19
+HealthyF89a.ovrlavg <- mean(data$Q89ab, na.rm = TRUE) * 100
+  
+#### Rand 226 (Passed away within 42 days of giving birth) ####
+# Proportion of pariticipants - number per 100,000 births
+# Rand226.ovrlavg <- sum(data$Rand226b)/sum(data$HealthyF89b) * 100000
+# NEED MORE DATA FOR THESE RESULTS ^^
+  
+#### HealthyF 91 (Skilled Staff attended birth) ####
+# Proportion of participants
+HealthyF91.ovrlavg <- mean(data$Q91b, na.rm = TRUE) * 100
+  
+#### Rand 225 (Passed away before 28 years old) ####
+# Proportion of participants
+# Rand225.ovrlavg <- mean(data$Rand225b) * 100
+# NEED MORE DATA FOR THESE RESULTS ^^
+  
+#### Healthy 65 (Any diseases) ####
+# Proportion of participants with any disease
+Healthy65.ovrlavg <- mean(data$Q65b, na.rm = TRUE) * 100
+# Proportion of participants with HIV/AIDS - per 1000
+Healthy65hiv.ovrlavg <- mean(data$HIV, na.rm = TRUE) * 1000 
+#Healthy65hiv.genderavg <- aggregate(HIV ~ Q9b, data=data, mean) * 1000
+#Healthy65hiv.ageavg <- aggregate(HIV ~ Q6b, data=data, mean) * 1000
+# t and anova tests for disaggregated averages
+#Healthy65hiv.gendert <- t.test(HIV ~ Q9b, data=data)
+#Healthy65hiv.aget <- t.test(HIV ~ Q6b, data=data)
+# Proportion of participants with tuberculosis - per 1000
+Healthy65tub.ovrlavg <- mean(data$tuberculosis, na.rm = TRUE) * 1000
+# Proportion of participants with malaria - per 1000
+Healthy65mal.ovrlavg <- mean(data$malaria, na.rm = TRUE) * 1000
+# Proportion of participants with hepatitis B - per 100,000
+Healthy65hepb.ovrlavg <- mean(data$hepatitisb, na.rm = TRUE) * 100000
+# also need to find a way to measure neglected tropical diseases - number
+# NEED MORE DATA FOR SOME OF THESE RESULTS ^^  
+
+#### Rand 224 (Mortality rate attributed to different causes) ####
+# take the overall sum - this is the baseline - the goal is to cut this in half
+#Rand224.ovrlsum <- sum(data$Rand224b)
+# Sum of people who die from cardiovascular disease, cancer, diabetes or chronic respiratory disease
+#Rand224ccdc.ovrlsum <- sum(data$ccdc)
+# Sum of people who have committed suicide
+#Rand224sui.ovrlsum <- sum(data$suicide)
+# Sum of people who die from traffic accidents
+#Rand224traf.ovrlsum <- sum(data$traffic)
+# Sum of people who die from ambient air pollution
+#Rand224aap.ovrlsum <- sum(data$aap)
+# Sum of people who die from unsafe water, sanitation, or lack of hygiene
+#Rand224wsh.ovrlsum <- sum(data$wsh)
+# Sum of people who die from unintentional poisoning
+#Rand224poi.ovrlsum <- sum(data$poisoning)
+  
+#### Healthy 69 (Knowledge of access to substance abuse treatment ####
+# Proportion of participants
+Healthy69.ovrlavg <- mean(data$Q69b, na.rm = TRUE) * 100
+  
+#### Healthy 83 (Access to health coverage) ####
+# Proportion of participants
+Healthy83.ovrlavg <- mean(data$Q83b, na.rm = TRUE) * 100
+  
+#### Healthy 85 (Current health insurance) ####
+# Proportion of participants
+Healthy85.ovrlavg <- mean(data$Q85b, na.rm = TRUE) * 100
+  
+#### Healthy 67 (Tobacco use) ####
+# Proportion of participants
+Healthy67.ovrlavg <- mean(data$Q67b, na.rm = TRUE) * 100
+  
+#### Healthy 73 (Access to medication) ####
+# Propotion of participants
+Healthy73.ovrlavg <- mean(data$Q73b, na.rm = TRUE) * 100
+  
+#### Healthy 75 (Afford medicine the family needs) ####
+# Proportion of participants
+Healthy75.ovrlavg <- mean(data$Q75b, na.rm = TRUE) * 100
+  
+#### Healthy 77 (Provide medicine when family needs it) ####
+# Proportion of participants
+Healthy75.ovrlavg <- mean(data$Q77b, na.rm = TRUE) * 100
+```
+
+# 3. Health
+
+## 3a. Fertility and Maternal Health
+
+In the past 12 months, `r round(HealthyF89.ovrlavg,2)`% of all participants have given birth, and `r round(HealthyF89a.ovrlavg,2)`% of 15-19 year olds have given birth. `r round(HealthyF91.ovrlavg,2)`% of women who gave birth had the birth attended by skilled staff. 
+
+## 3b. Diseases
+In the sample, `r round(Healthy65.ovrlavg,2)`% of participants had a disease. The following are the proportions for specific diseases:
+
+i. HIV - `r round(Healthy65hiv.ovrlavg,2)` out of 1000 have HIV.
+
+ii. Tuberculosis - `r round(Healthy65tub.ovrlavg,2)` out of 1000 have tuberculosis. 
+
+iii. Malaria - `r round(Healthy65mal.ovrlavg,2)` out of 1000 have malaria. 
+
+iv. Hepatitis B - `r round(Healthy65hepb.ovrlavg,2)` out of 1000 have Hepatitis B. 
+
+## 3c. Health Care Access
+`r round(Healthy69.ovrlavg,2)`% of the partcipants know of access to substance abuse treatment, `r round(Healthy83.ovrlavg,2)`% have access to health coverage, and `r round(Healthy85.ovrlavg,2)`% have current health insurance.
+
+Additionally, `r round(Healthy73.ovrlavg,2)`% have access to medication, `r round(Healthy75.ovrlavg,2)`% can afford the medicine their family needs, and `r round(Healthy75.ovrlavg,2)`% can provide medicine when their family needs it.
+
+
+
+
+
+
 
