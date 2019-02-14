@@ -541,5 +541,31 @@ plot2 <- ggplot(data, aes(x=factor(Q153b), fill = factor(Q153b)))+
                     labels=c("Have Not", "Have"))
 grid.arrange(plot1, plot2, ncol=2)
 ```
+<!-- 10. Reduced Inequalities -->
+
+```{r}
+data$Q46b <- ifelse(data$Q46 == "I don't have a place to call home.",1,ifelse(data$Q46 == "I have a home that is missing one or more walls or roof and has a dirt floor.",2,ifelse(data$Q46 == "I have a home that includes temporary walls or roof and has a dirt floor.",3,ifelse(data$Q46 == "I have a home with solid walls and floor.",4,NA)))) # Ordinal measure for home quality
+data$Q48b <- ifelse(data$Q48 == "My home is too small for my family's needs.",1,ifelse(data$Q48 == "My home is big enough for my family's needs.",2,ifelse(data$Q48 == "My home is too big for my family's needs.",3,NA))) # Ordinal meaure for home size
+```
+# Housing Standards 
+
+Of all participants `r round(mean(data$Q46b == 1, na.rm = TRUE)*100)`% do not have a place to call home. Of those who have a home `r round(mean(data$Q46b == 2, na.rm = TRUE)*100)`% have a home that is missing one or more walls or roof and has a dirt floor, `r round(mean(data$Q46b == 3, na.rm = TRUE)*100)`% have a home that includes temporary walls or roof and has a dirt floor, `r round(mean(data$Q46b == 4, na.rm =TRUE)*100)`% have a home with solid walls and floor.
+
+When asked what describes thier home `r round(mean(data$Q48b == 1, na.rm = TRUE)*100)`% of participants said my home is too small for my family's needs, `r round(mean(data$Q48b == 2, na.rm =TRUE)*100)`% said my home is big enough for my family's needs, `r round(mean(data$Q48b == 3, na.rm = TRUE)*100)`% said my home is too big for my family's needs.
+
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+ggplot(data, aes(x=Q46, fill = Q46))+
+  geom_bar(show.legend = FALSE) +
+  ggtitle("Housing Situation") + 
+  scale_fill_manual(values=c("#999999")) +
+  xlab("") + ylab("Count") +
+  coord_flip()
+ggplot(data, aes(x=Q48, fill = Q48))+
+  geom_bar(show.legend = FALSE) +
+  ggtitle("Housing Description") + 
+  scale_fill_manual(values=c("#999999", "#999999")) +
+  xlab("") + ylab("Count") +
+  coord_flip()
+```
 
 
