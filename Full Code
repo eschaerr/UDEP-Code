@@ -420,7 +420,7 @@ When asked about primary fuel source for heating `r round(mean(data$Q49b == 1, n
 
 When asked about primary fuel source lighting `r round(mean(data$Q50.1b == 1, na.rm = TRUE)*100)`% of participants said traditional (such as dung, agricultural residue, and fuelwood), `r round(mean(data$Q50.1b == 2, na.rm = TRUE)*100)`% said intermediate (such as charcoal and kerosene), and `r round(mean(data$Q50.1b == 3, na.rm = TRUE)*100)`% said modern (such as LPG, Biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity).
 
-```{r}
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- data %>%
   filter(!is.na(Q54b)) %>%
 ggplot(aes(x = as.factor(Q54b), fill = as.factor(Q54b))) +
@@ -461,7 +461,7 @@ Of those who have access to electricity `r round(mean(data$Q43b == 1, na.rm = TR
 
 On average famalies use electricity `r round(mean(data$Q44.1, na.rm = TRUE))` hours a day. Households also on average lose electricty `r round(mean(data$Q45, na.rm = TRUE))` times a week. The average length of a power outage is `r round(mean(data$Q46.1, na.rm = TRUE))` hours.
 
-```{r}
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 data %>%
   filter(!is.na(Q43b)) %>%
 ggplot(aes(x = as.factor(Q43b), fill = as.factor(Q43b))) +
