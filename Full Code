@@ -393,6 +393,85 @@ iv. Hepatitis B - `r round(Healthy65hepb.ovrlavg,2)` out of 1000 have Hepatitis 
 
 Additionally, `r round(Healthy73.ovrlavg,2)`% have access to medication, `r round(Healthy75.ovrlavg,2)`% can afford the medicine their family needs, and `r round(Healthy75.ovrlavg,2)`% can provide medicine when their family needs it.
 
+<!-- 7. Affordable and Clean Energy -->
+
+```{r include=FALSE}
+data$Q54b <- ifelse(data$Q54 == "National grid connection",1, ifelse(data$Q54 == "Local mini grid connection",2, ifelse(data$Q54 == "Electric generator",3, ifelse(data$Q54 == "Rechargeable battery",4, ifelse(data$Q54 == "Dry-cell battery",5, ifelse(data$Q54 == "Solar latern",6, ifelse(data$Q54 == "Solar multi-light product",7, ifelse(data$Q54 == "Solar home system",8, ifelse(data$Q54 == "Pico-hydro",9, ifelse(data$Q54 == "Other",10,NA))))))))))
+
+data$Q48.1b <- ifelse(data$Q48.1 == "Traditional (such as dung, agricultural residue, and fuelwood)",1, ifelse(data$Q48.1 == "Intermediate (such as charcoal and kerosene)",2, ifelse(data$Q48.1 == "Modern (such as LPG, biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity)",3,NA)))
+
+data$Q49b <- ifelse(data$Q49 == "Traditional (such as dung, agricultural residue, and fuelwood)",1, ifelse(data$Q49 == "Intermediate (such as charcoal and kerosene)",2, ifelse(data$Q49 == "Modern (such as LPG, biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity)",3,NA)))
+
+data$Q50.1b <- ifelse(data$Q50.1 == "Traditional (such as dung, agricultural residue, and fuelwood)",1, ifelse(data$Q50.1 == "Intermediate (such as charcoal and kerosene)",2, ifelse(data$Q50.1 == "Modern (such as LPG, biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity)",3,NA)))
+
+data$Q43b <- ifelse(data$Q43 == "Appliances (includes refrigerator, dishwasher, clothes washer and dryer)",1, ifelse(data$Q43 == "Cooking",2, ifelse(data$Q43 == "Entertainment,electronics (includes external power adapters, TVs, home office equipment, computers, and small appliances)",3, ifelse(data$Q43 == "Heating",4, ifelse(data$Q43 == "Lighting",5,NA)))))
+
+data$Q44.1 <- as.numeric(data$Q44.1)
+data$Q45 <- as.numeric(data$Q45)
+data$Q46.1 <- as.numeric(data$Q46.1)
+```
+# 7. Electricty Access and Primary Fuel Source
+
+Of those who reported having access to electricity `r round(mean(data$Q54b == 1, na.rm = TRUE)*100)`% had access to a national grid connection, `r round(mean(data$Q54b == 2, na.rm = TRUE)*100)`% had access to a local mini grid connection, `r round(mean(data$Q54b == 3, na.rm = TRUE)*100)`% had access to an electric generator, `r round(mean(data$Q54b == 4, na.rm = TRUE)*100)`% had access to a rechargable battery, `r round(mean(data$Q54b == 5, na.rm = TRUE)*100)`% had access to a dry-cell battery, `r round(mean(data$Q54b == 6, na.rm = TRUE)*100)`% had access to a solar lantern, `r round(mean(data$Q54b == 7, na.rm = TRUE)*100)`% had access to a solar multi-light product, `r round(mean(data$Q54b == 8, na.rm = TRUE)*100)`% had a solar home system, and `r round(mean(data$Q54b == 9, na.rm = TRUE)*100)`% had access to pico-hydro electricity. 
+
+When asked about primary fuel source for cooking `r round(mean(data$Q48.1b == 1, na.rm = TRUE)*100)`% of participants said traditional (such as dung, agricultural residue, and fuelwood), `r round(mean(data$Q48.1b == 2, na.rm = TRUE)*100)`% said intermediate (such as charcoal and kerosene), and `r round(mean(data$Q48.1b == 3, na.rm = TRUE)*100)`% said modern (such as LPG, Biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity).
+
+When asked about primary fuel source for heating `r round(mean(data$Q49b == 1, na.rm = TRUE)*100)`% of participants said traditional (such as dung, agricultural residue, and fuelwood), `r round(mean(data$Q49b == 2, na.rm = TRUE)*100)`% said intermediate (such as charcoal and kerosene), and `r round(mean(data$Q49b == 3, na.rm = TRUE)*100)`% said modern (such as LPG, Biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity).
+
+When asked about primary fuel source lighting `r round(mean(data$Q50.1b == 1, na.rm = TRUE)*100)`% of participants said traditional (such as dung, agricultural residue, and fuelwood), `r round(mean(data$Q50.1b == 2, na.rm = TRUE)*100)`% said intermediate (such as charcoal and kerosene), and `r round(mean(data$Q50.1b == 3, na.rm = TRUE)*100)`% said modern (such as LPG, Biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity).
+
+```{r}
+plot1 <- data %>%
+  filter(!is.na(Q54b)) %>%
+ggplot(aes(x = as.factor(Q54b), fill = as.factor(Q54b))) +
+  geom_bar(show.legend = FALSE) +
+  scale_x_discrete(labels= c("National grid connection","Local mini grid connection","Electric generator", "Rechargeable battery", "Dry-cell battery", "Solar latern", "Solar multi-light product", "Solar home system", "Pico-hydro", "Other")) +
+  labs(x= "Source" , y= "Count", title = "Electricity Source") +
+  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999","#999999","#999999","#999999","#999999")) +
+  coord_flip()
+
+plot2 <- data %>%
+  filter(!is.na(Q48.1b)) %>%
+ggplot(aes(x = as.factor(Q48.1b), fill = as.factor(Q48.1b))) +
+  geom_bar(show.legend = FALSE) +
+  scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  labs(x = "Source", y= "Count", title= "Cooking Fuel Source")
+
+plot3 <- data %>%
+  filter(!is.na(Q49b)) %>%
+ggplot(aes(x = as.factor(Q49b), fill = as.factor(Q49b))) +
+  geom_bar(show.legend = FALSE) +
+  scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  labs(x = "Source", y= "Count", title= "Heating Fuel Source")
+
+plot4 <- data %>%
+  filter(!is.na(Q50.1b)) %>%
+ggplot(aes(x = as.factor(Q50.1b), fill = as.factor(Q50.1b))) +
+  geom_bar(show.legend = FALSE) +
+  scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern")) +
+  scale_fill_manual(values = c("#999999","#999999","#999999")) +
+  labs(x = "Source", y= "Count", title= "Lighting Fuel Source")
+
+grid.arrange(plot1, plot2, plot3, plot4, nrow = 2, ncol=2)
+```
+
+Of those who have access to electricity `r round(mean(data$Q43b == 1, na.rm = TRUE)*100)`% use electricity mainly for appliances (includes refrigerator, dishwasher, clothes washer and dryer), `r round(mean(data$Q43b == 2, na.rm = TRUE)*100)`% mainly use it for cooking, `r round(mean(data$Q43b == 3, na.rm = TRUE)*100)`% mainly use it for entertainment and electronics (includes external power adapters, TVs, home office equipment, computers, and small appliances), `r round(mean(data$Q43b == 4, na.rm = TRUE)*100)`% mainly use it for heating, and `r round(mean(data$Q43b == 5, na.rm = TRUE)*100)`% mainly use it for lighting. 
+
+On average famalies use electricity `r round(mean(data$Q44.1, na.rm = TRUE))` hours a day. Households also on average lose electricty `r round(mean(data$Q45, na.rm = TRUE))` times a week. The average length of a power outage is `r round(mean(data$Q46.1, na.rm = TRUE))` hours.
+
+```{r}
+data %>%
+  filter(!is.na(Q43b)) %>%
+ggplot(aes(x = as.factor(Q43b), fill = as.factor(Q43b))) +
+  geom_bar(show.legend = FALSE) +
+  scale_x_discrete(labels= c("1" = "appliances", "2" = "cooking", "3" = "entertainment and electronics", "4" = "heating", "5" = "lighting")) +
+  labs(x= "Source" , y= "Count", title = "Electriciy Use Type") +
+  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999")) +
+  coord_flip()
+```
+
 <!-- 8. DECENT WORK CONDITIONS -->
 
 ```{r, message=FALSE, warning=FALSE, include = FALSE} 
@@ -567,5 +646,3 @@ ggplot(data, aes(x=Q48, fill = Q48))+
   xlab("") + ylab("Count") +
   coord_flip()
 ```
-
-
