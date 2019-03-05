@@ -647,21 +647,6 @@ ggplot(data, aes(x=Q48, fill = Q48))+
   coord_flip()
 ```
 
----
-title: "Education No Comparison Results"
-author: "UDEP Project"
-output:
-  html_document:
-    df_print: paged
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-library(ggplot2)
-library(gridExtra)
-library(tidyverse)
-```
-
 # Education
 
 The following sections include the educational status of individuals and households and relative school readiness of children within the household, the recent participation rate of youth and adults in formal and non-formal education and training in the last 12 months, and the proportions of households with information and communications technology skills as well as how they compare to other households in their community. 
