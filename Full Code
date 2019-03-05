@@ -646,3 +646,223 @@ ggplot(data, aes(x=Q48, fill = Q48))+
   xlab("") + ylab("Count") +
   coord_flip()
 ```
+
+---
+title: "Education No Comparison Results"
+author: "UDEP Project"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(gridExtra)
+library(tidyverse)
+```
+
+# Education
+
+The following sections include the educational status of individuals and households and relative school readiness of children within the household, the recent participation rate of youth and adults in formal and non-formal education and training in the last 12 months, and the proportions of households with information and communications technology skills as well as how they compare to other households in their community. 
+
+
+```{r, education, include=FALSE}
+
+# Schooling Levels:
+
+
+school_levels <- c("No schooling completed","Some grade school completed","Some high school, no diploma","High school graduate, diploma or equivalent (for example: GED)","Some college credit, no degree","Trade/technical/vocational training","Associate degree","Bachelor's degree","Master's degree","Professional degree","Doctorate degree")
+
+school_levels_numeric <- data.frame(school_levels,level=c(1:11))
+
+data <- data %>% 
+  left_join(school_levels_numeric,by=c("Q112"="school_levels")) %>%
+  rename(Q112_level=level)
+
+data <- data %>% 
+  left_join(school_levels_numeric,by=c("Q128"="school_levels")) %>%
+  rename(Q128_level=level)
+
+```
+
+```{r, Q112, include=FALSE}
+
+####################  Q112: Highest degree or schooling completed (individual)
+
+
+data$Q112_fctr <- factor(data$Q112, ordered=TRUE, levels=school_levels)
+data <- data %>%
+  mutate(Q112_proficient=ifelse(is.na(Q112_level),NA,ifelse(Q112_level>1,1,0)))
+
+```
+
+```{r, Q128, include=FALSE}
+
+####################   Q128: Highest level of formal education ( household)
+# doesn't really make sense by sex because we don't know the sex of the person with the highest education right?
+# perhaps this would be more interesting comparing by urban/rural, household size, ...
+
+data$Q128_fctr <- factor(data$Q128, ordered=TRUE, levels=school_levels)
+data <- data %>%
+  mutate(Q128_proficient=ifelse(is.na(Q128_level),NA,ifelse(Q128_level>1,1,0)))
+
+```
+
+```{r, Q114, include=FALSE}
+
+####################   Q114: Type of education in the last 12 months
+
+data <- data %>% 
+  mutate(Q114b_primary=ifelse(Q114=="",NA,ifelse(Q114=="Grade school or Pre-school (including home school)",1,0)),
+         Q114b_tertiary=ifelse(Q114=="",NA,ifelse(Q114=="Tertiary education (university, trade school, or college)",1,0)),
+         Q114b_technical=ifelse(Q114=="",NA,ifelse(Q114=="Technical and Vocational Education and Training (TVET)",1,0)),
+         Q114b_none=ifelse(Q114=="",NA,ifelse(Q114=="None of the above",1,0)),
+         Q114b_educ_in_last_12_months=ifelse(Q114b_primary==1|Q114b_tertiary==1|Q114b_technical==1,1,0))
+
+# difference between the proportion of females and males participating in education in last 12 months
+Education114b_overall_gendert <-t.test(Q114b_educ_in_last_12_months~Q9b,data=data)
+#t.test(data$Q114b_educ_in_last_12_months[data$Q9b==1],data$Q114b_educ_in_last_12_months[data$Q9b==0])  
+# difference between the proportion of females and males participating in  tertiary education in last 12 months
+Education114b_tertiary_gendert <-t.test(Q114b_tertiary~Q9b,data=data) #t.test(data$Q114b_tertiary[data$Q9b==1],data$Q114b_tertiary[data$Q9b==0]) 
+# difference between the proportion of females and males participating in  techical or vocational education in last 12 months
+Education114b_technical_gendert <-t.test(Q114b_technical~Q9b,data=data) #t.test(data$Q114b_technical[data$Q9b==1],data$Q114b_technical[data$Q9b==0]) 
+Education114b_primary_gendert <-t.test(Q114b_primary~Q9b,data=data)
+Education114b_primary_gendert
+# percentages
+# Education114b_overall_female <- mean(data$Q114b_educ_in_last_12_months[data$Q9b==1])*100
+# Education114b_overall_male <- mean(data$Q114b_educ_in_last_12_months[data$Q9b==0])*100
+Education114b_overall <- mean(data$Q114b_educ_in_last_12_months*100)
+Education114b_gender_avg <- aggregate(Q114b_educ_in_last_12_months~Q9b,data=data,mean)*100
+Education114b_gender_avg_tertiary<- aggregate(Q114b_tertiary~Q9b,data=data,mean)*100
+Education114b_gender_avg_technical<- aggregate(Q114b_technical~Q9b,data=data,mean)*100
+Education114b_gender_avg_primary<- aggregate(Q114b_primary~Q9b,data=data,mean)*100
+
+```
+
+```{r, Q122, include=FALSE}
+
+########### Q122 Computer Activities
+
+#Copying or moving a file or folder/Using copy and paste tools to duplicate or move information within a document/Sending e-mails with attached files (e.g. document, picture, #video)/Using basic arithmetic formulae in a spreadsheet/Connecting and installing new devices (e.g. a modem, camera, printer)/Finding, downloading, installing and configuring #software/Creating electronic presentations with presentation software (including text, images, sound, video or charts)/Transferring files between a computer and other #devices/Writing a computer program using a specialized programming language
+
+data <- data %>%
+  mutate(Q122_copy_file=ifelse(Q122=="",NA,ifelse(grepl("Copying or moving a file or folder",Q122),1,0)),
+         Q122_use_copy_paste=ifelse(Q122=="",NA,ifelse(grepl("Using copy and paste tools to duplicate or move information within a document",Q122),1,0)),
+         Q122_send_attachments=ifelse(Q122=="",NA,ifelse(grepl("Sending e-mails with attached files",Q122),1,0)),
+         Q122_use_arithmetic_spreadsheet=ifelse(Q122=="",NA,ifelse(grepl("Using basic arithmetic formulae in a spreadsheet",Q122),1,0)),
+         Q122_install_devices=ifelse(Q122=="",NA,ifelse(grepl("Connecting and installing new devices",Q122),1,0)),
+         Q122_install_software=ifelse(Q122=="",NA,ifelse(grepl("Finding, downloading, installing and configuring software",Q122),1,0)),
+         Q122_create_presentation=ifelse(Q122=="",NA,ifelse(grepl("Creating electronic presentations with presentation software",Q122),1,0)),
+         Q122_transfer=ifelse(Q122=="",NA,ifelse(grepl("Transferring files between a computer and other devices",Q122),1,0)),
+         Q122_write_program=ifelse(Q122=="",NA,ifelse(grepl("Writing a computer program using a specialized programming language",Q122),1,0)),
+         Q122_sum=
+           Q122_copy_file+
+           Q122_use_copy_paste+
+           Q122_send_attachments+
+           Q122_use_arithmetic_spreadsheet+
+           Q122_install_devices+
+           Q122_install_software+
+           Q122_create_presentation+
+           Q122_transfer+
+           Q122_write_program)
+
+# proportions
+
+prop_data <-  data %>% 
+  group_by() %>% 
+  summarize( prop_copy_file=mean(Q122_copy_file),
+             prop_copy_paste=mean(Q122_use_copy_paste),
+             prop_attachments=mean(Q122_send_attachments),
+             prop_use_arithmetic_spreadsheet=mean(Q122_use_arithmetic_spreadsheet),
+             prop_install_devices=mean(Q122_install_devices),
+             prop_install_software=mean(Q122_install_software),
+             prop_create_presentation=mean(Q122_create_presentation),
+             prop_transfer=mean(Q122_transfer),
+             prop_write_program=mean(Q122_write_program))
+ 
+ 
+ 
+ 
+ prop_data <- prop_data %>%
+  gather(var, val, 1:ncol(prop_data))
+ 
+
+```
+
+
+## Educational status 
+
+`r round(mean(data$Q112_proficient)*100,2)`% of respondents have at least some some grade school completed. The chart below depicts the educational distribution of participants by sex: 
+
+```{r}
+data %>% 
+  ggplot(aes(x=Q112_fctr,fill=Q9))+
+  geom_bar(position = "dodge")+
+  coord_flip()
+```
+
+`r round(mean(data$Q128_proficient)*100,2)`% of households have somebody with at least some grade school completed. The chart below depicts the educational distribution of households:
+
+```{r}
+data %>% 
+  ggplot(aes(x=Q128,fill=Q128))+
+  geom_bar(show.legend=FALSE)+
+  coord_flip()
+```
+
+
+## Participation in education and training in the last 12 months
+
+`r round(Education114b_overall,2)`% of all the participants have participated in education or vocational training in the past 12 months. `r round(Education114b_gender_avg[1,2],2)`% of men in the sample have participated and  `r round(Education114b_gender_avg[2,2],2)`% of women in the sample have participated. `r if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] > Education114b_gender_avg[2,2]) {"A difference of means indicates that significantly more men participated in educational or training activites in the past 12 months than women."}` `r if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] < Education114b_gender_avg[2,2]) {"A difference of means test indicates that significantly more women participated in educational or training activities in the past 12 months than men."}` `r if(Education114b_overall_gendert$p.value>0.05) {"However, the difference in education/training participation between men and women is not significant."}`
+
+<!-- Education type breakdown -->
+
+Of the women in the sample, `r round(Education114b_gender_avg_tertiary[2,2],2)`% are or were enrolled in college, university, or trade school, `r round(Education114b_gender_avg_technical[2,2],2)`% are or were enrolled in technical or vocational training, and `r round(Education114b_gender_avg_primary[2,2],2)`% are or were enrolled in grade school. 
+
+Of the men in the sample, `r round(Education114b_gender_avg_tertiary[1,2],2)`% are or were enrolled in college, university, or trade school, `r round(Education114b_gender_avg_technical[1,2],2)`% are or were enrolled in technical or vocational training, and `r round(Education114b_gender_avg_primary[1,2],2)`% are or were enrolled in grade school. 
+
+
+```{r message=FALSE, warning=FALSE}
+
+data %>% 
+  select(Q9,Q114) %>% 
+  ggplot(aes(x=Q114,fill=Q9))+
+  ggtitle("Participation in Education and Training \n in the Past 12 Months") + 
+  geom_bar(position = "dodge")+
+  xlab("")+
+  coord_flip()
+
+```
+
+
+## Computer Activities
+The chart below shows the proportion of respondents with at least one person in their household who can do the following nine computer skills:
+
+* Copying or moving a file or folder
+* Using copy and paste tools to duplicate or move information within a document
+* Sending e-mails with attached files (e.g. document, picture, video)
+* Using basic arithmetic formulae in a spreadsheet
+* Connecting and installing new devices (e.g. a modem, camera, printer)
+* Finding, downloading, installing and configuring software
+* Creating electronic presentations with presentation software (including text, images, sound, video or charts)
+* Transferring files between a computer and other devices
+* Writing a computer program using a specialized programming language
+
+
+The average number of the above skills that each household possesses is `r round(mean(data$Q122_sum),2)`. 
+
+
+```{r}
+
+prop_data %>% 
+  ggplot(aes(x=var,y=val,fill=var))+
+  geom_col(show.legend=FALSE)+
+  labs(title="Proportion of respondents with somebody\n in household able to do task")+
+  coord_flip()
+
+```
+
+
+
+
