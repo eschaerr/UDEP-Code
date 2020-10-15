@@ -16,7 +16,6 @@ library(DescTools)
 ```{r}
 # Upload the data here
 data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
-UDEPHouseSurveyNov6 <- read_csv("UDEPHouseSurveyNov6.csv")
 # names(data)
 # create a vector with all of the questions and their corresponding question numbers
 questions <- data[1,]
