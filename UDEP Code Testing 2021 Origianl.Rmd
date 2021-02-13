@@ -192,7 +192,7 @@ grid.arrange(plot1, plot2, ncol=2)
 ## Comparisons to other Households
 
 ```{r}
-order <- c("1","2","3”)
+order <- c("1","2","3","4","5","6","7","8","9") 
 data$Q34 <- factor(data$Q34, levels = order)
 data$Q34b <- as.numeric(data$Q34)
 data$Q44 <- factor(data$Q44, levels = order)
