@@ -206,40 +206,59 @@ When asked to compare their household's access to basic services (critical servi
 Participants were also asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the households that are most able to buy land on the top step, and 1 indicates the households that are least able to buy land on the bottom step. The average response was `r round(mean(data$Q44b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q44b, na.rm = TRUE) < median(data$Q44b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q44b, na.rm = TRUE) > median(data$Q44b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q44b, na.rm = TRUE) == median(data$Q44b, na.rm = TRUE)) {"normal."} `
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
-
+########################################################
+########################################################
 plot1 <- data %>%
   filter(!Q34 == "") %>%
-  ggplot(aes(x = Q34, fill = Q34)) +
+  ggplot(aes(x = Q34, fill = Q38)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  scale_x_discrete(labels= c("Worse than most households (poorer)" = "Worse","About the same as most households" = "Same","Better than most households (richer)" = "Better")) +
   labs(
-    title = expression(atop("Ladder Comparison on", "Household Wealth")),
+    title = expression(atop("Comparison on", "Household Wealth")),
     x = "",
-    y = "Count"
-  )
+    y = "Count" 
+  ) 
 
-plot2 <- ggplot(data, aes(x = Q38, fill = Q38)) +
+########################################################
+########################################################
+
+########################################################
+########################################################
+plot2 <- data %>%
+  filter(!Q38 == "") %>%
+  ggplot(aes(x = Q38, fill = Q38)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("More basic services than most households" = "More","About the same amount of basic services as most households" = "Same","Less basic services than most households" = "Less")) +
+  scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
   labs(
     title = expression(atop("Access to Basic", "Services Comparison")),
     x = "",
     y = "Count" 
-  ) + coord_flip() 
+  ) 
 
+
+
+########################################################
+########################################################
+
+########################################################
+########################################################
 plot3 <- data %>%
   filter(!Q44 == "") %>%
   ggplot(aes(x = Q44, fill = Q44)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
+  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_x_discrete(labels= c("Worse than other households" = "Worse","About the same as other households" = "Same","Better than other households" = "Better")) +
   labs(
-    title = expression(atop("Ladder Comparison on", "Ability to Buy Land")),
+    title = expression(atop("Comparison on", "Ability to Buy Land")),
     x = "",
     y = "Count"
   )
 
 grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
+########################################################
+########################################################
 ```
 
 ```{r}
