@@ -107,7 +107,7 @@ plot1 <- data %>%
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
   scale_y_discrete(labels= c("More food to eat than most households" = "More","About the same amount of food to eat as most households" = "Same","Less food to eat than most households" = "Less")) +
   labs(
-    title = "Amount of Food to Eat Comparison",
+    title = "Comparison Amount of Food",
     x = "Count",
     y = "" 
   ) 
