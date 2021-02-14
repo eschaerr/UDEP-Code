@@ -1,0 +1,266 @@
+---
+title: "Testing Final (POVERTY)"
+author: "UDEP Project, Brigham Young University"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(gridExtra)
+library(tidyverse)
+library(DescTools)
+```
+
+```{r}
+# Upload the data here
+data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
+# names(data)
+# create a vector with all of the questions and their corresponding question numbers
+questions <- data[1,]
+# get rid of question rows in dataset for analysis
+data <- data[-(1:2),]
+```
+
+```{r}
+# Define some of the Demographic variables (for now make them all binary)
+data$Q9b <- ifelse(data$Q9=="Man",0, ifelse(data$Q9=="Woman",1,NA)) # men vs. women
+data$Q6b <- ifelse(data$Q6<=40,0, ifelse(data$Q6>40,1,NA)) # 0-40 vs 40+
+data$Q133b <- ifelse(data$Q133 %like% "Employed for wages%",1, ifelse(data$Q133 %like% "Out of work%",0,NA)) # Binary measure of employment status (needs to be recoded to ordinal later)
+data$Q147b <- ifelse(data$Q147 == "yes",1,0)
+# Define some of the Demographic variables (for now make them all binary)
+data$Q25b <- ifelse(data$Q25=="Rural",0, ifelse(data$Q25=="Urban" | data$Q25=="Suburban",1,NA)) # rural vs. urban
+```
+
+```{r}
+# Set up for Poverty analysis:
+N <- dim(data)[1]
+data$Q28pd <- rep(NA,N) # create new variable for per day income
+data$Q28[15] <- "250,000" # remove once $ is not allowed in answer - NEED TO ONLY ALLOW NUMBERS IN THIS ANSWER IN THE SURVEY
+data$Q28 <- as.numeric(gsub(",","",data$Q28)) # take out commas from income values - THIS CAN ALSO BE REMOVED AFTER ONLY NUMBERS ARE ALLOWED
+for(i in 1:N){
+  # Convert income (Poverty 28) into per day 
+  # Note: need to convert units of income into actual currency/USD
+  if(data$Q32[i]=="1 year") data$Q28pd[i] <- data$Q28[i]/262
+  if(data$Q32[i]=="1 month") data$Q28pd[i] <- data$Q28[i]/21.74
+  if(data$Q32[i]=="1 week") data$Q28pd[i] <- data$Q28[i]/5
+}
+# Convert Yes/No answers to binary variable (0=No/Don't know, 1=Yes)
+data$Q173b <- ifelse(data$Q173=="Yes",1, ifelse(data$Q173=="No",0,NA)) # access to electricity
+data$Q174b <- ifelse(data$Q174=="Yes",1, ifelse(data$Q174=="No",0,NA)) # access to water and sanitation
+data$Q175b <- ifelse(data$Q175=="Yes",1, ifelse(data$Q175=="No",0,NA)) # access to waste removal
+data$Q40b <- ifelse(data$Q40=="Yes",1, ifelse(data$Q40=="No" | data$Q40=="Don't know",0,NA)) # land ownership 
+data$Q42b <- ifelse(data$Q42=="Yes",1,0) # legal documentation of land ownership
+```
+
+```{r}
+# Poverty No Comparison Analysis
+
+#### Poverty 28 (Income per day) ####
+# Overall and disaggregated averages
+Poverty28.ovrlavg <- mean(data$Q28pd,na.rm=TRUE) # Overall Average
+Poverty28.genderavg <- aggregate(Q28pd ~ Q9b, data=data, mean) # Averages for men and women
+Poverty28.ageavg <- aggregate(Q28pd ~ Q6b, data=data, mean) # Averages for 0-40 and 40+
+Poverty28.locavg <- aggregate(Q28pd ~ Q25b, data=data, mean) # Averages for Urban vs. Rural
+Poverty28.emplavg <- aggregate(Q28pd ~ Q133b, data=data, mean) # Averages based on employment status
+# t tests for disaggregated averages: 
+# Gender, Age, Location, and Employment Status
+Poverty28.gendert <- t.test(Q28pd ~ Q9b, data=data) # male vs. female
+Poverty28.aget <- t.test(Q28pd ~ Q6b, data=data) # child vs. adult
+# Poverty28.loct <- t.test(Q28pd ~ Q25b, data=data) # rural vs. urban/suburban
+# Poverty28.emplt <- t.test(Q28pd ~ Q133b, data=data) # unemployed vs. employed
+# NEED MORE DATA IN ORDER TO USE THESE THREE ^^
+
+#### Poverty 173 (Access to electiricy/energy) ####
+# Percentage of participants
+Poverty173.ovrlavg <- mean(data$Q173b) * 100
+  
+#### Poverty 174 (Access to water and sanitation) ####
+# Percentage of participants
+Poverty174.ovrlavg <- mean(data$Q174b) * 100
+  
+#### Poverty 175 (Access to refuse and waste removal) ####
+# Percentage of participants
+Poverty175.ovrlavg <- mean(data$Q175b) * 100
+  
+#### Poverty 40 (Land ownership) ####
+# Percentage of participants, overall and disaggregated by sex
+Poverty40.ovrlavg <- mean(data$Q40b) * 100
+Poverty40.genderavg <- aggregate(Q40b ~ Q9b, data=data, mean) * 100
+# t test for sex disaggreagated values
+Poverty40.gendert <- t.test(Q40b ~ Q9b, data=data)
+  
+#### Poverty 42 (Legal documentation of land ownership)
+# Percentage of participants, overall and disaggregated by sex
+Poverty42.ovrlavg <- mean(data$Q42b) * 100
+Poverty42.genderavg <- aggregate(Q42b ~ Q9b, data=data, mean) * 100
+# t test for sex disaggreagated values
+Poverty42.gendert <- t.test(Q42b ~ Q9b, data=data)
+```
+
+<!-- NO COMPARISON POVERTY DATA RESULTS -->
+
+<!-- INCOME -->
+
+# 1. Poverty
+
+## Income
+
+The overall average income per day is \$`r round(Poverty28.ovrlavg,2)`.
+
+The average income per day for men is \$`r round(Poverty28.genderavg[1,2],2)`, and the average income per day for women is \$`r round(Poverty28.genderavg[2,2],2)`. `r if(Poverty28.gendert$p.value<=0.05 & Poverty28.genderavg[1,2] > Poverty28.genderavg[2,2]) { "A difference of means test indicates that men make a significantly higher income per day on average than women." }` `r if(Poverty28.gendert$p.value<=0.05 & Poverty28.genderavg[1,2] < Poverty28.genderavg[2,2]) { "A difference of means test indicates that women make a significantly higher income per day on average than men."}` `r if(Poverty28.gendert$p.value>0.05) { "However, the difference is not significant." }`
+
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+data$Q9b <- as.factor(data$Q9b)
+plot1 <- ggplot(data, aes(Q9b, Q28pd)) + geom_boxplot()+ 
+  ggtitle("Income Trends by Gender") + 
+  xlab("Gender") + ylab("Income ($ per day)") + 
+  scale_x_discrete(labels= c("Male","Female"))
+plot2 <- ggplot(data, aes(x = Q28pd, fill=Q9b)) +
+  geom_density(alpha = 0.7) +
+  theme(legend.position = c(0.8, 0.8)) +
+  ggtitle("Density of Income by Gender") +
+  ylab("Density") + xlab("Income ($ per day)") +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
+grid.arrange(plot1, plot2, ncol=2)
+```
+The average income per day for the population ages 0 to 40 is \$`r round(Poverty28.ageavg[1,2],2)`, and the average income per day for adults is \$ `r round(Poverty28.ageavg[2,2],2)`. `r if(Poverty28.aget$p.value<=0.05 & Poverty28.ageavg[1,2] > Poverty28.ageavg[2,2]) { "A difference of means test indicates that children live with a significantly higher income per day on average than adults." }` `r if(Poverty28.aget$p.value<=0.05 & Poverty28.ageavg[1,2] < Poverty28.ageavg[2,2]) { "A difference of means test indicates that adults live with a significantly higher income per day on average than children." }` `r if(Poverty28.aget$p.value>0.05) { "However, the difference is not significant." }`
+
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+data$Q6b <- as.factor(data$Q6b)
+plot1 <- ggplot(data, aes(Q6b, Q28pd)) + geom_boxplot()+ 
+  ggtitle("Income Trends by Age") + 
+  xlab("Age") + ylab("Income ($ per day)") + 
+  scale_x_discrete(labels= c("0-40","40+"))
+plot2 <- ggplot(data, aes(x = Q28pd, fill=Q6b)) +
+  geom_density(alpha = 0.7) +
+  theme(legend.position = c(0.8, 0.8)) +
+  ggtitle("Density of Income by Age") +
+  ylab("Density") + xlab("Income ($ per day)") +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Age Range",
+                         breaks=c(0, 1),
+                         labels=c("0-40", "40+"))
+grid.arrange(plot1, plot2, ncol=2)
+```
+<!-- ACCESS TO FACILITIES-->
+
+## Access to Facilities
+
+In this sample, `r round(Poverty173.ovrlavg,2)`% of the participants have access to electricity or energy, `r round(Poverty174.ovrlavg,2)`% of the participants have access to water and sanitation, and `r round(Poverty175.ovrlavg,2)`% of the participants have access to refuse and waste removal.
+
+<!-- LAND OWNERSHIP -->
+
+## Land Ownership
+
+`r round(Poverty40.ovrlavg,2)`% of all the participants own land. `r round(Poverty40.genderavg[1,2],2)`% of men in the sample own land and `r round(Poverty40.genderavg[2,2],2)`% of women in the sample own land. `r if(Poverty40.gendert$p.value<=0.05 & Poverty40.genderavg[1,2] > Poverty40.genderavg[2,2]) { "A difference of means indicates that significantly more men own land than women." }` `r if(Poverty40.gendert$p.value<=0.05 & Poverty40.genderavg[1,2] < Poverty40.genderavg[2,2]) { "A difference of means test indicates that significantly more women own land than men." }` `r if(Poverty40.gendert$p.value>0.05) { "However, the difference in land ownership between men and women is not significant." }`
+
+<!-- LEGAL DECLARATION OF LAND OWNERSHIP -->
+
+Additionally, `r round(Poverty42.ovrlavg,2)`% of the participants who indicated they own land also have legal documentation that proves the land ownership. `r round(Poverty42.genderavg[1,2],2)`% of men and `r round(Poverty42.genderavg[2,2],2)`% of women in this smaller sample have the legal documentation. `r if(Poverty42.gendert$p.value<=0.05 & Poverty42.genderavg[1,2] > Poverty42.genderavg[2,2]) {"A difference of means test indicates that significantly more men who own land have legal documentation of it than women."}` `r if(Poverty42.gendert$p.value<=0.05 & Poverty42.genderavg[1,2] < Poverty42.genderavg[2,2]) {"A difference of means indicates that significantly more women who own land have legal documentation of it than men."}` `r if(Poverty42.gendert$p.value>0.05) {"However, the difference in legal documentation given land ownership between men and women is not significant."}`
+
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+plot1 <- ggplot(data, aes(x=Q40, fill=Q9b))+
+  geom_bar(position="dodge") +
+  ggtitle("Land Ownership by Gender") + 
+  xlab("Land Ownership") + ylab("Count") + 
+  scale_x_discrete(labels= c("No","Yes")) +
+  theme(legend.position = c(0.8, 0.8)) +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
+plot2 <- ggplot(data, aes(x=Q42, fill=Q9b))+
+  geom_bar(position="dodge") +
+  ggtitle("Legal Declaration of Ownership by Gender") + 
+  xlab("Legal Land Ownership") + ylab("Count") + 
+  scale_x_discrete(labels= c("No","Yes")) +
+  theme(legend.position = c(0.8, 0.8)) +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
+grid.arrange(plot1, plot2, ncol=2)
+```
+## Comparisons to other Households
+
+```{r}
+########################################################
+########################################################
+order <- c("1","2","3","4","5","6","7","8","9") 
+########################################################
+########################################################
+data$Q34 <- factor(data$Q34, levels = order)
+data$Q34b <- as.numeric(data$Q34)
+data$Q44 <- factor(data$Q44, levels = order)
+data$Q44b <- as.numeric(data$Q44)
+```
+
+Participants were asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the richest households on the top step, and 1 indicates the poorest households on the bottom step. The average response was `r round(mean(data$Q34b, na.rm = TRUE))` and the distribution was `r if(mean(data$Q34b, na.rm = TRUE) < median(data$Q34b, na.rm = TRUE)) {"positively skewed."}` `r if(mean(data$Q34b, na.rm = TRUE) > median(data$Q34b, na.rm = TRUE)) {"negatively skewed."}` `r if(mean(data$Q34b, na.rm = TRUE) == median(data$Q34b, na.rm = TRUE)) {"normal."} `
+
+When asked to compare their household's access to basic services (critical services including electricity and energy, water and sanitation, refuse and waste removal) to other households in the community `r round(mean(data$Q38 == "Less basic services than most households", na.rm = TRUE)*100)`% said they had less basic services than most households, `r round(mean(data$Q38 == "About the same amount of basic services as most households", na.rm = TRUE)*100)`% said they had about the same amount of basic services as most households, and `r round(mean(data$Q38 == "More basic services than most households", na.rm = TRUE)*100)`% said they had more basic services than most households.
+
+Participants were also asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the households that are most able to buy land on the top step, and 1 indicates the households that are least able to buy land on the bottom step. The average response was `r round(mean(data$Q44b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q44b, na.rm = TRUE) < median(data$Q44b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q44b, na.rm = TRUE) > median(data$Q44b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q44b, na.rm = TRUE) == median(data$Q44b, na.rm = TRUE)) {"normal."} `
+
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+########################################################
+########################################################
+plot1 <- data %>%
+  filter(!Q34 == "") %>%
+  ggplot(aes(x = Q34, fill = Q38)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  scale_x_discrete(labels= c("Worse than most households (poorer)" = "Worse","About the same as most households" = "Same","Better than most households (richer)" = "Better")) +
+  labs(
+    title = expression(atop("Comparison on", "Household Wealth")),
+    x = "",
+    y = "Count" 
+  ) 
+
+########################################################
+########################################################
+
+########################################################
+########################################################
+plot2 <- data %>%
+  filter(!Q38 == "") %>%
+  ggplot(aes(x = Q38, fill = Q38)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
+  labs(
+    title = expression(atop("Access to Basic", "Services Comparison")),
+    x = "",
+    y = "Count" 
+  ) 
+
+
+
+########################################################
+########################################################
+
+########################################################
+########################################################
+plot3 <- data %>%
+  filter(!Q44 == "") %>%
+  ggplot(aes(x = Q44, fill = Q44)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_x_discrete(labels= c("Worse than other households" = "Worse","About the same as other households" = "Same","Better than other households" = "Better")) +
+  labs(
+    title = expression(atop("Comparison on", "Ability to Buy Land")),
+    x = "",
+    y = "Count"
+  )
+
+grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
+########################################################
+########################################################
+```
+
+
