@@ -331,40 +331,36 @@ Additionally, in the past 12 months, `r round(Hunger60.ovrlavg,2)`% of the parti
 
 Finally, in the past 12 months, `r round(Hunger66.ovrlavg,2)`% of the participants were hungry at some point but did not eat and `r round(Hunger68.ovrlavg,2)`% went hungry for an entire day.
 
-```{r}
-# Hunger 70, 72
-order <- c("1","2","3","4","5","6","7","8","9")
-data$Q72 <- factor(data$Q72, levels = order)
-data$Q72b <- as.numeric(data$Q72)
-```
-
 ## Comparison to other Households
 
 When asked to compare their household's amount of food to eat to other households in the community `r round(mean(data$Q70 == "Less food to eat than most households", na.rm = TRUE)*100)`% said they had less food to eat than most households, `r round(mean(data$Q70 == "About the same amount of food to eat as most households", na.rm = TRUE)*100)`% said they had about the same amount of food to eat as most households, and `r round(mean(data$Q70 == "More food to eat than most households", na.rm = TRUE)*100)`% said they had more food to eat than most households.
 
-Participants were also asked to imagine that all children under 5-years-old in their community are on a step on a ladder, from 1 to 9, where 9 indicates the children who are healthiest on the top step, and 1 indicates the children who are the least healthy on the bottom step. The average response was `r round(mean(data$Q72b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q72b, na.rm = TRUE) < median(data$Q72b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q72b, na.rm = TRUE) > median(data$Q72b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q72b, na.rm = TRUE) == median(data$Q72b, na.rm = TRUE)) {"normal."} `
+When asked to compare the health of the children in their household to that of other children, `r round(mean(data$Q72 == "Less healthy than other households", na.rm = TRUE)*100)`% of participants said they had less food to eat than most households, `r round(mean(data$Q72 == "About the same level of health as other households", na.rm = TRUE)*100)`% said they had about the same amount of food to eat as most households, and `r round(mean(data$Q72 == "More healthy than other households", na.rm = TRUE)*100)`% said they had more food to eat than most households.
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 
-plot1 <- ggplot(data, aes(x = Q70, fill = Q70)) +
+plot1 <- data %>%
+  filter(Q70 != "") %>%
+  ggplot(aes(y = Q70, fill = Q70)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("More food to eat than most households" = "More","About the same amount of food to eat as most households" = "Same","Less food to eat than most households" = "Less")) +
+  scale_y_discrete(labels= c("More food to eat than most households" = "More","About the same amount of food to eat as most households" = "Same","Less food to eat than most households" = "Less")) +
   labs(
-    title = "Amount of Food to Eat Comparison",
-    x = "",
-    y = "Count" 
-  ) + coord_flip() 
+    title = "Comparison Amount of Food",
+    x = "Count",
+    y = "" 
+  ) 
 
 plot2 <- data %>%
   filter(!Q72 == "") %>%
-  ggplot(aes(x = Q72, fill = Q72)) +
+  ggplot(aes(y = Q72, fill = Q72)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
+  scale_fill_manual(values=c("#999999", "#999999","#999999")) +
+  scale_y_discrete(labels= c("More healthy than other children" = "More","About the same level of health as other children" = "Same","Less healthy than other children" = "Less")) + 
   labs(
-    title = "Ladder Comparison on Child Health",
-    x = "",
-    y = "Count"
+    title = "Comparison on Health",
+    x = "Count",
+    y = ""
   )
 
 grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
