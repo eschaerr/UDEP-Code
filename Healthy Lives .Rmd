@@ -421,7 +421,7 @@ plot1 <- data %>%
   ggplot(aes(x = Q95, fill = Q95)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
-  scale_x_discrete(labels= c("o	Less healthy than newborns in other households" = "Less","o	About the same level of health as newborns in other households" = "Same","o	More healthy than newborns in other households" = "More")) +
+  scale_x_discrete(labels= c("Less healthy than newborns in other households" = "Less","About the same level of health as newborns in other households" = "Same","More healthy than newborns in other households" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Women's Health")),
     x = "",
