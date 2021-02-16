@@ -14,7 +14,10 @@ library(DescTools)
 
 ```{r}
 # Upload the data here
-data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
+# read in the new dataset
+data <- read.csv(file = 'UDEP_v1.03.csv', header = TRUE, stringsAsFactors = FALSE)
+# read in the old dataset
+#data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
 # names(data)
 # create a vector with all of the questions and their corresponding question numbers
 questions <- data[1,]
@@ -22,16 +25,69 @@ questions <- data[1,]
 data <- data[-(1:2),]
 ```
 
-```{r}
-# Define some of the Demographic variables (for now make them all binary)
-data$Q9b <- ifelse(data$Q9=="Man",0, ifelse(data$Q9=="Woman",1,NA)) # men vs. women
-data$Q6b <- ifelse(data$Q6<=40,0, ifelse(data$Q6>40,1,NA)) # 0-40 vs 40+
-data$Q133b <- ifelse(data$Q133 %like% "Employed for wages%",1, ifelse(data$Q133 %like% "Out of work%",0,NA)) # Binary measure of employment status (needs to be recoded to ordinal later)
+```{r Demographics}
+# Define some of the Demographic variables
+
+# Q9b Gender - man (0), woman (1)
+data$Q9b <- as.factor(ifelse(data$Q9=="Man",0, ifelse(data$Q9=="Woman",1,NA)))
+
+# Q6b Age - 40 and under (0), over 40 (1)
+data$Q6b <- as.factor(ifelse(data$Q6<=40,0, ifelse(data$Q6>40,1,NA)))
+
+# Q13b Disability - yes (1), no (0)
+data$Q13b <- as.factor(ifelse(data$Q13 == "Yes",1,0))
+
+# Q17b Religion - yes (1), no (0)
+data$Q17b <- as.factor(ifelse(data$Q17 == "Yes", 1, 0))
+
+# Q21b, Q23b Phone & Internet - yes (1), no (0)
+data$Q21b <- as.factor(ifelse(data$Q21 == "Yes", 1, 0))
+data$Q23b <- as.factor(ifelse(data$Q23 == "Yes", 1, 0))
+
+# Q133b Employed - yes (1), no (0) NOT as factor
+data$Q133b <- ifelse(data$Q133 %like% "Employed for wages%",1, ifelse(data$Q133 %like% "Out of work%",0,NA)) # Binary measure of employment status (needs to be recoded to ordinal later
+
+# Q147b Work Injury Last 12 Months- yes (1), no (0) NOT as factor
 data$Q147b <- ifelse(data$Q147 == "yes",1,0)
-# Define some of the Demographic variables 
-data$Q25b <- ifelse(data$Q25=="Rural",1, ifelse(data$Q25=="Urban",3,2)) # rural(1) vs. urban (3) vs.Suburban(2)
+
+# Q25b Urban/Rural - rural (1), suburban (2), urban (3)
+data$Q25b <- ifelse(data$Q25=="Rural",1, ifelse(data$Q25=="Urban",3,2)) 
+
+# Q184 Ethnicity: convert ethnicity question to a factor and add all levels present in the question
+data$Q184b <- factor(data$Q184,levels=c("American Indian or Alaska Native", "Asian", "Black or African American", "Hispanic or Latino", "Native Hawaiian or Other Pacific Islander", "White", "I prefer not to respond", "Do not know"))
+
+# Q185 Marital Status: convert ethnicity question to a factor and add all levels present in the question
+data$Q185b <- factor(data$Q185,levels=c("Single", "In a relationship", "Engaged", "Married", "Widowed", "Separated", "Divorced", "I prefer not to respond", "Don't know"))
+```
+
+```{r Demographics Graphs}
+# Count of Men and Women 
+# want to make this proportion instead? 
+gender_plot <- data %>%
+  filter(!Q9b == "") %>%
+  ggplot(aes(y = Q9b, fill = Q9b)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values=c("#999999", "#999999")) +
+  scale_y_discrete(labels= c("0" = "Male","1" = "Female")) + 
+  labs(
+    title = "Count of Male and Female Respondents",
+    x = "Count",
+    y = ""
+  )
+
+# Bar Chart of Age -= want to change this to show a more appropriate 
+age_plot <- data %>% 
+  ggplot(aes(x=Q6))+
+  geom_bar(show.legend=FALSE,fill="#56B4E9")+
+  scale_x_discrete(name="")+
+  scale_y_discrete(name="Age")+
+  labs(title = "Age of Respondents")
+
+
 
 ```
+
+
 
 ```{r}
 # Set up for Poverty analysis:
@@ -113,7 +169,6 @@ The overall average income per day is \$`r round(Poverty28.ovrlavg,2)`.
 The average income per day for men is \$`r round(Poverty28.genderavg[1,2],2)`, and the average income per day for women is \$`r round(Poverty28.genderavg[2,2],2)`. `r if(Poverty28.gendert$p.value<=0.05 & Poverty28.genderavg[1,2] > Poverty28.genderavg[2,2]) { "A difference of means test indicates that men make a significantly higher income per day on average than women." }` `r if(Poverty28.gendert$p.value<=0.05 & Poverty28.genderavg[1,2] < Poverty28.genderavg[2,2]) { "A difference of means test indicates that women make a significantly higher income per day on average than men."}` `r if(Poverty28.gendert$p.value>0.05) { "However, the difference is not significant." }`
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
-data$Q9b <- as.factor(data$Q9b)
 plot1 <- ggplot(data, aes(Q9b, Q28pd)) + geom_boxplot()+ 
   ggtitle("Income Trends by Gender") + 
   xlab("Gender") + ylab("Income ($ per day)") + 
@@ -133,7 +188,7 @@ grid.arrange(plot1, plot2, ncol=2)
 The average income per day for the population ages 0 to 40 is \$`r round(Poverty28.ageavg[1,2],2)`, and the average income per day for adults is \$ `r round(Poverty28.ageavg[2,2],2)`. `r if(Poverty28.aget$p.value<=0.05 & Poverty28.ageavg[1,2] > Poverty28.ageavg[2,2]) { "A difference of means test indicates that children live with a significantly higher income per day on average than adults." }` `r if(Poverty28.aget$p.value<=0.05 & Poverty28.ageavg[1,2] < Poverty28.ageavg[2,2]) { "A difference of means test indicates that adults live with a significantly higher income per day on average than children." }` `r if(Poverty28.aget$p.value>0.05) { "However, the difference is not significant." }`
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
-data$Q6b <- as.factor(data$Q6b)
+
 plot1 <- ggplot(data, aes(Q6b, Q28pd)) + geom_boxplot()+ 
   ggtitle("Income Trends by Age") + 
   xlab("Age") + ylab("Income ($ per day)") + 
@@ -714,10 +769,6 @@ grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
 # 4. Quality Education
 
 ```{r Education 130 PCM}
-# My Attempt
-
-
-data$Q9b <- factor(data$Q9b)
 data$Q6ord <- cut(as.numeric(data$Q6),c(0,14,19,29,39,49,100),labels=c("Under 15","15-19","20-29","30-39","40-49","50 and above"))
 
 # Education 130 
@@ -1818,12 +1869,8 @@ grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 # 8. Decent Work and Economic Growth
 
 ```{r, message=FALSE, warning=FALSE, include = FALSE}
-data$Q147b <- ifelse(data$Q147=="Yes",1,0) # binary measure of if injured in last 12 months
 data$Q137b <- ifelse(data$Q137 == "Local organization", 1, ifelse(data$Q137 == "Self-employed", 2, ifelse(data$Q137 == "Multinational organization", 3, ifelse(data$Q137 == "Government", 4, NA)))) # where people are employed nominal measure NA,1,2,3,4
-data$Q13b <- ifelse(data$Q13 == "Yes",1,0) # disabled or not 1 yes 0 no 
 data$Q151b <- ifelse(data$Q151 %like% "None",0,1) # 0 no access 1 access to banking stuff
-data$Q9b <- as.factor(data$Q9b)
-data$Q13b <- as.factor(data$Q13b)
 data$Q153b <- ifelse(data$Q153 == "Yes",1,0) # Last 12 months made a transaction using mobile phone
 prop.emp <- mean(data$Q133b, na.rm = TRUE)*100 # proportion that are employed
 prop.inj <- mean(data$Q147b)*100 # proportion that were injured 
