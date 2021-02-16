@@ -28,8 +28,9 @@ data$Q9b <- ifelse(data$Q9=="Man",0, ifelse(data$Q9=="Woman",1,NA)) # men vs. wo
 data$Q6b <- ifelse(data$Q6<=40,0, ifelse(data$Q6>40,1,NA)) # 0-40 vs 40+
 data$Q133b <- ifelse(data$Q133 %like% "Employed for wages%",1, ifelse(data$Q133 %like% "Out of work%",0,NA)) # Binary measure of employment status (needs to be recoded to ordinal later)
 data$Q147b <- ifelse(data$Q147 == "yes",1,0)
-# Define some of the Demographic variables (for now make them all binary)
-data$Q25b <- ifelse(data$Q25=="Rural",0, ifelse(data$Q25=="Urban" | data$Q25=="Suburban",1,NA)) # rural vs. urban
+# Define some of the Demographic variables 
+data$Q25b <- ifelse(data$Q25=="Rural",1, ifelse(data$Q25=="Urban",3,2)) # rural(1) vs. urban (3) vs.Suburban(2)
+
 ```
 
 ```{r}
