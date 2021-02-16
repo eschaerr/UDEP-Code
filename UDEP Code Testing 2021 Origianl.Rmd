@@ -377,10 +377,15 @@ data$Q91b <- ifelse(data$Q91=="Skilled Staff", 1, ifelse(is.na(data$Q91), NA, 0)
 # Need to figure out how to identify "Skilled Staff" - who is qualified?
 # data$Rand226b <- ifelse(data$Rand226=="Yes", 1, ifelse(data$HealthyF89=="No", 0, NA)) # data on someone else passing away
 data$Q65b <- ifelse(data$Q65=="No one in my household has been infected by any of these diseases in the last 12 months", 0, ifelse(is.na(data$Q65), NA, 1))
-data$HIV <- ifelse(data$Q65=="HIV or AIDS",1, ifelse(is.na(data$Q65), NA, 0))
-data$tuberculosis <- ifelse(data$Q65=="Tuberculosis",1, ifelse(is.na(data$Q65), NA, 0))
-data$malaria <- ifelse(data$Q65=="Malaria",1, ifelse(is.na(data$Q65), NA, 0))
-data$hepatitisb <- ifelse(data$Q65=="Hepatitis B",1, ifelse(is.na(data$Q65), NA, 0))
+#data$HIV <- ifelse(data$Q65=="HIV or AIDS",1, ifelse(is.na(data$Q65), NA, 0))
+data$HIV <- grepl("IV or AIDS",data$Q65)
+#data$tuberculosis <- ifelse(data$Q65=="Tuberculosis",1, ifelse(is.na(data$Q65), NA, 0))
+data$tuberculosis <- grepl("Tuberculosis",data$Q65)
+#data$malaria <- ifelse(data$Q65=="Malaria",1, ifelse(is.na(data$Q65), NA, 0))
+data$malaria <- grepl("Malaria",data$Q65)
+#data$hepatitisb <- ifelse(data$Q65=="Hepatitis B",1, ifelse(is.na(data$Q65), NA, 0))
+data$hepatitisb <- grepl("Hepatitis B",data$Q65)
+
 # data$Rand224b <- ifelse(is.na(data$Rand224),NA,1) # data on someone else passing away
 # data$ccdc <- ifelse(data$Rand224=="Cardiovascular disease" | data$Rand224=="Cancer" | data$Rand224=="Diabetes" | data$Rand224=="Chronic respiratory disease",1, ifelse(is.na(data$Rand224),NA,0))
 # data$suicide <- ifelse(data$Rand224=="Suicide",1, ifelse(is.na(data$Rand224),NA,0))
@@ -392,9 +397,21 @@ data$Q69b <- ifelse(data$Q69=="Yes",1, ifelse(data$Q69=="No",0,NA))
 data$Q83b <- ifelse(data$Q83=="Yes",1, ifelse(data$Q83=="No" | data$Q83=="Don't know",0,NA))
 data$Q85b <- ifelse(data$Q85=="Yes",1, ifelse(data$Q85=="No" | data$Q85=="Don't know",0,NA))
 data$Q67b <- ifelse(data$Q67=="Yes",1, ifelse(data$Q67=="No" | data$Q67=="Don't know",0,NA))
-data$Q73b <- ifelse(data$Q73=="None of the above",0, ifelse(is.na(data$Q73),NA,1))
+#The latest version (01.03) does not include this question (Q)
+#data$Q73b <- ifelse(data$Q73=="None of the above",0, ifelse(is.na(data$Q73),NA,1))
 data$Q75b <- ifelse(data$Q75=="Yes",1, ifelse(data$Q75=="No" | data$Q75=="Don't know",0,NA))
 data$Q77b <- ifelse(data$Q77=="Yes",1, ifelse(data$Q77=="No" | data$Q77=="Don't know",0,NA))
+#set up for question170
+data$Q170b <- ifelse(data$Q170=="Yes",1, ifelse(data$Q170=="No" | data$Q170=="Don't know",0,NA))
+#set up for question171
+data$Q171.1b <- ifelse(data$Q171.1=="Yes",1, ifelse(data$Q171.1=="No" | data$Q171.1=="Don't know",0,NA))
+#set up for question 180
+data$Q180b <- ifelse(data$Q180=="Yes",1, ifelse(data$Q180=="No" | data$Q180=="Don't know",0,NA))
+#set up for question 181
+data$Q181b <- ifelse(data$Q181=="Yes",1, ifelse(data$Q181=="No" | data$Q181=="Don't know",0,NA))
+#set up for question 181
+data$Q182b <- ifelse(data$Q182=="Yes",1, ifelse(data$Q182=="No" | data$Q182=="Don't know",0,NA))
+
 ```
 
 ```{r}
@@ -472,8 +489,9 @@ Healthy85.ovrlavg <- mean(data$Q85b, na.rm = TRUE) * 100
 Healthy67.ovrlavg <- mean(data$Q67b, na.rm = TRUE) * 100
   
 #### Healthy 73 (Access to medication) ####
+####The latest version (01.03) does not include this question###
 # Propotion of participants
-Healthy73.ovrlavg <- mean(data$Q73b, na.rm = TRUE) * 100
+#Healthy73.ovrlavg <- mean(data$Q73b, na.rm = TRUE) * 100
   
 #### Healthy 75 (Afford medicine the family needs) ####
 # Proportion of participants
@@ -482,6 +500,87 @@ Healthy75.ovrlavg <- mean(data$Q75b, na.rm = TRUE) * 100
 #### Healthy 77 (Provide medicine when family needs it) ####
 # Proportion of participants
 Healthy75.ovrlavg <- mean(data$Q77b, na.rm = TRUE) * 100
+#### Healthy 170 (affected with a disease in the last 12 months) ####
+# Proportion of participants
+HealthyF170.ovrlavg <- mean(data$Q170b, na.rm = TRUE) * 100
+#### Healthy 171.1 (In a given year, do you or your family use prescription medicines?) ####
+Healthy171.1.ovrlavg <- mean(data$Q171.1b, na.rm = TRUE) * 100
+
+###Healthy 177 (Which Neglected Tropical Disease (NTD) have you or members of your household been affected with? Indicate all that apply)
+data$Q177b <- ifelse(data$Q177=="No one in my household has been infected by any of these diseases in the last 12 months", 0, ifelse(is.na(data$Q177), NA, 1))
+####Buruli_uncer
+#data$Buruli_uncer <- ifelse(data$Q177=="Buruli ulcer",1, ifelse(is.na(data$Q177), NA, 0))
+data$Buruli_uncer_count <- grepl("Buruli ulcer",data$Q177)
+Healthy177buruli.ovrlavg <- mean(data$Buruli_uncer_count, na.rm = TRUE) * 1000 
+#Chagas disease  
+#data$Chagas_disease <- ifelse(data$Q177=="Chagas disease",1, ifelse(is.na(data$Q177), NA, 0))
+data$Chagas_disease_count <- grepl("Chagas disease",data$Q177)
+Healthy177chagas.ovrlavg <- mean(data$Chagas_disease_count, na.rm = TRUE) * 1000 
+#Dengue and Chikungunya
+#data$Dengue_and_Chikungunya <- ifelse(data$Q177=="Dengue and Chikungunya",1, ifelse(is.na(data$Q177), NA, 0))
+data$dengue_count <- grepl("Dengue and Chikungunya",data$Q177)
+Healthy177dengue.ovrlavg <- mean(data$dengue_count, na.rm = TRUE) * 1000 
+#Dracunculiasis (guinea-worm disease)  
+#data$Dracunculiasis <- ifelse(data$Q177=="Dracunculiasis",1, ifelse(is.na(data$Q65), NA, 0))
+data$dracunculiasis_count <- grepl("Dracunculiasis",data$Q177)
+Healthy177dracunculiasis.ovrlavg <- mean(data$dracunculiasis_count, na.rm = TRUE) * 1000 
+#Echinococcosis
+#data$Echinococcosis <- ifelse(data$Q177=="Echinococcosis",1, ifelse(is.na(data$Q177), NA, 0))
+data$echinococcosis_count <- grepl("Echinococcosis",data$Q177)
+Healthy177echinococcosis.ovrlavg <- mean(data$echinococcosis_count, na.rm = TRUE) * 1000
+#Foodborne trematodiases  
+data$Foodbornes_count <- grepl("Foodborne trematodiases",data$Q177)
+Healthy177foodborne.ovrlavg <- mean(data$Foodbornes_counts, na.rm = TRUE) * 1000
+#Human African trypanosomiasis (sleeping sickness)
+data$trypanosomiasis_count <- grepl("Human African trypanosomiasis (sleeping sickness)",data$Q177)
+Healthy177trypanosomiasis.ovrlavg <- mean(data$trypanosomiasis_count, na.rm = TRUE) * 1000
+#Leishmaniasis
+data$leishmaniasis_count <- grepl("Leishmaniasis",data$Q177)
+Healthy177leishmaniasis.ovrlavg <- mean(data$leishmaniasis_count, na.rm = TRUE) * 1000
+#Leprosy (Hansen's disease)  
+data$Leprosy_count <- grepl("Leprosy (Hansen's disease)",data$Q177)
+Healthy177Leprosy.ovrlavg <- mean(data$Leprosy_count, na.rm = TRUE) * 1000
+#Lymphatic filariasis  
+data$Lymphatic_count <- grepl("Lymphatic filariasis",data$Q177)
+Healthy177Lymphatic.ovrlavg <- mean(data$Lymphatic_count, na.rm = TRUE) * 1000
+#Mycetoma, chromoblastomycosis and other deep mycoses
+data$mycoses_count <- grepl("Mycetoma, chromoblastomycosis and other deep mycoses",data$Q177)
+Healthy177mycoses.ovrlavg <- mean(data$mycoses_count, na.rm = TRUE) * 1000
+#Onchocerciasis (river blindness) 
+data$Onchocerciasis_count <- grepl("Onchocerciasis (river blindness)",data$Q177)
+Healthy177onchocerciasis.ovrlavg <- mean(data$Onchocerciasis_count, na.rm = TRUE) * 1000
+#Rabies  
+data$rabies_count <- grepl("Rabies",data$Q177)
+Healthy177rabies.ovrlavg <- mean(data$rabies_count, na.rm = TRUE) * 1000
+#Scabies and other ectoparasites
+data$ectoparasites_count <- grepl("Scabies and other ectoparasites",data$Q177)
+Healthy177ectoparasites.ovrlavg <- mean(data$ectoparasites_count , na.rm = TRUE) * 1000
+#Schistosomiasis 
+data$schistosomiasis_count <- grepl("Schistosomiasis",data$Q177)
+Healthy177schistosomiasis.ovrlavg <- mean(data$schistosomiasis_count, na.rm = TRUE) * 1000
+#Soil-transmitted helminthiases  
+data$helminthiases_count <- grepl("Soil-transmitted helminthiases",data$Q177)
+Healthy177helminthiases.ovrlavg <- mean(data$helminthiases_count, na.rm = TRUE) * 100
+#Snakebite envenoming 
+data$envenoming_count <- grepl("Snakebite envenoming",data$Q177)
+Healthy177envenoming.ovrlavg <- mean(data$envenoming_count, na.rm = TRUE) * 100
+#Taeniasis/Cysticercosis  
+data$taeniasis_count <- grepl("Taeniasis/Cysticercosis",data$Q177)
+Healthy177taeniasis.ovrlavg <- mean(data$taeniasis_count, na.rm = TRUE) * 100
+#Trachoma
+data$trachoma_count <- grepl("Trachoma",data$Q177)
+Healthy177trachoma.ovrlavg <- mean(data$trachoma_count, na.rm = TRUE) * 100
+#Yaws (Endemic treponematoses) 
+data$yaws_count <- grepl("Yaws (Endemic treponematoses)",data$Q177)
+Healthy177yaws.ovrlavg <- mean(data$yaws_count, na.rm = TRUE) * 100
+
+###Healthy 180 (Do you have access to vaccinations? )
+Healthy180.ovrlavg <- mean(data$Q180b, na.rm = TRUE) * 100
+###Healthy 181 (Are you able to afford vaccinations )
+Healthy181.ovrlavg <- mean(data$Q181b, na.rm = TRUE) * 100
+###Healthy 182 (Have you received vaccinations)
+Healthy182.ovrlavg <- mean(data$Q182b, na.rm = TRUE) * 100
+
 ```
 
 # 3. Healthy Lives
@@ -492,7 +591,7 @@ In the past 12 months, `r round(HealthyF89.ovrlavg,2)`% of all participants have
 
 ## Diseases
 
-In the sample, `r round(Healthy65.ovrlavg,2)`% of participants had a disease. The following are the proportions for specific diseases:
+In the sample, `r round(Healthy65.ovrlavg,2)`% of participants had a disease, and `r round(HealthyF170.ovrlavg,2)`% of participants had someone in their household been affected with a disease in the last 12 months.The following are the proportions for specific diseases:
 
 i.  HIV - `r round(Healthy65hiv.ovrlavg,2)` out of 1000 have HIV.
 
@@ -502,24 +601,68 @@ iii. Malaria - `r round(Healthy65mal.ovrlavg,2)` out of 1000 have malaria.
 
 iv. Hepatitis B - `r round(Healthy65hepb.ovrlavg,2)` out of 1000 have Hepatitis B.
 
+## Other Diseases
+i. Buruli ulcer  - `r roung(Healthy177buruli.ovrlavg,2)`out of 1000 have Buruli ulcer.
+
+ii. Chagas disease - `r roung(Healthy177chagas.ovrlavg,2)`out of 1000 have Chagas disease.
+
+iii. Dengue and Chikungunya -  `r roung(Healthy177dengue.ovrlavg,2)`out of 1000 have Dengue and Chikungunya.
+
+iV. Dracunculiasis (guinea-worm disease)  - `r roung(Healthy177dracunculiasis.ovrlavg,2)`out of 1000 have Dracunculiasis (guinea-worm disease) .
+
+v. Echinococcosis - `r roung(Healthy177echinococcosis.ovrlavg,2)`out of 1000 have Echinococcosis .
+
+vi. Foodborne trematodiases - `r roung(Healthy177foodborne.ovrlavg,2)`out of 1000 have Foodborne trematodiases . 
+
+vii. Human African trypanosomiasis (sleeping sickness)  - `r roung(Healthy177trypanosomiasis.ovrlavg,2)`out of 1000 have Human African trypanosomiasis (sleeping sickness) . 
+
+viii. Leishmaniasis - `r roung(Healthy177leishmaniasis.ovrlavg,2)`out of 1000 have Leishmaniasis .
+
+ix. Leprosy (Hansen's disease)  - `r roung(Healthy177Leprosy.ovrlavg,2)`out of 1000 have Leprosy (Hansen's disease) .
+
+x. Lymphatic filariasis  - `r roung(Healthy177Lymphatic.ovrlavg,2)`out of 1000 have Lymphatic filariasis .
+
+xi. Mycetoma, chromoblastomycosis and other deep mycoses - `r roung(Healthy177mycoses.ovrlavg,2)`out of 1000 have Mycetoma, chromoblastomycosis and other deep mycoses .
+
+xii. Onchocerciasis (river blindness) - `r roung(Healthy177onchocerciasis.ovrlavg,2)`out of 1000 have Onchocerciasis (river blindness) .
+
+xiii. Rabies -`r roung(Healthy177rabies.ovrlavg,2)`out of 1000 have Rabies .
+
+xiv. Scabies and other ectoparasites  -`r roung(Healthy177ectoparasites.ovrlavg,2)`out of 1000 have cabies and other ectoparasites .
+
+xv. Schistosomiasis -`r roung(Healthy177schistosomiasis.ovrlavg,2)`out of 1000 have Schistosomiasis .
+
+xvi. Soil-transmitted helminthiases -`r roung(Healthy177helminthiases.ovrlavg,2)`out of 1000 have Soil-transmitted helminthiases .
+
+xvii. Snakebite envenoming  -`r roung(Healthy177envenoming.ovrlavg,2)`out of 1000 have Snakebite envenoming .
+
+xviii. Taeniasis/Cysticercosis  -`r roung(Healthy177taeniasis.ovrlavg,2)`out of 1000 have Taeniasis/Cysticercosis .
+
+xix. Trachoma -`r roung(Healthy177trachoma.ovrlavg,2)`out of 1000 have Trachoma .
+
+xx. Yaws (Endemic treponematoses)  -`r roung(Healthy177yaws.ovrlavg,2)`out of 1000 have Yaws (Endemic treponematoses) .
+
+
 ## Health Care Access
 
 `r round(Healthy69.ovrlavg,2)`% of the partcipants know of access to substance abuse treatment, `r round(Healthy83.ovrlavg,2)`% have access to health coverage, and `r round(Healthy85.ovrlavg,2)`% have current health insurance.
 
-Additionally, `r round(Healthy73.ovrlavg,2)`% have access to medication, `r round(Healthy75.ovrlavg,2)`% can afford the medicine their family needs, and `r round(Healthy75.ovrlavg,2)`% can provide medicine when their family needs it.
+`r round(Healthy75.ovrlavg,2)`% can afford the medicine their family needs, `r round(Healthy75.ovrlavg,2)`% can provide medicine when their family needs it, and `r round(Healthy171.1.ovrlavg,2)`has an access to prescription medicines.
+
+Additionally, `r round(Healthy180.ovrlavg,2)`% of the participants have access to vaccinations, `r round(Healthy181.ovrlavg,2)`% can afford vaccinations, and `r round(Healthy182.ovrlavg,2)`% have received vaccinations.
 
 ## Comparison to other Households
 
 ```{r}
 order <- c("1","2","3","4","5","6","7","8","9")
-data$Q87 <- factor(data$Q87, levels = order)
+#data$Q87 <- factor(data$Q87, levels = order)
 data$Q87b <- as.numeric(data$Q87)
-data$Q63 <- factor(data$Q63, levels = order)
+#data$Q63 <- factor(data$Q63, levels = order)
 data$Q63b <- as.numeric(data$Q63)
 data$Q95 <- factor(data$Q95, levels = order)
 data$Q95b <- as.numeric(data$Q95)
-data$Q71 <- factor(data$Q71, levels = order)
-data$Q71b <- as.numeric(data$Q71)
+#data$Q71 <- factor(data$Q71, levels = order)
+#data$Q71b <- as.numeric(data$Q71)
 ```
 
 Participants were asked to imagine that all the women in their community are on a step on a ladder, from 1 to 9, where 9 indicates the women who are healthiest on the top step, and 1 indicates the women who are the least healthy on the bottom step. The average response was `r round(mean(data$Q87b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q87b, na.rm = TRUE) < median(data$Q87b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q87b, na.rm = TRUE) > median(data$Q87b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q87b, na.rm = TRUE) == median(data$Q87b, na.rm = TRUE)) {"normal."} `
@@ -534,12 +677,14 @@ plot1 <- data %>%
   filter(!Q87 == "") %>%
   ggplot(aes(x = Q87, fill = Q87)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  scale_x_discrete(labels= c("Less healthy than other women" = "Less","About the same level of health as other women" = "Same","More healthy than other women" = "More")) +
   labs(
-    title = expression(atop("Ladder Comparison on", "Women's Health")),
+    title = expression(atop("Comparison on", "Women's Health")),
     x = "",
-    y = "Count"
-  )
+    y = "Count" 
+  ) 
+
 
 plot2 <- ggplot(data, aes(x = Q93, fill = Q93)) +
   geom_bar(show.legend = FALSE) +
@@ -555,74 +700,15 @@ plot3 <- data %>%
   filter(!Q63 == "") %>%
   ggplot(aes(x = Q63, fill = Q63)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  scale_x_discrete(labels= c("Less healthy than other households" = "Less","About the same level of health as other households" = "Same","More healthy than other households" = "More")) +
   labs(
-    title = expression(atop("Ladder Comparison on", "Healthy Newborns")),
+    title = expression(atop("Comparison on", "Healthy Newborns")),
     x = "",
-    y = "Count"
-  )
+    y = "Count" 
+  ) 
 
 grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
-```
-
-Participants were also asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the healthiest households on the top step, and 1 indicates the least healthy households on the bottom step. The average response was `r round(mean(data$Q95b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q95b, na.rm = TRUE) < median(data$Q95b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q95b, na.rm = TRUE) > median(data$Q95b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q95b, na.rm = TRUE) == median(data$Q95b, na.rm = TRUE)) {"normal."} `
-
-Participants were also asked to think about the last person who had a birthday in their household and imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates that person is the most mentally healthy on the top step, and 1 indicates that person is the least mentally healthy on the bottom step. The average response was `r round(mean(data$Q71b, na.rm = TRUE))` and the distribution was ``` r if(mean(data$Q71b, na.rm = TRUE) < median(data$Q71b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q71b, na.rm = TRUE) > median(data$Q71b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q71b, na.rm = TRUE) == median(data$Q71b, na.rm = TRUE)) {"normal."} `
-
-```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
-
-plot1 <- data %>%
-  filter(!Q95 == "") %>%
-  ggplot(aes(x = Q95, fill = Q95)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
-  labs(
-    title = "Ladder Comparison on Household Health",
-    x = "",
-    y = "Count"
-  )
-
-plot2 <- data %>%
-  filter(!Q71 == "") %>%
-  ggplot(aes(x = Q71, fill = Q71)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
-  labs(
-    title = "Ladder Comparison on Mental Health",
-    x = "",
-    y = "Count"
-  )
-
-grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
-```
-
-When asked to compare their household's access to health care to other households in the community `r round(mean(data$Q197 == "Worse access to health care than most households", na.rm = TRUE)*100)`% said they had worse access to health care than most households, `r round(mean(data$Q197 == "About the same access to health care as most households", na.rm = TRUE)*100)`% said they had about the same access to health care as most households, and `r round(mean(data$Q197 == "Better access to health care than most households", na.rm = TRUE)*100)`% said they had better access to health care than most households.
-
-When asked to compare their household's access to affordable medications to other households in the community `r round(mean(data$Q79 == "Worse access to affordable medications than most households", na.rm = TRUE)*100)`% said they had worse access to affordable medications than most households, `r round(mean(data$Q79 == "About the same access to affordable medications as most households", na.rm = TRUE)*100)`% said they had about the same access to affordable medications as most households, and `r round(mean(data$Q79 == "Better access to affordable medications than most households", na.rm = TRUE)*100)`% said they had better access to affordable medications than most households.
-
-```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
-
-plot1 <- ggplot(data, aes(x = Q197, fill = Q197)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("Better access to health care than most households" = "Better","About the same access to health care as most households" = "Same","Worse access to health care than most households" = "Worse")) +
-  labs(
-    title = "Access to Health Care Comparison",
-    x = "",
-    y = "Count" 
-  ) + coord_flip() 
-
-plot2 <- ggplot(data, aes(x = Q79, fill = Q79)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("Better access to affordable medications than most households" = "Better","About the same access to affordable medications as most households" = "Same","Worse access to affordable medications than most households" = "Worse")) +
-  labs(
-    title = expression(atop("Access to Affordable Medication", "Comparison")),
-    x = "",
-    y = "Count" 
-  ) + coord_flip() 
-
-grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 ```
 
 # 4. Quality Education
