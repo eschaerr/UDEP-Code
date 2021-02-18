@@ -39,6 +39,9 @@ data$Q13b <- as.factor(ifelse(data$Q13 == "Yes",1,0))
 
 # Q17b Religion - yes (1), no (0)
 data$Q17b <- as.factor(ifelse(data$Q17 == "Yes", 1, 0))
+## prep for religion graph
+data$Q19b <- factor(data$Q19, levels = c("Bahaism", "Buddhism", "Christianity", "Confucianism", "Hinduism", "Islam", "Jainism", "Judaism", "Shintoism", "Sikhism", "Other"))
+
 
 # Q21b, Q23b Phone & Internet - yes (1), no (0)
 data$Q21b <- as.factor(ifelse(data$Q21 == "Yes", 1, 0))
@@ -75,13 +78,52 @@ gender_plot <- data %>%
     y = ""
   )
 
-# Bar Chart of Age -= want to change this to show a more appropriate 
+# Bar Chart of Age -= want to change this to show a more appropriate distribution (histogram. not enough data yet)
 age_plot <- data %>% 
   ggplot(aes(x=Q6))+
   geom_bar(show.legend=FALSE,fill="#56B4E9")+
-  scale_x_discrete(name="")+
-  scale_y_discrete(name="Age")+
+ # scale_x_discrete(name="")+
+ # scale_y_discrete(name="Age")+
   labs(title = "Age of Respondents")
+
+# Bar Chart of Disability
+disability_plot <- data %>%
+  filter(!Q13b == "") %>%
+  ggplot(aes(y = Q13b, fill = Q13b)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values=c("#999999", "#999999")) +
+  scale_y_discrete(labels= c("0" = "No Disability","1" = "Disability")) + 
+  labs(
+    title = "Count of Respondents with a Disability",
+    x = "Count",
+    y = ""
+  )
+
+# Bar Chart of Religion
+religion_plot1 <- data %>%
+  filter(!Q17b == "") %>%
+  ggplot(aes(x = Q17b, fill = Q17b)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values=c("#56B4E9", "#56B4E9")) +
+  scale_x_discrete(labels= c("0" = "No Religion","1" = "Religion")) + 
+  labs(
+    title = "Count of Respondents who Identify with a Religion",
+    y = "Count",
+    x = ""
+  )
+
+# Which Religions - how to get options to show up even if there were no respondents with that answer??
+religion_plot2 <- data %>%
+  filter(!Q19b == "") %>%
+  ggplot(aes(x = Q19b, fill = Q19b)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9")) +
+  #scale_x_discrete(labels= c("0" = "No Religion","1" = "Religion")) + 
+  labs(
+    title = "Count of Respondents who Identify with a Religion",
+    y = "Count",
+    x = ""
+  )
 
 
 
