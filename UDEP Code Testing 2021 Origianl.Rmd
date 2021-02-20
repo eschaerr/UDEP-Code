@@ -63,7 +63,7 @@ data$Q184b <- factor(data$Q184,levels=c("American Indian or Alaska Native", "Asi
 data$Q185b <- factor(data$Q185,levels=c("Single", "In a relationship", "Engaged", "Married", "Widowed", "Separated", "Divorced", "I prefer not to respond", "Don't know"))
 ```
 
-```{r Demographics Graphs}
+```{r Demographics Graphs fig.height=3,fig.width=8, warnings = FALSE}
 # Count of Men and Women 
 # want to make this proportion instead? 
 gender_plot <- data %>%
@@ -73,18 +73,19 @@ gender_plot <- data %>%
   scale_fill_manual(values=c("#999999", "#999999")) +
   scale_y_discrete(labels= c("0" = "Male","1" = "Female")) + 
   labs(
-    title = "Count of Male and Female Respondents",
+    title = "Male and Female Respondents",
     x = "Count",
     y = ""
   )
 
-# Bar Chart of Age -= want to change this to show a more appropriate distribution (histogram. not enough data yet)
+# Histogram of Age
 age_plot <- data %>% 
-  ggplot(aes(x=Q6))+
-  geom_bar(show.legend=FALSE,fill="#56B4E9")+
- # scale_x_discrete(name="")+
- # scale_y_discrete(name="Age")+
-  labs(title = "Age of Respondents")
+  ggplot(aes(x=as.numeric(Q6) ))+
+  geom_histogram(show.legend=FALSE,fill="#56B4E9")+
+  labs(title = "Age of Respondents",
+       x = "Age",
+       y = "Count")
+
 
 # Bar Chart of Disability
 disability_plot <- data %>%
@@ -94,7 +95,7 @@ disability_plot <- data %>%
   scale_fill_manual(values=c("#999999", "#999999")) +
   scale_y_discrete(labels= c("0" = "No Disability","1" = "Disability")) + 
   labs(
-    title = "Count of Respondents with a Disability",
+    title = "Disability",
     x = "Count",
     y = ""
   )
@@ -117,15 +118,18 @@ religion_plot2 <- data %>%
   filter(!Q19b == "") %>%
   ggplot(aes(x = Q19b, fill = Q19b)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9")) +
+  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9")) +
   #scale_x_discrete(labels= c("0" = "No Religion","1" = "Religion")) + 
   labs(
-    title = "Count of Respondents who Identify with a Religion",
+    title = "Religious Identities",
     y = "Count",
     x = ""
   )
 
-
+# Print Graphs
+grid.arrange(gender_plot, age_plot,ncol = 2)
+disability_plot
+grid.arrange(religion_plot1, religion_plot2, nrow = 2)
 
 ```
 
