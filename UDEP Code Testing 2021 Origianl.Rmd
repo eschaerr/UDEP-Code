@@ -1916,8 +1916,8 @@ plot4 <- data %>%
   filter(!is.na(Q50.1b)) %>%
 ggplot(aes(x = as.factor(Q50.1b), fill = as.factor(Q50.1b))) +
   geom_bar(show.legend = FALSE) +
-  scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern")) +
-  scale_fill_manual(values = c("#999999","#999999","#999999")) +
+  scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern", "4"="Not needed","5"="Needed"  )) +
+  scale_fill_manual(values = c("#999999","#999999","#999999","#999999")) +
   labs(x = "Source", y= "Count", title= "Lighting Fuel Source")
 
 grid.arrange(plot1, plot2, plot3, plot4, nrow = 2, ncol=2)
@@ -1942,7 +1942,7 @@ ggplot(aes(x = as.factor(Q43b), fill = as.factor(Q43b))) +
 plot2 <- ggplot(data, aes(x = Q56, fill = Q56)) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels=c("Worse access to electricity than most households"=expression(atop("Worse access to electricity", "than most households")),"About the same access to electricity as most households"=expression(atop("About the same access to","electricity as most households")),"Better access to electricity than most households"=expression(atop("Better access to electricity","than most households")))) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   labs(
     title = expression(atop("Community Electricity","Comparison")),
     x = "",
