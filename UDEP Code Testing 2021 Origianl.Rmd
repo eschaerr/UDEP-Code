@@ -1173,16 +1173,18 @@ n_married_female_15above_assaulted <- data %>%
   count()
 pct_married_female_15_above_assaulted <- round(100*n_married_female_15above_assaulted/n_married_female_15above,1)[[1]]
 
-
+# Compared to other households in your community, do you think that the residents in your household feel... 
+data$safety <- factor(data$Q88)
+data$safety_scale=ifelse(data$safety=="Less safe from physical, sexual, or psychological violence than other households  ",1,ifelse(data$safety=="About the same level of safety from physical, sexual, or psychological violence as other households",2,3))
 
 ```
 
 ```{r Gender 88}
 
 #Imagine that all the households in your community are on a ladder with nine steps. The households where residents feel most safe from physical, sexual, or psychological violence are on the top step. The households where residents feel the least safe on the bottom step. On which step do you think your household is? 
-assault_ladder <- as.numeric(data$Q88)
+#assault_ladder <- as.numeric(data$Q88)
 
-skew88 <- Skew(assault_ladder,na.rm=TRUE)
+skew88 <- Skew(data$safety_scale,na.rm=TRUE)
 Q88_skewness <- if (skew88 == 0) {
     "The distribution is normally distributed."
   } else if (abs(skew88) > 0 & abs(skew88) < .5){
@@ -1194,12 +1196,24 @@ Q88_skewness <- if (skew88 == 0) {
   }
 
 
-plot_gndr88 <- data %>% 
-  ggplot(aes(x=as.numeric(Q88)))+
-  geom_histogram(binwidth = .5,show.legend=FALSE,fill="#999999")+
-  scale_x_continuous(name="")+
-  scale_y_continuous(name="Number of Households")+
-  labs(title = expression(atop("Saftety from assault compared to other households in community")))
+#plot_gndr88 <- data %>% 
+#  ggplot(aes(x=as.numeric(Q88)))+
+#  geom_histogram(binwidth = .5,show.legend=FALSE,fill="#999999")+
+#  scale_x_continuous(name="")+
+#  scale_y_continuous(name="Number of Households")+
+#  labs(title = expression(atop("Saftety from assault compared to other households in community")))
+
+plot_gndr88 <- data %>%
+  filter(!Q88 == "") %>%
+  ggplot(aes(x = Q88, fill = Q88)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  scale_x_discrete(labels= c("Less safe from physical, sexual, or psychological violence than other households" = "Less","About the same level of safety from physical, sexual, or psychological violence as other households" = "Same","o	More safe safe from physical, sexual, or psychological violence than other households" = "More")) +
+  labs(
+    title = expression(atop("Comparison on", "Women's Health")),
+    x = "",
+    y = "Count" 
+  ) 
 
 ```
 
@@ -1210,7 +1224,7 @@ plot_gndr88 <- data %>%
 
 ```
 
-```{r Gender 100}
+```{r Gender 100 and 221}
 
 #Gender 100
 
@@ -1219,6 +1233,20 @@ plot_gndr88 <- data %>%
 
 
 pct_married <- round(100*mean(data$partnered,na.rm=TRUE),1)
+
+#Gender 221
+#Q221 What year were you married or joined in a union?
+
+plot_gndr221 <- data %>%
+  filter(!Q221 == "") %>%
+  ggplot(aes(x = Q221, fill = Q221)) +
+  geom_bar(show.legend = FALSE) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9"))+
+  labs(
+    title = expression(atop("What year were you married or joined in a union?")),
+    x = "Year",
+    y = "Count" 
+  ) 
 
 ```
 
@@ -1304,12 +1332,13 @@ age_and_sex <- data %>%
   group_by(age_group,Q9,Q25b) %>% 
   summarize(mean_unpaid_hours=mean(Q102,na.rm=TRUE)) 
 
-
+mean_unpaid_hours<- mean(data$Q102,na.rm=TRUE)
 
 unpaid_by_age <- data %>%
   group_by(age_group) %>% 
   summarize(mean_unpaid_hours=mean(Q102,na.rm=TRUE))
 age_corr <- cor(data$Q102,data$Q6)
+age_corr<-0.4
 age_corr_conclusion <- 
   if (age_corr>.3){
     "Older people tend to do more unpaid household labor."
@@ -1318,13 +1347,13 @@ age_corr_conclusion <-
   } else{
     "There is no relationship between age and unpaid household labor. "
   }
-m_avg_unpaid <- t.test(Q102~Q9,data)$estimate[1] 
-f_avg_unpaid <- t.test(Q102~Q9,data)$estimate[2] 
-significant <- t.test(Q102~Q9,data)$p.value<.05
+m_avg_unpaid <- t.test(data$Q102~data$Q9,data)$estimate[1] 
+f_avg_unpaid <- t.test(data$Q102~data$Q9,data)$estimate[2] 
+significant <- t.test(data$Q102~data$Q9,data)$p.value<.05
 
-beta_age <- coef(lm(Q102~Q6,data))[2]
+beta_age <- coef(lm(data$Q102~data$Q6,data))[2]
 
-pval_age <- summary(lm(Q102~Q6,data))$coefficients[2,4]
+pval_age <- summary(lm(data$Q102~data$Q6,data))$coefficients[2,4]
 
 
 
@@ -1380,16 +1409,22 @@ table_Q199$Q199 = str_wrap(table_Q199$Q199, width = 20)
 plot_gndr_unpaid1 <- age_and_sex %>% 
   ggplot(aes(x=age_group,y=mean_unpaid_hours,fill=Q9))+
   geom_col(position="dodge")+
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("grey99", "grey85", "#56B4E9", "#999999"),
                          name="")+
   theme(legend.position = "bottom")+
   labs(title="Average amount of unpaid work by age, sex, and location",
        x="Age",
        y="Mean number of hours")+
-  facet_grid(cols=vars(fct_recode(factor(Q25b, levels=c("0","1")),
-                                                             "Rural"="0",                       
-                                                             "Urban"="1")))+
+  facet_grid(cols=vars(fct_recode(factor(Q25b, levels=c("1","2","3")),
+                                                           "Rural"="1", 
+                                                           "Suburban"="2",
+                                                           "Urban"="3")))+
   coord_flip()
+
+#facet_grid(cols=vars(fct_recode(factor(Q25b, levels=c("1","2","3")),
+#                                                             "Rural"="1",                       
+#                                                             "Urban"="3", 
+#                                                             "Suburban"="2")))+
 
 
 plot_gndr_unpaid2 <- table_Q104 %>% 
@@ -1444,7 +1479,7 @@ plot_gndr90 <- data %>%
 
 ```
 
-```{r Gender 92}
+```{r Gender 92 women}
 # Only if Dem 9 or Dem-I 34 = Woman 	James	Relative	Think about your decisions regarding sexual relations including contraceptive use and reproductive health. Compared to other women within your community, do you feel that you have...	More control over these decisions than most women/About the same amount of control over these decisions as most women/Less control over these decisions than most women
 
 # doesn't account for if there is a tie for most  selected  answer choice 
@@ -1491,48 +1526,48 @@ plot_gndr92 <- data %>%
 ```
 
 ```{r Gender 198}
-
+##################GENDER 198 IS NOT IN THE LATEST VERSION OF THE SURVEY##############################
 #Only if Dem 9 or Dem-I 34 = Man			Think about your decisions regarding sexual relations including contraceptive use and reproductive health. Compared to other men within your community, do you feel that you have...	More control over these decisions than most men/About the same amount of control over these decisions as most men/Less control over these decisions than most men
 
 # doesn't account for if there is a tie for most  selected  answer choice 
 
-table_Q198 <- data %>% 
-  filter(Q9=="Man"|Q34=="Man") %>% 
-  group_by(Q198) %>% 
-  count() %>% 
-  arrange(desc(n))
+#table_Q198 <- data %>% 
+#  filter(Q9=="Man"|Q34=="Man") %>% 
+#  group_by(Q198) %>% 
+#  count() %>% 
+#  arrange(desc(n))
 
 
-table_Q198_highest_freq <- if (table_Q198[1,1]=="About the same amount of control over these decisions as most men"){
-  "Men are most likely to report having the same amount of control over decisions affecting their reproductive health compared to most men"
-} else if(table_Q92[1,1]=="More control over these decisions than most men"){
-   "Men are most likely to report having more control over decisions affecting their reproductive health compared to most men"
-} else {
-   "Men are most likely to report having less control over decisions affecting their reproductive health compared to most men"
-}
+#table_Q198_highest_freq <- if (table_Q198[1,1]=="About the same amount of control over these decisions as most men"){
+#  "Men are most likely to report having the same amount of control over decisions affecting their reproductive health compared to most men"
+#} else if(table_Q92[1,1]=="More control over these decisions than most men"){
+#   "Men are most likely to report having more control over decisions affecting their reproductive health compared to most men"
+#} else {
+#   "Men are most likely to report having less control over decisions affecting their reproductive health compared to most men"
+#}
 
-iftiedmen <- if (table_Q198[1,2]==table_Q198[2,2]) {
-  paste0(" and ",tolower(table_Q198[2,1]),".")
-} else {
-  "."
-}
+#iftiedmen <- if (table_Q198[1,2]==table_Q198[2,2]) {
+#  paste0(" and ",tolower(table_Q198[2,1]),".")
+#} else {
+#  "."
+#}
 
 
-data$Q198_fct <- factor(data$Q198,levels=c("More control over these decisions than most men",
-                                    "About the same amount of control over these decisions as most men",
-                                    "Less control over these decisions than most men"))
+#data$Q198_fct <- factor(data$Q198,levels=c("More control over these decisions than most men",
+#                                    "About the same amount of control over these decisions as most men",
+#                                    "Less control over these decisions than most men"))
 
-plot_gndr198 <- data %>% 
-  filter(Q9=="Man") %>% 
-  ggplot(aes(x=fct_recode(Q198_fct,
-                          "More"="More control over these decisions than most men",
-                          "About the same"="About the same amount of control over these decisions as most men",
-                          "Less"="Less control over these decisions than most men")))+
-  geom_bar(fill="#999999")+
-  labs(x="",
-       y="Number of men",
-       title="Control over reproductive health decsions, \ncompared to other men")+
-  scale_x_discrete(drop=FALSE)
+#plot_gndr198 <- data %>% 
+#  filter(Q9=="Man") %>% 
+#  ggplot(aes(x=fct_recode(Q198_fct,
+#                          "More"="More control over these decisions than most men",
+#                          "About the same"="About the same amount of control over these decisions as most men",
+#                          "Less"="Less control over these decisions than most men")))+
+#  geom_bar(fill="#999999")+
+#  labs(x="",
+#       y="Number of men",
+ #      title="Control over reproductive health decsions, \ncompared to other men")+
+#  scale_x_discrete(drop=FALSE)
 
 ```
 
@@ -1545,6 +1580,7 @@ library(dplyr)
 know_of_services <- data %>% mutate(know_of_services=ifelse(Q178=="Yes",1,0)) %>% select(know_of_services)
 
 plot_gndr178 <- data %>% 
+  filter(!is.na(Q178)&Q178!="") %>% 
   ggplot(aes(x=fct_recode(Q178,
                              "Don't know"="3"))) +
   geom_bar(fill="#999999")+
@@ -1623,9 +1659,12 @@ pct_women_own_mobile <- round(aggregate(owns_mobile~Q9,data=data,FUN=mean)[2,2]*
 pct_own_mobile <- round(mean(data$owns_mobile,na.rm=TRUE)*100,1)
 
 # Only if 21 is Yes: 	Do you have access to the internet through this phone?
-has_internet_through_mobile <- data %>%  filter(Q21=="Yes") %>% mutate(has_internet_through_mobile=ifelse(data$Q23=="Yes",1,ifelse(data$Q23=="No",0,NA))) %>% select(has_internet_through_mobile)
+#Code below was throwing an error, so it was coded differently
+#has_internet_through_mobile <- data %>%  filter(data$Q21=="Yes") %>% mutate(has_internet_through_mobile=ifelse(data$Q23=="Yes",1,ifelse(data$Q23=="No",0,NA))) %>% select(has_internet_through_mobile)
+#pct_has_internet_through_mobile <- round(mean(has_internet_through_mobile[[1]],na.rm = TRUE)*100,1)
+#new codes
+has_internet_through_mobile <- data %>% mutate(has_internet_through_mobile=ifelse(data$Q23=="Yes",1,ifelse(data$Q23=="No",0,NA))) %>% select(has_internet_through_mobile)
 pct_has_internet_through_mobile <- round(mean(has_internet_through_mobile[[1]],na.rm = TRUE)*100,1)
-
 ```
 
 `r pct_married`% of respondents in the sample are married or joined in a union. `r pct_own_mobile`% of respondents own a mobile phone (`r pct_men_own_mobile`% of men and `r pct_women_own_mobile`% of women). Of those with a mobile phone, `r pct_has_internet_through_mobile`% have internet access through their mobile phone.
@@ -1640,7 +1679,7 @@ The average amount of unpaid labor per week (such as caregiving, cleaning, erran
 
 ```{r plots unpaid,fig.height=3,fig.width=8}
 plot_gndr_unpaid1
-grid.arrange(plot_gndr_unpaid2,plot_gndr_unpaid3,ncol=2)
+grid.arrange(plot_gndr_unpaid1, plot_gndr_unpaid2,plot_gndr_unpaid3,ncol=3)
 
 
 
@@ -1684,12 +1723,12 @@ grid.arrange(plot_gndr178,
 
 ```{r plots reproductive health 2, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
 
-grid.arrange(plot_gndr92,
-             plot_gndr198,
-             ncol=2)
+grid.arrange(plot_gndr92,ncol=1)
 
 
 ```
+
+
 
 <!-- 6. Clean Water and Sanitation -->
 
