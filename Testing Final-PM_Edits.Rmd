@@ -329,13 +329,13 @@ Participants were also asked to imagine that all children under 5-years-old in t
 
 plot1 <- ggplot(data, aes(x = Q70, fill = Q70)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("More food to eat than most households" = "More","About the same amount of food to eat as most households" = "Same","Less food to eat than most households" = "Less")) +
   labs(
     title = "Amount of Food to Eat Comparison",
     x = "",
     y = "Count" 
-  ) + coord_flip() 
+  ) + coord_flip()
 
 plot2 <- data %>%
   filter(!Q72 == "") %>%
