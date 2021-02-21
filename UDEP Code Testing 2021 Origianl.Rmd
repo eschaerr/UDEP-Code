@@ -1173,7 +1173,8 @@ n_married_female_15above <- data %>%
 n_married_female_15above_assaulted <- data %>%
   filter(Q6b_15==1,partnered==1,Q9=="Woman",assault_victim==1) %>% 
   count()
-pct_married_female_15_above_assaulted <- round(100*n_married_female_15above_assaulted/n_married_female_15above,1)[[1]]
+pct_married_female_15_above_assaulted <- round(100*nrow(n_married_female_15above_assaulted)/nrow(n_married_female_15above),1)[[1]]
+
 
 # Compared to other households in your community, do you think that the residents in your household feel... 
 data$safety <- factor(data$Q88)
