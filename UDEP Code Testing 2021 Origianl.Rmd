@@ -63,7 +63,7 @@ data$Q184b <- factor(data$Q184,levels=c("American Indian or Alaska Native", "Asi
 data$Q185b <- factor(data$Q185,levels=c("Single", "In a relationship", "Engaged", "Married", "Widowed", "Separated", "Divorced", "I prefer not to respond", "Don't know"))
 ```
 
-```{r Demographics Graphs fig.height=3,fig.width=8, warnings = FALSE}
+```{r Demographics Graphs, fig.height=3,fig.width=8, warnings = FALSE}
 # Count of Men and Women 
 # want to make this proportion instead? 
 gender_plot <- data %>%
@@ -703,45 +703,45 @@ iii. Malaria - `r round(Healthy65mal.ovrlavg,2)` out of 1000 have malaria.
 iv. Hepatitis B - `r round(Healthy65hepb.ovrlavg,2)` out of 1000 have Hepatitis B.
 
 ## Other Diseases
-i. Buruli ulcer  - `r roung(Healthy177buruli.ovrlavg,2)`out of 1000 have Buruli ulcer.
+i. Buruli ulcer  - `r round(Healthy177buruli.ovrlavg,2)`out of 1000 have Buruli ulcer.
 
-ii. Chagas disease - `r roung(Healthy177chagas.ovrlavg,2)`out of 1000 have Chagas disease.
+ii. Chagas disease - `r round(Healthy177chagas.ovrlavg,2)`out of 1000 have Chagas disease.
 
-iii. Dengue and Chikungunya -  `r roung(Healthy177dengue.ovrlavg,2)`out of 1000 have Dengue and Chikungunya.
+iii. Dengue and Chikungunya -  `r round(Healthy177dengue.ovrlavg,2)`out of 1000 have Dengue and Chikungunya.
 
-iV. Dracunculiasis (guinea-worm disease)  - `r roung(Healthy177dracunculiasis.ovrlavg,2)`out of 1000 have Dracunculiasis (guinea-worm disease) .
+iV. Dracunculiasis (guinea-worm disease)  - `r round(Healthy177dracunculiasis.ovrlavg,2)`out of 1000 have Dracunculiasis (guinea-worm disease) .
 
-v. Echinococcosis - `r roung(Healthy177echinococcosis.ovrlavg,2)`out of 1000 have Echinococcosis .
+v. Echinococcosis - `r round(Healthy177echinococcosis.ovrlavg,2)`out of 1000 have Echinococcosis .
 
-vi. Foodborne trematodiases - `r roung(Healthy177foodborne.ovrlavg,2)`out of 1000 have Foodborne trematodiases . 
+vi. Foodborne trematodiases - `r round(Healthy177foodborne.ovrlavg,2)`out of 1000 have Foodborne trematodiases . 
 
-vii. Human African trypanosomiasis (sleeping sickness)  - `r roung(Healthy177trypanosomiasis.ovrlavg,2)`out of 1000 have Human African trypanosomiasis (sleeping sickness) . 
+vii. Human African trypanosomiasis (sleeping sickness)  - `r round(Healthy177trypanosomiasis.ovrlavg,2)`out of 1000 have Human African trypanosomiasis (sleeping sickness) . 
 
-viii. Leishmaniasis - `r roung(Healthy177leishmaniasis.ovrlavg,2)`out of 1000 have Leishmaniasis .
+viii. Leishmaniasis - `r round(Healthy177leishmaniasis.ovrlavg,2)`out of 1000 have Leishmaniasis .
 
-ix. Leprosy (Hansen's disease)  - `r roung(Healthy177Leprosy.ovrlavg,2)`out of 1000 have Leprosy (Hansen's disease) .
+ix. Leprosy (Hansen's disease)  - `r round(Healthy177Leprosy.ovrlavg,2)`out of 1000 have Leprosy (Hansen's disease) .
 
-x. Lymphatic filariasis  - `r roung(Healthy177Lymphatic.ovrlavg,2)`out of 1000 have Lymphatic filariasis .
+x. Lymphatic filariasis  - `r round(Healthy177Lymphatic.ovrlavg,2)`out of 1000 have Lymphatic filariasis .
 
-xi. Mycetoma, chromoblastomycosis and other deep mycoses - `r roung(Healthy177mycoses.ovrlavg,2)`out of 1000 have Mycetoma, chromoblastomycosis and other deep mycoses .
+xi. Mycetoma, chromoblastomycosis and other deep mycoses - `r round(Healthy177mycoses.ovrlavg,2)`out of 1000 have Mycetoma, chromoblastomycosis and other deep mycoses .
 
-xii. Onchocerciasis (river blindness) - `r roung(Healthy177onchocerciasis.ovrlavg,2)`out of 1000 have Onchocerciasis (river blindness) .
+xii. Onchocerciasis (river blindness) - `r round(Healthy177onchocerciasis.ovrlavg,2)`out of 1000 have Onchocerciasis (river blindness) .
 
-xiii. Rabies -`r roung(Healthy177rabies.ovrlavg,2)`out of 1000 have Rabies .
+xiii. Rabies -`r round(Healthy177rabies.ovrlavg,2)`out of 1000 have Rabies .
 
-xiv. Scabies and other ectoparasites  -`r roung(Healthy177ectoparasites.ovrlavg,2)`out of 1000 have cabies and other ectoparasites .
+xiv. Scabies and other ectoparasites  -`r round(Healthy177ectoparasites.ovrlavg,2)`out of 1000 have cabies and other ectoparasites .
 
-xv. Schistosomiasis -`r roung(Healthy177schistosomiasis.ovrlavg,2)`out of 1000 have Schistosomiasis .
+xv. Schistosomiasis -`r round(Healthy177schistosomiasis.ovrlavg,2)`out of 1000 have Schistosomiasis .
 
-xvi. Soil-transmitted helminthiases -`r roung(Healthy177helminthiases.ovrlavg,2)`out of 1000 have Soil-transmitted helminthiases .
+xvi. Soil-transmitted helminthiases -`r round(Healthy177helminthiases.ovrlavg,2)`out of 1000 have Soil-transmitted helminthiases .
 
-xvii. Snakebite envenoming  -`r roung(Healthy177envenoming.ovrlavg,2)`out of 1000 have Snakebite envenoming .
+xvii. Snakebite envenoming  -`r round(Healthy177envenoming.ovrlavg,2)`out of 1000 have Snakebite envenoming .
 
-xviii. Taeniasis/Cysticercosis  -`r roung(Healthy177taeniasis.ovrlavg,2)`out of 1000 have Taeniasis/Cysticercosis .
+xviii. Taeniasis/Cysticercosis  -`r round(Healthy177taeniasis.ovrlavg,2)`out of 1000 have Taeniasis/Cysticercosis .
 
-xix. Trachoma -`r roung(Healthy177trachoma.ovrlavg,2)`out of 1000 have Trachoma .
+xix. Trachoma -`r round(Healthy177trachoma.ovrlavg,2)`out of 1000 have Trachoma .
 
-xx. Yaws (Endemic treponematoses)  -`r roung(Healthy177yaws.ovrlavg,2)`out of 1000 have Yaws (Endemic treponematoses) .
+xx. Yaws (Endemic treponematoses)  -`r round(Healthy177yaws.ovrlavg,2)`out of 1000 have Yaws (Endemic treponematoses) .
 
 
 ## Health Care Access
@@ -772,7 +772,7 @@ When asked to compare their household's support needed for a healthy birth to ot
 
 Participants were also asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the healthiest newborns on the top step, and 1 indicates the least healthy newborns on the bottom step. The average response was `r round(mean(data$Q63b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q63b, na.rm = TRUE) < median(data$Q63b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q63b, na.rm = TRUE) > median(data$Q63b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q63b, na.rm = TRUE) == median(data$Q63b, na.rm = TRUE)) {"normal."} `
 
-```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8 }
 
 plot1 <- data %>%
   filter(!Q87 == "") %>%
@@ -784,12 +784,12 @@ plot1 <- data %>%
     title = expression(atop("Comparison on", "Women's Health")),
     x = "",
     y = "Count" 
-  ) 
+  )
 
 
 plot2 <- ggplot(data, aes(x = Q93, fill = Q93)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_x_discrete(labels= c("Better support needed for a healthy birth than most households" = "Better","About the same support needed for a healthy birth as most households" = "Same","Less support needed for a healthy birth than most households" = "Less")) +
   labs(
     title = expression(atop("Support for Healthy", "Births Comparison")),
@@ -825,9 +825,11 @@ data$Q6ord <- cut(as.numeric(data$Q6),c(0,14,19,29,39,49,100),labels=c("Under 15
 
 plot1 <- data %>%
   filter(Q130 != "") %>%
+  # can take this out when we remove ladder question data from the data
+  filter(Q130 %in% c("More formal education than others", "About the same amount of formal education as others","Less formal education than others")) %>%
   ggplot(aes(y = Q130, fill = Q130)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_y_discrete(labels= c("More formal education than others" = "More","About the same amount of formal education as others" = "Same","Less formal education than others" = "Less")) +
   labs(
     title = "Comparison of Education",
@@ -988,7 +990,7 @@ school_levels <- c("No schooling completed","Some grade school completed","Some 
 
 school_levels_numeric <- data.frame(school_levels,level=c(1:11))
 
-data <- data %>% 
+data <- data %>%
   left_join(school_levels_numeric,by=c("Q128"="school_levels")) %>%
   rename(Q128_level=level)
 
@@ -1028,7 +1030,7 @@ plot_edu128 <- data %>%
 # 4.6.1 Percentage of population in a given age group achieving at least a fixed level of proficiency in functional (a) literacy and (b) numeracy skills, by sex
 
 
-data <- data %>% 
+data <- data %>%
   left_join(school_levels_numeric,by=c("Q112"="school_levels")) %>%
   rename(Q112_level=level)
 
@@ -1083,7 +1085,7 @@ menwomen_ttest <- t.test(data$Q112_proficient~Q9b,data)
 \
 When asked to compare the most educated person in their household to other members of the community, `r round(mean(data$Q130 == "Less formal education than others", na.rm = TRUE)*100)`% said they had less education than members of the community, `r round(mean(data$Q130 == "About the same amount of formal education as others", na.rm = TRUE)*100)`% said they had about the same amount education as most households, and `r round(mean(data$Q130 == "More formal education than others", na.rm = TRUE)*100)`% said they had more formal education than others.
 
-```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
+```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8, eval = FALSE}
 
 grid.arrange(plot_edu128, plot1, ncol = 2)
 
