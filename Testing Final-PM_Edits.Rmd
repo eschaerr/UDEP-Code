@@ -527,13 +527,13 @@ plot1 <- data %>%
 
 plot2 <- ggplot(data, aes(x = Q93, fill = Q93)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Better support needed for a healthy birth than most households" = "Better","About the same support needed for a healthy birth as most households" = "Same","Less support needed for a healthy birth than most households" = "Less")) +
   labs(
     title = expression(atop("Support for Healthy", "Births Comparison")),
     x = "",
     y = "Count" 
-  ) + coord_flip() 
+  ) + coord_flip()  
 
 plot3 <- data %>%
   filter(!Q63 == "") %>%
