@@ -502,7 +502,7 @@ data$Q63 <- factor(data$Q63, levels = order)
 data$Q63b <- as.numeric(data$Q63)
 data$Q95 <- factor(data$Q95, levels = order)
 data$Q95b <- as.numeric(data$Q95)
-data$Q71 <- factor(data$Q71, levels = order)
+#data$Q71 <- factor(data$Q71, levels = order)
 data$Q71b <- as.numeric(data$Q71)
 ```
 
