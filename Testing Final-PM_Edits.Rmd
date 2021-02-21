@@ -566,18 +566,18 @@ plot1 <- data %>%
     y = "Count"
   )
 
-plot2 <- data %>%
-  filter(!Q71 == "") %>%
-  ggplot(aes(x = Q71, fill = Q71)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
-  labs(
-    title = "Ladder Comparison on Mental Health",
-    x = "",
-    y = "Count"
-  )
+#plot2 <- data %>%
+#  filter(!Q71 == "") %>%
+#  ggplot(aes(x = Q71, fill = Q71)) +
+#  geom_bar(show.legend = FALSE) +
+#  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
+#  labs(
+#    title = "Ladder Comparison on Mental Health",
+#    x = "",
+#    y = "Count"
+#  )
 
-grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
+#grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 ```
 
 When asked to compare their household's access to health care to other households in the community `r round(mean(data$Q197 == "Worse access to health care than most households", na.rm = TRUE)*100)`% said they had worse access to health care than most households, `r round(mean(data$Q197 == "About the same access to health care as most households", na.rm = TRUE)*100)`% said they had about the same access to health care as most households, and `r round(mean(data$Q197 == "Better access to health care than most households", na.rm = TRUE)*100)`% said they had better access to health care than most households.
