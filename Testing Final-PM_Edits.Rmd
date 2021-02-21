@@ -376,7 +376,7 @@ data$Q69b <- ifelse(data$Q69=="Yes",1, ifelse(data$Q69=="No",0,NA))
 data$Q83b <- ifelse(data$Q83=="Yes",1, ifelse(data$Q83=="No" | data$Q83=="Don't know",0,NA))
 data$Q85b <- ifelse(data$Q85=="Yes",1, ifelse(data$Q85=="No" | data$Q85=="Don't know",0,NA))
 data$Q67b <- ifelse(data$Q67=="Yes",1, ifelse(data$Q67=="No" | data$Q67=="Don't know",0,NA))
-data$Q73b <- ifelse(data$Q73=="None of the above",0, ifelse(is.na(data$Q73),NA,1))
+#data$Q73b <- ifelse(data$Q73=="None of the above",0, ifelse(is.na(data$Q73),NA,1))
 data$Q75b <- ifelse(data$Q75=="Yes",1, ifelse(data$Q75=="No" | data$Q75=="Don't know",0,NA))
 data$Q77b <- ifelse(data$Q77=="Yes",1, ifelse(data$Q77=="No" | data$Q77=="Don't know",0,NA))
 ```
