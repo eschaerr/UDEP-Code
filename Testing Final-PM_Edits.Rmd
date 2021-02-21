@@ -551,7 +551,7 @@ grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
 
 Participants were also asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the healthiest households on the top step, and 1 indicates the least healthy households on the bottom step. The average response was `r round(mean(data$Q95b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q95b, na.rm = TRUE) < median(data$Q95b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q95b, na.rm = TRUE) > median(data$Q95b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q95b, na.rm = TRUE) == median(data$Q95b, na.rm = TRUE)) {"normal."} `
 
-Participants were also asked to think about the last person who had a birthday in their household and imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates that person is the most mentally healthy on the top step, and 1 indicates that person is the least mentally healthy on the bottom step. The average response was `r round(mean(data$Q71b, na.rm = TRUE))` and the distribution was ``` r if(mean(data$Q71b, na.rm = TRUE) < median(data$Q71b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q71b, na.rm = TRUE) > median(data$Q71b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q71b, na.rm = TRUE) == median(data$Q71b, na.rm = TRUE)) {"normal."} `
+
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 
