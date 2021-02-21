@@ -598,7 +598,7 @@ plot1 <- ggplot(data, aes(x = Q197, fill = Q197)) +
 
 plot2 <- ggplot(data, aes(x = Q79, fill = Q79)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_x_discrete(labels= c("Better access to affordable medications than most households" = "Better","About the same access to affordable medications as most households" = "Same","Worse access to affordable medications than most households" = "Worse")) +
   labs(
     title = expression(atop("Access to Affordable Medication", "Comparison")),
