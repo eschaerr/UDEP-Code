@@ -503,7 +503,7 @@ data$Q63b <- as.numeric(data$Q63)
 data$Q95 <- factor(data$Q95, levels = order)
 data$Q95b <- as.numeric(data$Q95)
 #data$Q71 <- factor(data$Q71, levels = order)
-data$Q71b <- as.numeric(data$Q71)
+#data$Q71b <- as.numeric(data$Q71)
 ```
 
 Participants were asked to imagine that all the women in their community are on a step on a ladder, from 1 to 9, where 9 indicates the women who are healthiest on the top step, and 1 indicates the women who are the least healthy on the bottom step. The average response was `r round(mean(data$Q87b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q87b, na.rm = TRUE) < median(data$Q87b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q87b, na.rm = TRUE) > median(data$Q87b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q87b, na.rm = TRUE) == median(data$Q87b, na.rm = TRUE)) {"normal."} `
