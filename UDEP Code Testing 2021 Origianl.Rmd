@@ -1731,7 +1731,6 @@ grid.arrange(plot_gndr178,
              plot_gndr90,ncol=2)
 ```
 
-`r table_Q198_highest_freq` `r iftiedmen`
 
 `r table_Q92_highest_freq` `r iftiedwomen`
 
