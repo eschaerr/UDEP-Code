@@ -2173,13 +2173,17 @@ plot1 <- ggplot(data, aes(x=Q46, fill = Q46))+
   scale_x_discrete(labels=c("I don't have a place to call home.","I have a home that is missing one or more walls or roof and has a dirt floor."=expression(atop("I have a home that is missing one or","more walls or roof and has a dirt floor")),"I have a home that includes temporary walls or roof and has a dirt floor."=expression(atop("I have a home that includes temporary","walls or roof and has a dirt floor")),"I have a home with solid walls and floor."=expression(atop("I have a home with","solid walls and floor"))))+
   xlab("") + ylab("Count") +
   coord_flip()
-plot2 <- ggplot(data, aes(x=Q48, fill = Q48))+
+  
+plot2 <- data %>%
+  filter(!Q48 == "") %>%
+  ggplot(aes(x=Q48, fill = Q48))+
   geom_bar(show.legend = FALSE) +
   ggtitle("Housing Description") + 
   scale_x_discrete(labels=c("My home is too small for my family's needs."=expression(atop("My home is too small","for my family's needs")),"My home is big enough for my family's needs."=expression(atop("My home is big enough","for my family's needs")),"My home is too big for my family's needs."=expression(atop("My home is too big","for my family's needs")))) +
   scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9")) +
   xlab("") + ylab("Count") +
   coord_flip()
+  
 grid.arrange(plot1,plot2, nrow = 2, ncol = 1)
 ```
 
