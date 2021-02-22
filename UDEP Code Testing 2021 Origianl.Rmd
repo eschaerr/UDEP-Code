@@ -1195,7 +1195,7 @@ data$safety_scale=ifelse(data$safety=="Less safe from physical, sexual, or psych
 ```{r Gender 88}
 
 #Imagine that all the households in your community are on a ladder with nine steps. The households where residents feel most safe from physical, sexual, or psychological violence are on the top step. The households where residents feel the least safe on the bottom step. On which step do you think your household is? 
-#assault_ladder <- as.numeric(data$Q88)
+assault_ladder <- as.numeric(data$Q88)
 
 skew88 <- Skew(data$safety_scale,na.rm=TRUE)
 Q88_skewness <- if (skew88 == 0) {
