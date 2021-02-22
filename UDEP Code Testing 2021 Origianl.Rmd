@@ -1699,7 +1699,7 @@ grid.arrange(plot_gndr_unpaid1, plot_gndr_unpaid2,plot_gndr_unpaid3,ncol=3)
 
 ```
 
-## Physical, Sexual, and Psychological Violoence
+## Physical, Sexual, and Psychological Violence
 
 In the last 12 months, `r pct_married_female_15_above_assaulted`% of married female respondents 15 years and older reported that a household member had been a victim of physical, sexual, or psychological violence. On a scale of 1-9, with 9 being most safe from violence and 1 being least safe, respondents rate their household a `r round(mean(data$safety_scale,na.rm=TRUE),1)` on average. `r Q88_skewness`
 
