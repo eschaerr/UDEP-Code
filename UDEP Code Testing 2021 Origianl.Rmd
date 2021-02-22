@@ -301,8 +301,8 @@ grid.arrange(plot1, plot2, ncol=2)
 #data$Q44b <- as.numeric(data$Q44)
 
 #RECODE Q34
-data$Q34<-recode(data$Q34, 'Worse than most households (poorer)'=1, 'About the same as most households'=2, 'Better than most households (richer)'=3)
-data$Q34b <- as.numeric(data$Q34)
+data$Q34b<-recode(data$Q34, 'Worse than most households (poorer)'=1, 'About the same as most households'=2, 'Better than most households (richer)'=3)
+data$Q34b <- as.numeric(data$Q34b)
 #RECODE Q44
 data$Q44<-recode(data$Q44, 'Worse than other households'=1, 'About the same as other households'=2, 'Better than other households'=3)
 data$Q44b <- as.numeric(data$Q44)
