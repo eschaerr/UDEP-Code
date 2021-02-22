@@ -2188,7 +2188,9 @@ grid.arrange(plot1,plot2, nrow = 2, ncol = 1)
 ```
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=6}
-plot3 <- ggplot(data, aes(x = Q50, fill = Q50)) +
+plot3 <- data %>%
+  filter(!Q50== "") %>%
+  ggplot(aes(x = Q50, fill = Q50)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#999999","#999999","#999999")) +
   labs(
