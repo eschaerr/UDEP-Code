@@ -1922,8 +1922,8 @@ plot3 <- data %>%
   filter(!is.na(Q49b)) %>%
 ggplot(aes(x = as.factor(Q49b), fill = as.factor(Q49b))) +
   geom_bar(show.legend = FALSE) +
-  scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern")) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
+  scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern", "4"="Not Needed", "5"="Needed")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9", "#56B4E9")) +
   labs(x = "Source", y= "Count", title= "Heating Fuel Source")
 
 plot4 <- data %>%
