@@ -51,7 +51,7 @@ data$Q23b <- as.factor(ifelse(data$Q23 == "Yes", 1, 0))
 data$Q133b <- ifelse(data$Q133 %like% "Employed for wages%",1, ifelse(data$Q133 %like% "Out of work%",0,NA)) # Binary measure of employment status (needs to be recoded to ordinal later
 
 # Q147b Work Injury Last 12 Months- yes (1), no (0) NOT as factor
-data$Q147b <- ifelse(data$Q147 == "yes",1,0)
+data$Q147b <- ifelse(data$Q147 == "Yes",1,0)
 
 # Q25b Urban/Rural - rural (1), suburban (2), urban (3)
 data$Q25b <- ifelse(data$Q25=="Rural",1, ifelse(data$Q25=="Urban",3,2)) 
