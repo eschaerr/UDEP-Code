@@ -322,7 +322,7 @@ Participants were also asked to imagine that all the households in their communi
 ########################################################
 plot1 <- data %>%
   filter(!Q34 == "") %>%
-  ggplot(aes(x = Q34, fill = Q38)) +
+  ggplot(aes(x = Q34, fill = Q34)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Worse than most households (poorer)" = "Worse","About the same as most households" = "Same","Better than most households (richer)" = "Better")) +
