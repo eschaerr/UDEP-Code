@@ -2135,7 +2135,9 @@ plot1 <- data %>%
     y = "Count"
   )
 
-plot2 <- ggplot(data, aes(x = Q155, fill = Q155)) +
+plot2 <- data %>%
+  filter(!Q155 == "") %>%
+  ggplot(aes(x = Q155, fill = Q155)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Better access to financial services than most households" = "Better","About the same access to financial services as most households" = "Same","Worse access to financial services than most households" = "Worse")) +
