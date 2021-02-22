@@ -1952,7 +1952,9 @@ ggplot(aes(x = as.factor(Q43b), fill = as.factor(Q43b))) +
   scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999")) +
   coord_flip()
 
-plot2 <- ggplot(data, aes(x = Q56, fill = Q56)) +
+plot2 <- data %>%
+  filter(!is.na(Q56)) %>%
+  ggplot(aes(x = Q56, fill = Q56)) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels=c("Worse access to electricity than most households"=expression(atop("Worse access to electricity", "than most households")),"About the same access to electricity as most households"=expression(atop("About the same access to","electricity as most households")),"Better access to electricity than most households"=expression(atop("Better access to electricity","than most households")))) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
@@ -1961,6 +1963,7 @@ plot2 <- ggplot(data, aes(x = Q56, fill = Q56)) +
     x = "",
     y = "Count" 
   ) + coord_flip()
+
 grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 ```
 
