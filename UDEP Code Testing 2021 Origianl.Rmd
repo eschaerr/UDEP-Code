@@ -1450,6 +1450,7 @@ plot_gndr_unpaid2 <- table_Q104 %>%
        y="Number of Women")
 
 plot_gndr_unpaid3 <- table_Q199 %>% 
+  filter(!is.na(Q199)&Q199!="") %>%
   ggplot(aes(x=Q199,y=n))+
   geom_col(fill="#999999")+
   coord_flip()+
