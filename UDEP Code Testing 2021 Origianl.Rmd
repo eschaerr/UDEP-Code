@@ -65,7 +65,7 @@ data$Q184b <- factor(data$Q184,levels=c("American Indian or Alaska Native", "Asi
 data$Q185b <- factor(data$Q185,levels=c("Single", "In a relationship", "Engaged", "Married", "Widowed", "Separated", "Divorced", "I prefer not to respond", "Don't know"))
 ```
 
-```{r Demographics Graphs, fig.height=3,fig.width=8, warnings = FALSE}
+```{r Demographics Graphs, fig.height=3,fig.width=8, warnings = FALSE, message = FALSE}
 # Count of Men and Women 
 # want to make this proportion instead? 
 gender_plot <- data %>%
