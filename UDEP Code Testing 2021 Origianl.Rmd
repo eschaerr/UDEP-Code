@@ -1884,6 +1884,64 @@ data$Q44.1 <- as.numeric(data$Q44.1)
 data$Q45 <- as.numeric(data$Q45)
 data$Q46.1 <- as.numeric(data$Q46.1)
 
+# set up for Q54
+## national
+data$national <- grepl("National grid connection",data$Q54)
+data$national_count <- as.numeric(data$national)
+Energy54national.ovrlavg <- mean(data$national_count, na.rm = TRUE) * 1000 
+
+## local
+data$loca <- grepl("Local mini grid connection",data$Q54)
+data$local_count <- as.numeric(data$local)
+Energy54local.ovrlavg <- mean(data$local_count, na.rm = TRUE) * 1000 
+
+## electric generator
+data$generator <- grepl("Electric generator",data$Q54)
+data$generator_count <- as.numeric(data$generator)
+Energy54generator.ovrlavg <- mean(data$generator_count, na.rm = TRUE) * 1000 
+
+## Rechargeable battery
+data$rechargeable <- grepl("Rechargeable battery",data$Q54)
+data$rechargeable_count <- as.numeric(data$rechargeable)
+Energy54rechargeable.ovrlavg <- mean(data$rechargeable_count, na.rm = TRUE) * 1000 
+
+##Dry-cell battery
+data$drycell <- grepl("Dry-cell battery",data$Q54)
+data$drycell_count <- as.numeric(data$drycell)
+Energy54drycell.ovrlavg <- mean(data$drycell_count, na.rm = TRUE) * 1000 
+
+##Solar lantern
+data$lantern<- grepl("Solar lantern",data$Q54)
+data$lantern_count <- as.numeric(data$lantern)
+Energy54lantern.ovrlavg <- mean(data$lantern_count, na.rm = TRUE) * 1000 
+
+
+##Solar multi-light product
+data$multilight <- grepl("Solar multi-light product",data$Q54)
+data$multilight_count <- as.numeric(data$multilight)
+Energy54multilight.ovrlavg <- mean(data$multilight_count, na.rm = TRUE) * 1000 
+
+##Solar home system
+data$homesystem <- grepl("Solar home system",data$Q54)
+data$homesystem_count <- as.numeric(data$homesystem)
+Energy54homesystem.ovrlavg <- mean(data$homesystem_count, na.rm = TRUE) * 1000 
+
+##Pico-hydro
+data$pico <- grepl("Pico-hydro",data$Q54)
+data$pico_count <- as.numeric(data$pico)
+Energy54pico.ovrlavg <- mean(data$pico_count, na.rm = TRUE) * 1000 
+
+##"I don't know
+data$dontknow <- grepl("I don't know",data$Q54)
+data$dontknow_count <- as.numeric(data$dontknow)
+Energy54dontknow.ovrlavg <- mean(data$dontknow_count, na.rm = TRUE) * 1000 
+
+##Other
+data$other <- grepl("Other",data$Q54)
+data$other_count <- as.numeric(data$other)
+Energy54other.ovrlavg <- mean(data$other_count, na.rm = TRUE) * 1000 
+
+
 # Text to add to body paragraphs with new survey questions (heating, lighting, and cooking all have two additional responses)
 # `r round(mean(data$Q48.1b == 4, na.rm = TRUE)*100)`% said no fuel source for cooking (not needed), `r round(mean(data$Q48.1b == 5, na.rm = TRUE)*100)`% said no fuel source for cooking (but needed).
 # `r round(mean(data$Q49b == 4, na.rm = TRUE)*100)`% said no fuel source for heating (not needed), `r round(mean(data$Q49b == 5, na.rm = TRUE)*100)`% said no fuel source for heating (but needed).
