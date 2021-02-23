@@ -455,19 +455,19 @@ When asked to compare the health of the children in their household to that of o
 
 plot1 <- data %>%
   filter(Q70 != "") %>%
-  ggplot(aes(y = Q70, fill = Q70)) +
+  ggplot(aes(y = factor(Q70,levels=c("More food to eat than most households", "About the same amount of food to eat as most households", "Less food to eat than most households"),ordered=TRUE), fill = Q70)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
   scale_y_discrete(labels= c("More food to eat than most households" = "More","About the same amount of food to eat as most households" = "Same","Less food to eat than most households" = "Less")) +
   labs(
     title = "Comparison Amount of Food",
     x = "Count",
-    y = "" 
-  ) 
+    y = ""
+  )
 
 plot2 <- data %>%
   filter(!Q72 == "") %>%
-  ggplot(aes(y = Q72, fill = Q72)) +
+    ggplot(aes(y = factor(Q72,levels=c("More healthy than other children", "About the same level of health as other children", "Less healthy than other children"),ordered=TRUE), fill = Q72)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values=c("#999999", "#999999","#999999")) +
   scale_y_discrete(labels= c("More healthy than other children" = "More","About the same level of health as other children" = "Same","Less healthy than other children" = "Less")) + 
@@ -837,9 +837,7 @@ data$Q6ord <- cut(as.numeric(data$Q6),c(0,14,19,29,39,49,100),labels=c("Under 15
 
 plot1 <- data %>%
   filter(Q130 != "") %>%
-  # can take this out when we remove ladder question data from the data
-  filter(Q130 %in% c("More formal education than others", "About the same amount of formal education as others","Less formal education than others")) %>%
-  ggplot(aes(y = Q130, fill = Q130)) +
+  ggplot(aes(y = factor(Q130,levels=c("More formal education than others", "About the same amount of formal education as others", "Less formal education than others"),ordered=TRUE), fill = Q130)) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_y_discrete(labels= c("More formal education than others" = "More","About the same amount of formal education as others" = "Same","Less formal education than others" = "Less")) +
@@ -978,7 +976,7 @@ plot_edu122 <- data %>%
 
 plot_edu124 <- data %>%
   filter( Q124 !="") %>%
-  ggplot(aes(y = Q124, fill = Q124)) + 
+  ggplot(aes(y = factor(Q124,levels=c("More technology skills than other households", "About the same amount of technology skills as other households", "Fewer technology skills than other households"),ordered=TRUE), fill = Q124)) + 
   geom_bar(show.legend = FALSE) + 
   scale_fill_manual(values = c("#56B4E9","#56B4E9","#56B4E9")) + 
   scale_y_discrete(labels = c("More technology skills than other households" = "More", "About the same amount of technology skills as other households" = "Same", "Fewer technology skills than other households" = "Fewer")) + 
@@ -987,7 +985,6 @@ plot_edu124 <- data %>%
     x = "Count",
     y = ""
   )
-
 
 ```
 
