@@ -23,6 +23,8 @@ data <- read.csv(file = 'UDEP_v1.03.csv', header = TRUE, stringsAsFactors = FALS
 questions <- data[1,]
 # get rid of question rows in dataset for analysis
 data <- data[-(1:2),]
+# needed just for the time being while we have fake data - delete later 
+questions <- data[1,]
 ```
 
 ```{r Demographics}
@@ -129,8 +131,8 @@ religion_plot2 <- data %>%
 # Print Graphs
 grid.arrange(gender_plot, age_plot,ncol = 2)
 disability_plot
-grid.arrange(religion_plot1, religion_plot2, nrow = 2)
-
+religion_plot1
+religion_plot2
 ```
 
 
@@ -1092,7 +1094,6 @@ menwomen_ttest <- t.test(data$Q112_proficient~Q9b,data)
 # Education
 
 `r round(mean(data$Q128_proficient, na.rm = TRUE)*100,1)`% of households have somebody with at least some grade school completed. \
-\
 When asked to compare the most educated person in their household to other members of the community, `r round(mean(data$Q130 == "Less formal education than others", na.rm = TRUE)*100)`% said they had less education than members of the community, `r round(mean(data$Q130 == "About the same amount of formal education as others", na.rm = TRUE)*100)`% said they had about the same amount education as most households, and `r round(mean(data$Q130 == "More formal education than others", na.rm = TRUE)*100)`% said they had more formal education than others.
 
 ```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8, eval = FALSE}
