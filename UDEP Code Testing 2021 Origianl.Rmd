@@ -23,8 +23,6 @@ data <- read.csv(file = 'UDEP_v1.03.csv', header = TRUE, stringsAsFactors = FALS
 questions <- data[1,]
 # get rid of question rows in dataset for analysis
 data <- data[-(1:2),]
-# needed just for the time being while we have fake data - delete later 
-questions <- data[1,]
 ```
 
 ```{r Demographics}
