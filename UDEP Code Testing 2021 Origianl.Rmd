@@ -365,9 +365,13 @@ plot2 <- data %>%
 
 ########################################################
 ########################################################
+levels <- c("Worse than other households","About the same as other households","Better than other households")
+
+
 plot3 <- data %>%
+  filter(Q44 %in% levels) %>%
   filter(!Q44 == "") %>%
-  ggplot(aes(x = Q44, fill = Q44)) +
+  ggplot(aes(x = factor(Q44,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_x_discrete(labels= c("Worse than other households" = "Worse","About the same as other households" = "Same","Better than other households" = "Better")) +
@@ -376,7 +380,7 @@ plot3 <- data %>%
     x = "",
     y = "Count"
   )
-
+  
 grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
 ########################################################
 ########################################################
