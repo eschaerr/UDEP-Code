@@ -2247,7 +2247,9 @@ grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 <!-- 9. Reduced Inequalities -->
 
 ```{r}
-data$Q46b <- ifelse(data$Q46 == "I don't have a place to call home.",1,ifelse(data$Q46 == "I have a home that is missing one or more walls or roof and has a dirt floor.",2,ifelse(data$Q46 == "I have a home that includes temporary walls or roof and has a dirt floor.",3,ifelse(data$Q46 == "I have a home with solid walls and floor.",4,NA)))) # Ordinal measure for home quality
+data$Q46b <- ifelse(data$Q46 == "I don't have a place to call home.",1,ifelse(data$Q46 == "I have a home that is missing one or more walls/roof and has a dirt floor.",2,ifelse(data$Q46 == "I have a home that includes temporary walls/roof and has a dirt floor.  ",3,ifelse(data$Q46 == "I have a home with solid walls/roof and floor.",4,NA)))) # Ordinal measure for home quality
+
+
 data$Q48b <- ifelse(data$Q48 == "My home is too small for my family's needs.",1,ifelse(data$Q48 == "My home is big enough for my family's needs.",2,ifelse(data$Q48 == "My home is too big for my family's needs.",3,ifelse(data$Q48 == "I don't have a place to call home.",4,NA)))) # Ordinal meaure for home size
 ```
 
