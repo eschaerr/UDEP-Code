@@ -1742,7 +1742,7 @@ plot_gndr88
 
 `r same_pct`% of female respondents or respondents who reside with a woman feel that the women in their household own about the same amount of property or land as most women in other households within their community, `r less_pct`% feel women in their household own less, and `r more_pct`% feel women in their household own more.
 
-Among households in which a woman resides,`r round(mean(land$woman_has_land,na.rm=TRUE)*100,1)`% have at least one woman who owns agricultural land. Among households in which at least one woman owns agricultural land, the average number of women who own agrictultural land is `r avg_nbr_women_landowners_in_hh[[1]]`.
+Among households in which a woman resides, `r round(mean(land$woman_has_land,na.rm=TRUE)*100,1)`% have at least one woman who owns agricultural land. Among households in which at least one woman owns agricultural land, the average number of women who own agrictultural land is `r avg_nbr_women_landowners_in_hh[[1]]`.
 
 ```{r plot110, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
 plot_gndr110
