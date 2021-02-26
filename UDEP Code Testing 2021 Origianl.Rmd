@@ -727,46 +727,45 @@ iii. Malaria - `r round(Healthy65mal.ovrlavg,2)` out of 1000 have malaria.
 iv. Hepatitis B - `r round(Healthy65hepb.ovrlavg,2)` out of 1000 have Hepatitis B.
 
 ## Other Diseases
-i. Buruli ulcer  - `r round(Healthy177buruli.ovrlavg,2)`out of 1000 have Buruli ulcer.
+i. Buruli ulcer  - `r round(Healthy177buruli.ovrlavg,2)` out of 1000 have Buruli ulcer.
 
-ii. Chagas disease - `r round(Healthy177chagas.ovrlavg,2)`out of 1000 have Chagas disease.
+ii. Chagas disease - `r round(Healthy177chagas.ovrlavg,2)` out of 1000 have Chagas disease.
 
-iii. Dengue and Chikungunya -  `r round(Healthy177dengue.ovrlavg,2)`out of 1000 have Dengue and Chikungunya.
+iii. Dengue and Chikungunya -  `r round(Healthy177dengue.ovrlavg,2)` out of 1000 have Dengue and Chikungunya.
 
-iV. Dracunculiasis (guinea-worm disease)  - `r round(Healthy177dracunculiasis.ovrlavg,2)`out of 1000 have Dracunculiasis (guinea-worm disease) .
+iV. Dracunculiasis (guinea-worm disease)  - `r round(Healthy177dracunculiasis.ovrlavg,2)` out of 1000 have Dracunculiasis (guinea-worm disease) .
 
-v. Echinococcosis - `r round(Healthy177echinococcosis.ovrlavg,2)`out of 1000 have Echinococcosis .
+v. Echinococcosis - `r round(Healthy177echinococcosis.ovrlavg,2)` out of 1000 have Echinococcosis .
 
-vi. Foodborne trematodiases - `r round(Healthy177foodborne.ovrlavg,2)`out of 1000 have Foodborne trematodiases . 
+vi. Foodborne trematodiases - `r round(Healthy177foodborne.ovrlavg,2)` out of 1000 have Foodborne trematodiases . 
 
-vii. Human African trypanosomiasis (sleeping sickness)  - `r round(Healthy177trypanosomiasis.ovrlavg,2)`out of 1000 have Human African trypanosomiasis (sleeping sickness) . 
+vii. Human African trypanosomiasis (sleeping sickness)  - `r round(Healthy177trypanosomiasis.ovrlavg,2)` out of 1000 have Human African trypanosomiasis (sleeping sickness) . 
 
-viii. Leishmaniasis - `r round(Healthy177leishmaniasis.ovrlavg,2)`out of 1000 have Leishmaniasis .
+viii. Leishmaniasis - `r round(Healthy177leishmaniasis.ovrlavg,2)` out of 1000 have Leishmaniasis .
 
-ix. Leprosy (Hansen's disease)  - `r round(Healthy177Leprosy.ovrlavg,2)`out of 1000 have Leprosy (Hansen's disease) .
+ix. Leprosy (Hansen's disease)  - `r round(Healthy177Leprosy.ovrlavg,2)` out of 1000 have Leprosy (Hansen's disease) .
 
-x. Lymphatic filariasis  - `r round(Healthy177Lymphatic.ovrlavg,2)`out of 1000 have Lymphatic filariasis .
+x. Lymphatic filariasis  - `r round(Healthy177Lymphatic.ovrlavg,2)` out of 1000 have Lymphatic filariasis .
 
-xi. Mycetoma, chromoblastomycosis and other deep mycoses - `r round(Healthy177mycoses.ovrlavg,2)`out of 1000 have Mycetoma, chromoblastomycosis and other deep mycoses .
+xi. Mycetoma, chromoblastomycosis and other deep mycoses - `r round(Healthy177mycoses.ovrlavg,2)` out of 1000 have Mycetoma, chromoblastomycosis and other deep mycoses .
 
-xii. Onchocerciasis (river blindness) - `r round(Healthy177onchocerciasis.ovrlavg,2)`out of 1000 have Onchocerciasis (river blindness) .
+xii. Onchocerciasis (river blindness) - `r round(Healthy177onchocerciasis.ovrlavg,2)` out of 1000 have Onchocerciasis (river blindness) .
 
-xiii. Rabies -`r round(Healthy177rabies.ovrlavg,2)`out of 1000 have Rabies .
+xiii. Rabies -`r round(Healthy177rabies.ovrlavg,2)` out of 1000 have Rabies .
 
-xiv. Scabies and other ectoparasites  -`r round(Healthy177ectoparasites.ovrlavg,2)`out of 1000 have cabies and other ectoparasites .
+xiv. Scabies and other ectoparasites  -`r round(Healthy177ectoparasites.ovrlavg,2)` out of 1000 have cabies and other ectoparasites .
 
-xv. Schistosomiasis -`r round(Healthy177schistosomiasis.ovrlavg,2)`out of 1000 have Schistosomiasis .
+xv. Schistosomiasis -`r round(Healthy177schistosomiasis.ovrlavg,2)` out of 1000 have Schistosomiasis .
 
-xvi. Soil-transmitted helminthiases -`r round(Healthy177helminthiases.ovrlavg,2)`out of 1000 have Soil-transmitted helminthiases .
+xvi. Soil-transmitted helminthiases -`r round(Healthy177helminthiases.ovrlavg,2)` out of 1000 have Soil-transmitted helminthiases .
 
-xvii. Snakebite envenoming  -`r round(Healthy177envenoming.ovrlavg,2)`out of 1000 have Snakebite envenoming .
+xvii. Snakebite envenoming  -`r round(Healthy177envenoming.ovrlavg,2)` out of 1000 have Snakebite envenoming .
 
-xviii. Taeniasis/Cysticercosis  -`r round(Healthy177taeniasis.ovrlavg,2)`out of 1000 have Taeniasis/Cysticercosis .
+xviii. Taeniasis/Cysticercosis  -`r round(Healthy177taeniasis.ovrlavg,2)` out of 1000 have Taeniasis/Cysticercosis .
 
-xix. Trachoma -`r round(Healthy177trachoma.ovrlavg,2)`out of 1000 have Trachoma .
+xix. Trachoma -`r round(Healthy177trachoma.ovrlavg,2)` out of 1000 have Trachoma .
 
-xx. Yaws (Endemic treponematoses)  -`r round(Healthy177yaws.ovrlavg,2)`out of 1000 have Yaws (Endemic treponematoses) .
-
+xx. Yaws (Endemic treponematoses)  -`r round(Healthy177yaws.ovrlavg,2)` out of 1000 have Yaws (Endemic treponematoses) .
 
 ## Health Care Access
 
