@@ -972,16 +972,17 @@ plot_edu122 <- data %>%
        x="Sum of Computer Skills",
        y="Number of Households")
 
+levels <- c("Fewer technology skills than other households", "About the same amount of technology skills as other households", "More technology skills than other households")
 plot_edu124 <- data %>%
-  filter( Q124 !="") %>%
-  ggplot(aes(y = factor(Q124,levels=c("More technology skills than other households", "About the same amount of technology skills as other households", "Fewer technology skills than other households"),ordered=TRUE), fill = Q124)) + 
-  geom_bar(show.legend = FALSE) + 
-  scale_fill_manual(values = c("#56B4E9","#56B4E9","#56B4E9")) + 
-  scale_y_discrete(labels = c("More technology skills than other households" = "More", "About the same amount of technology skills as other households" = "Same", "Fewer technology skills than other households" = "Fewer")) + 
+  filter( Q124 %in% levels) %>%
+ # filter(!is.na(Q124)) %>%
+  ggplot(aes(x = factor(Q124,levels=levels,ordered=TRUE))) + 
+  geom_bar(show.legend = FALSE, fill ="#56B4E9" ) + 
+  scale_x_discrete(labels = c("Fewer technology skills than other households" = "Fewer","About the same amount of technology skills as other households" = "Same", "More technology skills than other households" = "More" )) + 
   labs(
     title = "Comparison on Technology Skills",
-    x = "Count",
-    y = ""
+    x = "",
+    y = "Count"
   )
 
 ```
