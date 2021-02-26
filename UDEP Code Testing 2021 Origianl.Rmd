@@ -497,7 +497,8 @@ N <- dim(data)[1]
 # Convert Yes/No answers to binary variable (0=No, 1=Yes)
 data$Q89b <- ifelse(data$Q89=="Yes", 1, ifelse(data$Q89=="No", 0, NA))
 data$Q89ab <- ifelse(data$Q89b==1 & data$Q6>14 & data$Q6<20,1, ifelse(data$Q89b==0 & data$Q6>14 & data$Q6<20,0,NA))
-data$Q91b <- ifelse(data$Q91=="Skilled Staff", 1, ifelse(is.na(data$Q91), NA, 0)) 
+#SKILLED STAFF
+data$Q91b <- ifelse(data$Q91=="Doctor"|data$Q91=="Trained midwife", 1, ifelse(is.na(data$Q91), NA, 0)) 
 # Need to figure out how to identify "Skilled Staff" - who is qualified?
 # data$Rand226b <- ifelse(data$Rand226=="Yes", 1, ifelse(data$HealthyF89=="No", 0, NA)) # data on someone else passing away
 data$Q65b <- ifelse(data$Q65=="No one in my household has been infected by any of these diseases in the last 12 months", 0, ifelse(is.na(data$Q65), NA, 1))
