@@ -2038,8 +2038,7 @@ ggplot(aes(x = as.factor(Q43b), fill = as.factor(Q43b))) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels= c("1" = "appliances", "2" = "cooking", "3" = "entertainment and electronics", "4" = "heating", "5" = "lighting")) +
   labs(x= "Source" , y= "Count", title = "Electriciy Use Type") +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999")) +
-  coord_flip()
+  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999")) 
 
 plot2 <- data %>%
   filter(!is.na(Q56)) %>%
