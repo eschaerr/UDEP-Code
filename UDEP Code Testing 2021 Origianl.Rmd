@@ -1558,7 +1558,7 @@ plot_gndr92 <- data %>%
   filter(Q9=="Woman") %>% 
   ggplot(aes(x=fct_recode(Q92_fct,
                           "More"="More control over these decisions than most women",
-                          "About the same"="About the same amount of control over these decisions as most women",
+                          "Same"="About the same amount of control over these decisions as most women",
                           "Less"="Less control over these decisions than most women")))+
   scale_x_discrete(drop=FALSE)+
   geom_bar(fill="#56B4E9")+
