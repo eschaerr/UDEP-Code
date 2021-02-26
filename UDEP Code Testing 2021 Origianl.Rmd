@@ -1677,13 +1677,15 @@ same_pct <- Q110_pct$pct[1]
 less_pct <- Q110_pct$pct[2]
 more_pct <- Q110_pct$pct[3]
 
+levels <- c("Less property/land than most women in other households","About the same amount of property/land as most women in other households","More property/land than most women in other households")
+
+
 plot_gndr110 <- data %>%
   filter(Q110!="") %>% 
-  ggplot(aes(x=fct_recode(Q110,
-                          Less="Less property/land than most women in other households",
-                          Same="About the same amount of property/land as most women in other households",
-                          More= "More property/land than most women in other households" )))+
+  filter(Q110 %in% levels) %>%
+  ggplot(aes(x = factor(Q110,levels=levels,ordered=TRUE)))+
   geom_bar(fill="#56B4E9")+
+  scale_x_discrete(labels= c("Less property/land than most women in other households" = "Less","About the same amount of property/land as most women in other households" = "Same","More property/land than most women in other households" = "More")) +
   labs(title="Land ownership compared to women in other households in community",
        x="",
        y="Count")
