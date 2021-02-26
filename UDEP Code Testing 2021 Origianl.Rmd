@@ -2040,17 +2040,20 @@ ggplot(aes(x = as.factor(Q43b), fill = as.factor(Q43b))) +
   labs(x= "Source" , y= "Count", title = "Electriciy Use Type") +
   scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999")) 
 
+levels <- c("Worse access to electricity than most households","About the same access to electricity as most households","Better access to electricity than most households")
+
 plot2 <- data %>%
+  filter(Q56 %in% levels) %>%
   filter(!is.na(Q56)) %>%
-  ggplot(aes(x = Q56, fill = Q56)) +
+  ggplot(aes(x = factor(Q56,levels=levels,ordered=TRUE)))+
   geom_bar(show.legend = FALSE) +
-  scale_x_discrete(labels=c("Worse access to electricity than most households"=expression(atop("Worse access to electricity", "than most households")),"About the same access to electricity as most households"=expression(atop("About the same access to","electricity as most households")),"Better access to electricity than most households"=expression(atop("Better access to electricity","than most households")))) +
+  scale_x_discrete(labels= c("Worse access to electricity than most households" = "Worse","About the same access to electricity as most households" = "Same","Better access to electricity than most households" = "Better"))+
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   labs(
-    title = expression(atop("Community Electricity","Comparison")),
+    title = expression(atop("Community Electricity Accecibility","Comparison")),
     x = "",
     y = "Count" 
-  ) + coord_flip()
+  ) 
 
 grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 ```
