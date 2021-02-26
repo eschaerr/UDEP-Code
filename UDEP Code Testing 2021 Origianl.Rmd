@@ -177,26 +177,26 @@ Poverty28.aget <- t.test(Q28pd ~ Q6b, data=data) # child vs. adult
   
 #### Poverty 173 (Access to electiricy/energy) ####
 # Percentage of participants
-Poverty173.ovrlavg <- mean(data$Q173b) * 100
+Poverty173.ovrlavg <- mean(data$Q173b, na.rm=TRUE) * 100
   
 #### Poverty 174 (Access to water and sanitation) ####
 # Percentage of participants
-Poverty174.ovrlavg <- mean(data$Q174b) * 100
+Poverty174.ovrlavg <- mean(data$Q174b,na.rm=TRUE ) * 100
   
 #### Poverty 175 (Access to refuse and waste removal) ####
 # Percentage of participants
-Poverty175.ovrlavg <- mean(data$Q175b) * 100
+Poverty175.ovrlavg <- mean(data$Q175b, na.rm=TRUE) * 100
   
 #### Poverty 40 (Land ownership) ####
 # Percentage of participants, overall and disaggregated by sex
-Poverty40.ovrlavg <- mean(data$Q40b) * 100
+Poverty40.ovrlavg <- mean(data$Q40b, na.rm=TRUE) * 100
 Poverty40.genderavg <- aggregate(Q40b ~ Q9b, data=data, mean) * 100
 # t test for sex disaggreagated values
 Poverty40.gendert <- t.test(Q40b ~ Q9b, data=data)
   
 #### Poverty 42 (Legal documentation of land ownership)
 # Percentage of participants, overall and disaggregated by sex
-Poverty42.ovrlavg <- mean(data$Q42b) * 100
+Poverty42.ovrlavg <- mean(data$Q42b, na.rm=TRUE) * 100
 Poverty42.genderavg <- aggregate(Q42b ~ Q9b, data=data, mean) * 100
 # t test for sex disaggreagated values
 Poverty42.gendert <- t.test(Q42b ~ Q9b, data=data)
@@ -215,7 +215,10 @@ The overall average income per day is \$`r round(Poverty28.ovrlavg,2)`.
 The average income per day for men is \$`r round(Poverty28.genderavg[1,2],2)`, and the average income per day for women is \$`r round(Poverty28.genderavg[2,2],2)`. `r if(Poverty28.gendert$p.value<=0.05 & Poverty28.genderavg[1,2] > Poverty28.genderavg[2,2]) { "A difference of means test indicates that men make a significantly higher income per day on average than women." }` `r if(Poverty28.gendert$p.value<=0.05 & Poverty28.genderavg[1,2] < Poverty28.genderavg[2,2]) { "A difference of means test indicates that women make a significantly higher income per day on average than men."}` `r if(Poverty28.gendert$p.value>0.05) { "However, the difference is not significant." }`
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
-plot1 <- ggplot(data, aes(Q9b, Q28pd)) + geom_boxplot()+ 
+plot1 <- data %>%
+  filter(!is.na(Q9b)) %>%
+  filter(!Q9b == "") %>%
+  ggplot(aes(Q9b, Q28pd)) + geom_boxplot()+ 
   ggtitle("Income Trends by Gender") + 
   xlab("Gender") + ylab("Income ($ per day)") + 
   scale_x_discrete(labels= c("Male","Female"))
@@ -320,10 +323,12 @@ Participants were also asked to imagine that all the households in their communi
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 ########################################################
 ########################################################
+levels <- c("Worse than most households (poorer)","About the same as most households","Better than most households (richer)")
+
 plot1 <- data %>%
+  filter(Q34 %in% levels) %>%
   filter(!Q34 == "") %>%
-  ggplot(aes(x = Q34, fill = Q34)) +
-  geom_bar(show.legend = FALSE) +
+  ggplot(aes(x = factor(Q34,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Worse than most households (poorer)" = "Worse","About the same as most households" = "Same","Better than most households (richer)" = "Better")) +
   labs(
@@ -337,9 +342,13 @@ plot1 <- data %>%
 
 ########################################################
 ########################################################
+levels <- c("Fewer basic services than most households","About the same amount of basic services as most households" ,"More basic services than most households")
+
+
 plot2 <- data %>%
+  filter(Q38 %in% levels) %>%
   filter(!Q38 == "") %>%
-  ggplot(aes(x = Q38, fill = Q38)) +
+  ggplot(aes(x = factor(Q38,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
@@ -356,9 +365,13 @@ plot2 <- data %>%
 
 ########################################################
 ########################################################
+levels <- c("Worse than other households","About the same as other households","Better than other households")
+
+
 plot3 <- data %>%
+  filter(Q44 %in% levels) %>%
   filter(!Q44 == "") %>%
-  ggplot(aes(x = Q44, fill = Q44)) +
+  ggplot(aes(x = factor(Q44,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_x_discrete(labels= c("Worse than other households" = "Worse","About the same as other households" = "Same","Better than other households" = "Better")) +
@@ -367,7 +380,7 @@ plot3 <- data %>%
     x = "",
     y = "Count"
   )
-
+  
 grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
 ########################################################
 ########################################################
