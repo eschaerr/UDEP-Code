@@ -2286,15 +2286,19 @@ grid.arrange(plot1,plot2, nrow = 2, ncol = 1)
 ```
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=6}
+levels <- c("Less nice than most homes","About the same as most homes","Nicer than most homes")
+
 plot3 <- data %>%
+  filter(Q50 %in% levels) %>%
   filter(!Q50== "") %>%
-  ggplot(aes(x = Q50, fill = Q50)) +
+  ggplot(aes(x = factor(Q50,levels=levels,ordered=TRUE)))+
   geom_bar(show.legend = FALSE) +
+  scale_x_discrete(labels= c("Less nice than most homes"="Less","About the same as most homes"="Same","Nicer than most homes"="Nicer")) +
   scale_fill_manual(values = c("#999999","#999999","#999999")) +
   labs(
     title = "Community Housing Comparison",
     x = "",
     y = "Count" 
-  ) + coord_flip()
+  ) 
 plot3
 ```
