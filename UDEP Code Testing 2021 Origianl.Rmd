@@ -177,26 +177,26 @@ Poverty28.aget <- t.test(Q28pd ~ Q6b, data=data) # child vs. adult
   
 #### Poverty 173 (Access to electiricy/energy) ####
 # Percentage of participants
-Poverty173.ovrlavg <- mean(data$Q173b) * 100
+Poverty173.ovrlavg <- mean(data$Q173b, na.rm=TRUE) * 100
   
 #### Poverty 174 (Access to water and sanitation) ####
 # Percentage of participants
-Poverty174.ovrlavg <- mean(data$Q174b) * 100
+Poverty174.ovrlavg <- mean(data$Q174b,na.rm=TRUE ) * 100
   
 #### Poverty 175 (Access to refuse and waste removal) ####
 # Percentage of participants
-Poverty175.ovrlavg <- mean(data$Q175b) * 100
+Poverty175.ovrlavg <- mean(data$Q175b, na.rm=TRUE) * 100
   
 #### Poverty 40 (Land ownership) ####
 # Percentage of participants, overall and disaggregated by sex
-Poverty40.ovrlavg <- mean(data$Q40b) * 100
+Poverty40.ovrlavg <- mean(data$Q40b, na.rm=TRUE) * 100
 Poverty40.genderavg <- aggregate(Q40b ~ Q9b, data=data, mean) * 100
 # t test for sex disaggreagated values
 Poverty40.gendert <- t.test(Q40b ~ Q9b, data=data)
   
 #### Poverty 42 (Legal documentation of land ownership)
 # Percentage of participants, overall and disaggregated by sex
-Poverty42.ovrlavg <- mean(data$Q42b) * 100
+Poverty42.ovrlavg <- mean(data$Q42b, na.rm=TRUE) * 100
 Poverty42.genderavg <- aggregate(Q42b ~ Q9b, data=data, mean) * 100
 # t test for sex disaggreagated values
 Poverty42.gendert <- t.test(Q42b ~ Q9b, data=data)
