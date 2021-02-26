@@ -798,9 +798,13 @@ Participants were also asked to imagine that all the households in their communi
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8 }
 
+levels <- c("Less healthy than other women","About the same level of health as other women","More healthy than other women")
+
+
 plot1 <- data %>%
+  filter(Q87 %in% levels) %>%
   filter(!Q87 == "") %>%
-  ggplot(aes(x = Q87, fill = Q87)) +
+  ggplot(aes(x = factor(Q87,levels=levels,ordered=TRUE)))+
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_x_discrete(labels= c("Less healthy than other women" = "Less","About the same level of health as other women" = "Same","More healthy than other women" = "More")) +
@@ -811,7 +815,12 @@ plot1 <- data %>%
   )
 
 
-plot2 <- ggplot(data, aes(x = Q93, fill = Q93)) +
+levels <- c("Less support needed for a healthy birth than most households","About the same support needed for a healthy birth as most households","Better support needed for a healthy birth than most households")
+
+plot2 <- data %>%
+  filter(Q93 %in% levels) %>%
+  filter(!Q93 == "") %>%
+  ggplot(aes(x = factor(Q93,levels=levels,ordered=TRUE)))+
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_x_discrete(labels= c("Better support needed for a healthy birth than most households" = "Better","About the same support needed for a healthy birth as most households" = "Same","Less support needed for a healthy birth than most households" = "Less")) +
@@ -819,13 +828,17 @@ plot2 <- ggplot(data, aes(x = Q93, fill = Q93)) +
     title = expression(atop("Support for Healthy", "Births Comparison")),
     x = "",
     y = "Count" 
-  ) + coord_flip() 
+  )
+
+levels <- c("Less healthy than other households","About the same level of health as other households","More healthy than other households")
+
 
 plot3 <- data %>%
+  filter(Q63 %in% levels) %>%
   filter(!Q63 == "") %>%
-  ggplot(aes(x = Q63, fill = Q63)) +
+  ggplot(aes(x = factor(Q63,levels=levels,ordered=TRUE)))+
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Less healthy than other households" = "Less","About the same level of health as other households" = "Same","More healthy than other households" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Healthy Newborns")),
