@@ -342,9 +342,13 @@ plot1 <- data %>%
 
 ########################################################
 ########################################################
+levels <- c("Fewer basic services than most households","About the same amount of basic services as most households" ,"More basic services than most households")
+
+
 plot2 <- data %>%
+  filter(Q38 %in% levels) %>%
   filter(!Q38 == "") %>%
-  ggplot(aes(x = Q38, fill = Q38)) +
+  ggplot(aes(x = factor(Q38,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
