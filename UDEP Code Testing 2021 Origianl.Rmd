@@ -1002,7 +1002,6 @@ plot_edu122 <- data %>%
 levels <- c("Fewer technology skills than other households", "About the same amount of technology skills as other households", "More technology skills than other households")
 plot_edu124 <- data %>%
   filter( Q124 %in% levels) %>%
- # filter(!is.na(Q124)) %>%
   ggplot(aes(x = factor(Q124,levels=levels,ordered=TRUE))) + 
   geom_bar(show.legend = FALSE, fill ="#56B4E9" ) + 
   scale_x_discrete(labels = c("Fewer technology skills than other households" = "Fewer","About the same amount of technology skills as other households" = "Same", "More technology skills than other households" = "More" )) + 
@@ -1773,27 +1772,25 @@ grid.arrange(plot_gndr92,ncol=1)
 ```
 
 
-
 <!-- 6. Clean Water and Sanitation -->
 
-```{r}
-order <- c("1","2","3","4","5","6","7","8","9")
-data$Q195 <- factor(data$Q195, levels = order)
-data$Q195b <- as.numeric(data$Q195)
-data$Q196 <- factor(data$Q196, levels = order)
-data$Q196b <- as.numeric(data$Q196)
-
+```{r Clean Water}
 data$Q191b <- ifelse(data$Q191 == "Never (0)",1, ifelse(data$Q191 == "Rarely (1-2 times in the prior 4 weeks)",2, ifelse(data$Q191 == "Sometimes (3-10 times in the prior 4 weeks)",3, ifelse(data$Q191 == "Often (11-20 times in the prior 4 weeks)",4, ifelse(data$Q191 == "Always (above 20 times in prior 4 weeks)",5,NA)))))
 
 water_source <- data %>%
-  select("Q192") %>%
-  mutate(a = ifelse(Q192 %like% "%Piped water into dwelling, yard or plot%",1,0)) %>%
-  mutate(b = ifelse(Q192 %like% "%public taps or standpipes%",1,0)) %>%
-  mutate(c = ifelse(Q192 %like% "%boreholes or tubewells%",1,0)) %>%
-  mutate(d = ifelse(Q192 %like% "%protected dug wells%",1,0)) %>%
-  mutate(e = ifelse(Q192 %like% "%protected springs and rainwater%",1,0))
+  mutate(a = ifelse(Q192.1 %like% "%Piped water into dwelling, yard or plot%",1,0)) %>%
+  mutate(b = ifelse(Q192.1 %like% "%Public taps or standpipes%",1,0)) %>%
+  mutate(c = ifelse(Q192.1 %like% "%Boreholes or tubewells%",1,0)) %>%
+  mutate(d = ifelse(Q192.1 %like% "%Protected dug wells%",1,0)) %>%
+  mutate(e = ifelse(Q192.1 %like% "%Protected springs and rainwater%",1,0)) %>%
+  select(a:e)
 
-total_water <- tibble(nrow(subset(water_source, a== 1)),
+# provides averages
+total_water_avg <- water_source %>%
+  summarise(mean(a), mean(b), mean(c), mean(d), mean(e))
+
+# provides counts
+total_water_counts <- tibble(nrow(subset(water_source, a== 1)),
 nrow(subset(water_source, b== 1)),
 nrow(subset(water_source, c== 1)),
 nrow(subset(water_source, d== 1)),
@@ -1801,98 +1798,125 @@ nrow(subset(water_source, e== 1))) %>%
   gather("nrow(subset(water_source, a == 1))", "nrow(subset(water_source, b == 1))", "nrow(subset(water_source, c == 1))", "nrow(subset(water_source, d == 1))", "nrow(subset(water_source, e == 1))",key = type, value = count)
 
 sanitation <- data %>%
-  select(Q193, Q194) %>%
-  mutate(a = ifelse(Q194 %like% "%Just hand sanitizer%",1,0)) %>% # Changed to new survey question wont run properly till new data
-  mutate(b = ifelse(Q194 %like% "%Soap and water%",1,0)) %>%
-  mutate(c = ifelse(Q194 %like% "%Just water%",1,0)) %>%
-  mutate(d = ifelse(Q194 %like% "%Just soap%",1,0)) %>%
-  mutate(e = ifelse(Q194 %like% "%nothing%",1,0)) %>%
-  group_by(Q193)
+  mutate(a = ifelse(Q193.1 %like% "%Flush or pour flush%",1,0)) %>%
+  mutate(b = ifelse(Q193.1 %like% "%Septic tanks%",1,0)) %>%
+  mutate(c = ifelse(Q193.1 %like% "%Ventilated improved pit latrines%",1,0)) %>%
+  mutate(d = ifelse(Q193.1 %like% "%Composting toilets%",1,0)) %>%
+  mutate(e = ifelse(Q193.1 %like% "%Other, specify: %",1,0)) %>%
+  mutate(f = ifelse(Q193.1 %like% "%None%",1,0)) %>%
+  select(Q193,Q194,a:f)
 
-san1 <- summarise(sanitation, propHS = mean(a == 1))
-san2 <- summarise(sanitation, propSW = mean(b == 1)) 
-san3 <- summarise(sanitation, propJW = mean(c == 1))
-san4 <- summarise(sanitation, propJS = mean(d == 1))
-san5 <- summarise(sanitation, propN = mean(e == 1)) 
+facility <- data %>%
+  mutate(s = ifelse(Q194 %like% "%Soap%",1,0)) %>%
+  mutate(w = ifelse(Q194 %like% "%Water%",1,0)) %>%
+  mutate(hs = ifelse(Q194 %like% "%Hand Sanitizer%",1,0)) %>%
+  mutate(o = ifelse(Q194 %like% "%Other, specify:%",1,0)) %>%
+  mutate(n = ifelse(Q194 %like% "%Nothing%",1,0)) %>%
+  select(Q193,s:n)
 
-sanitation_2 <- san1 %>%
-  left_join(san2, by = "Q193") %>%
-  left_join(san3, by = "Q193") %>%
-  left_join(san4, by = "Q193") %>%
-  left_join(san5, by = "Q193") %>%
-  gather("propHS","propSW","propJW","propJS","propN", key = "Type", value = "Prop")
+san1 <- summarise(facility, propS = mean(s == 1))
+san2 <- summarise(facility, propW = mean(w == 1)) 
+san3 <- summarise(facility, propHS = mean(hs == 1))
+san4 <- summarise(facility, propO = mean(o == 1))
+san5 <- summarise(facility, propN = mean(n == 1)) 
+
+sanitation_2 <- sanitation %>%
+  left_join(facility, by = "Q193") %>%
+  mutate(toilet_sanitizer = ifelse(a + hs==2,1,0)) %>%
+  mutate(toilet_sw = ifelse(a + s + w==3,1,0)) %>%
+  summarize(prop_toilet_hs = mean(toilet_sanitizer, na.rm = TRUE),
+            prop_toilet_sw = mean(toilet_sw, na.rm = TRUE)
+  ) %>%
+  cbind(san1, san2, san3, san4, san5) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = "type",
+    values_to = "prop"
+  )
+
 ```
 
 # 6. Clean Water and Sanitation
 
 When asked about how frequently a household members had to drink water they felt was unsafe `r round(mean(data$Q191 == "Never (0)", na.rm = TRUE)*100)`% said never, `r round(mean(data$Q191 == "Rarely (1-2 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said rarely (1-2 times in the prior 4 weeks), `r round(mean(data$Q191 == "Sometimes (3-10 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said sometimes (3-10 times in the prior 4 weeks), `r round(mean(data$Q191 == "Often (11-20 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said often (11-20 times in the prior 4 weeks), and `r round(mean(data$Q191 == "Always (above 20 times in prior 4 weeks)", na.rm = TRUE)*100)`% said always (above 20 times in prior 4 weeks).
 
-When asked about what water sources they had access to `r round(mean(water_source$a == 1, na.rm = TRUE)*100)`% of participants said they had access to piped water into thier dwelling, yard or plot, `r round(mean(water_source$b == 1, na.rm = TRUE)*100)`% said they had access to public taps or standpipes, `r round(mean(water_source$c == 1, na.rm = TRUE)*100)`% said they had access to boreholes or tubewells, `r round(mean(water_source$d == 1, na.rm = TRUE)*100)`% said they had access to protected dug wells, and `r round(mean(water_source$e == 1, na.rm = TRUE)*100)`% said they had access to protected springs and rainwater.
+When asked about what water sources they had access to `r round(mean(water_source$a == 1, na.rm = TRUE)*100)`% of participants said they had access to piped water into their dwelling, yard or plot, `r round(mean(water_source$b == 1, na.rm = TRUE)*100)`% said they had access to public taps or standpipes, `r round(mean(water_source$c == 1, na.rm = TRUE)*100)`% said they had access to boreholes or tubewells, `r round(mean(water_source$d == 1, na.rm = TRUE)*100)`% said they had access to protected dug wells, and `r round(mean(water_source$e == 1, na.rm = TRUE)*100)`% said they had access to protected springs and rainwater.
 
-When asked about restroom facilities `r round(sanitation_2[1,3], digits = 2)*100`% said they had access to a flush or pour flush toilet to a sewer system with just hand sanitizer. `r round(sanitation_2[2,3], digits = 2)*100`% said they had access to a flush or pour flush toilet to a sewer system with soap and water. The rest of participants either did not respond or used another form of restroom with less access to sanitation.
 
-Participants were asked to place themselves on a scale from 1 - 9, with those at a nine having the nicest sanitary facillities in the community and 1 having the worst. The average response was `r round(mean(data$Q195b, na.rm = TRUE))` and the distribution was `r if(mean(data$Q195b, na.rm = TRUE) < median(data$Q195b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q195b, na.rm = TRUE) > median(data$Q195b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q195b, na.rm = TRUE) == median(data$Q195b, na.rm = TRUE)) {"normal."} `
+When asked about restroom facilities `r round(sanitation_2$prop[1]*100)`% said they had access to a flush or pour flush toilet to a sewer system with just hand sanitizer. `r round(sanitation_2$prop[2]*100)`% said they had access to a flush or pour flush toilet to a sewer system with soap and water. The rest of participants either did not respond or used another form of restroom with less access to sanitation.
 
-Participants were asked to place themselves on a scale from 1 - 9, with those at a nine having plenty of clean water and 1 having the least. The average response was `r round(mean(data$Q196b, na.rm = TRUE))` and the distribution was `r if(mean(data$Q196b, na.rm = TRUE) < median(data$Q196b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q196b, na.rm = TRUE) > median(data$Q196b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q196b, na.rm = TRUE) == median(data$Q196b, na.rm = TRUE)) {"normal."} `
+
+When asked to compare their access to sanitary facilities to other households in the community, `r round(mean(data$Q195 == "Worse access to sanitary facilities than most households", na.rm = TRUE)*100)`% said they had worse access to sanitary facilities than most households, `r round(mean(data$Q93 == "About the same access to sanitary facilities as most households", na.rm = TRUE)*100)`% said they had about the same access to sanitary facilities as most households, and `r round(mean(data$Q93 == "Better access to sanitary facilities than most households", na.rm = TRUE)*100)`% said they had better access to sanitary facilities tha nmost households.
+
+When asked to compare their access to clean drinking water to other households in the community, `r round(mean(data$Q196 == "Worse access to clean drinking water than most households", na.rm = TRUE)*100)`% said they had worse access to clean water than most households, `r round(mean(data$Q93 == "About the same access to clean drinking water as most households", na.rm = TRUE)*100)`% said they had about the same access to clean drinking water as most households, and `r round(mean(data$Q93 == "Better access to clean drinking water than most households", na.rm = TRUE)*100)`% said they had better access to sanitary facilities than most households.
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- data %>%
-  filter(!is.na(Q191b)) %>% 
-  ggplot(aes(x = as.factor(Q191b), fill = as.factor(Q191b))) +
-  geom_bar(show.legend = FALSE) +
+  filter(Q191 != "") %>% 
+  ggplot(aes(y = factor(Q191, levels = c("Never (0)", "Rarely (1-2 times in the prior 4 weeks)", "Sometimes (3-10 times in the prior 4 weeks)", "Often (11-20 times in the prior 4 weeks)", "Always (above 20 times in prior 4 weeks)"), ordered = TRUE))) +
+  geom_bar(show.legend = FALSE, fill = "#999999") +
   scale_x_discrete(labels= c("1" = "Never (0)", "2" = expression(atop("Rarely (1-2 times in", "the prior 4 weeks)")), "3" = expression(atop("Sometimes (3-10 times in", "the prior 4 weeks)")), "4" = "Often (11-20 times in the prior 4 weeks)", "5" = expression(atop("Always (above 20 times", "in prior 4 weeks)")))) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999")) +
   labs(title = expression(atop("Unsafe Water Consumption", "Per Week")),
-         x = "Numer of Times",
-         y = "Count"
-         ) +
-  coord_flip() # move title to left
+       x = "Numer of Times",
+       y = ""
+  )
 
-plot2 <- total_water %>%
-  ggplot(aes(x = type, y = count, fill = type)) +
-  geom_col(show.legend = FALSE) +
-  scale_x_discrete(labels= c("nrow(subset(water_source, a == 1))" = expression(atop("Piped water into dwelling,","yard or plot")), "nrow(subset(water_source, b == 1))" = "public taps or standpipes", "nrow(subset(water_source, c == 1))" = "boreholes or tubewells", "nrow(subset(water_source, d == 1))" = "protected dug wells", "nrow(subset(water_source, e == 1))" = expression(atop("protected springs and","rainwater")))) +
-  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9", "#56B4E9")) +
+plot2 <- total_water_counts %>%
+  ggplot(aes(y = type, x = count)) +
+  geom_col(show.legend = FALSE, fill = "#56B4E9") +
+  scale_y_discrete(labels= c("nrow(subset(water_source, a == 1))" = expression(atop("Piped water into dwelling,","yard or plot")), "nrow(subset(water_source, b == 1))" = "public taps or standpipes", "nrow(subset(water_source, c == 1))" = "boreholes or tubewells", "nrow(subset(water_source, d == 1))" = "protected dug wells", "nrow(subset(water_source, e == 1))" = expression(atop("protected springs and","rainwater")))) +
   labs(title = "Water Source Access",
-       x = "Type",
-       y = "Count"
-  ) + coord_flip() # move title to left 
+       x = "Count"
+  )
 
+levels1 <- c("Worse access to sanitary facilities than most households","About the same access to sanitary facilities as most households","Better access to sanitary facilities than most households")
 plot3 <- data %>%
-  filter(!is.na(Q195)) %>%
-  ggplot(aes(x = Q195, fill = Q195)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
+  filter(Q195 %in% levels1) %>%
+  ggplot(aes(x = factor(Q195, levels = levels1, ordered = TRUE))) +
+  geom_bar(show.legend = FALSE, fill ="#999999" ) +
+  scale_x_discrete(labels= c("Worse access to sanitary facilities than most households" = "Worse", "About the same access to sanitary facilities as most households" = "Same","Better access to sanitary facilities than most households" = "More")) +
+  labs(title = "Comparison on Access to Sanitary Facilities",
+       x = "",
+       y = "Count"
+  )
+
+levels <- c("Fewer technology skills than other households", "About the same amount of technology skills as other households", "More technology skills than other households")
+plot_edu124 <- data %>%
+  filter( Q124 %in% levels) %>%
+  ggplot(aes(x = factor(Q124,levels=levels,ordered=TRUE))) + 
+  geom_bar(show.legend = FALSE, fill ="#56B4E9" ) + 
+  scale_x_discrete(labels = c("Fewer technology skills than other households" = "Fewer","About the same amount of technology skills as other households" = "Same", "More technology skills than other households" = "More" )) + 
   labs(
-    title = "Ladder Comparison on Sanitary Facilities",
+    title = "Comparison on Technology Skills",
     x = "",
     y = "Count"
   )
 
+levels2 <- c("Worse access to clean drinking water than most households", "About the same access to clean drinking water as most households", "Better access to clean drinking water than most households")
 plot5 <- data %>%
-  filter(!is.na(Q196)) %>%
-  ggplot(aes(x = Q196, fill = Q196)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9", "#56B4E9","#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
+  filter( Q196 %in% levels2) %>%
+  ggplot(aes(x = factor(Q196, levels = levels2, ordered = TRUE))) +
+  geom_bar(show.legend = FALSE, fill = "#56B4E9") +
+  scale_x_discrete(labels = c("Worse access to clean drinking water than most households" = "Worse", "About the same access to clean drinking water as most households" = "Same", "Better access to clean drinking water than most households" = "Better")) + 
   labs(
-    title = "Ladder Comparison on Clean Water",
+    title = "Comparison on Clean Water",
     x = "",
     y = "Count"
   )
-
 
 plot4 <- sanitation_2 %>%
-  ggplot(aes(x = Type, y = Prop, fill = Q193)) +
-  geom_col(posiiton = "dodge") +
-    scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999")) +
-   scale_x_discrete(labels= c("propHS" = "Hand Sanitizer", "propJS" = "Just Soap", "propJW" = "Just Water", "propN" = "Nothing", "propSW" = "Soap and Water")) +
+  filter(type %in% c("propS", "propW", "propHS", "propO", "propN")) %>%
+  ggplot(aes(x = type, y = prop)) +
+  geom_col(fill = "#999999") +
+   scale_x_discrete(labels= c("propS" = "Soap", "propW" = "Water", "propHS" = "Hand Sanitizer", "propO" = "Other", "propN" = "None")) +
   labs(title = "Restroom Facilities",
     x = "Sanitation Services",
-    y = "Proportion",
-    fill = "Type"
+    y = "Proportion"
   ) + coord_flip()
 
-grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
+#grid.arrange(plot1, plot2, nrow = 1, ncol = 2) # wasn't formatting correctly, print separately instead
+plot1
+plot2
 grid.arrange(plot3, plot5, nrow = 1, ncol = 2)
 grid.arrange(plot4, nrow = 1, ncol = 1)
 ```
