@@ -820,15 +820,15 @@ plot1 <- data %>%
 
 
 
-levels <- c("Less support needed for a healthy birth than most households","About the same support needed for a healthy birth as most households","Better support needed for a healthy birth than most households")
+levels <- c(1,2,3)
 
 plot2 <- data %>%
-  filter(Q93 %in% levels) %>%
-  filter(!Q93 == "") %>%
-  ggplot(aes(x = factor(Q93,levels=levels,ordered=TRUE)))+
+  filter(Q93b %in% levels) %>%
+  filter(!Q93b == "") %>%
+  ggplot(aes(x = factor(Q93b,levels=levels,ordered=TRUE)))+
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
-  scale_x_discrete(labels= c("Better support needed for a healthy birth than most households" = "Better","About the same support needed for a healthy birth as most households" = "Same","Less support needed for a healthy birth than most households" = "Less")) +
+  scale_x_discrete(labels= c("1" = "Better","2" = "Same","3" = "Less")) +
   labs(
     title = expression(atop("Support for Healthy", "Births Comparison")),
     x = "",
