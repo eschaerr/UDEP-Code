@@ -2027,7 +2027,7 @@ plot2 <- data %>%
 ggplot(aes(x = as.factor(Q48.1b), fill = as.factor(Q48.1b))) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern", "4"="Not Needed", "5"="Needed")) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9","#56B4E9")) +
   labs(x = "Source", y= "Count", title= "Cooking Fuel Source")
 
 plot3 <- data %>%
@@ -2043,7 +2043,7 @@ plot4 <- data %>%
 ggplot(aes(x = as.factor(Q50.1b), fill = as.factor(Q50.1b))) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern", "4"="Not needed","5"="Needed"  )) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9","#56B4E9")) +
   labs(x = "Source", y= "Count", title= "Lighting Fuel Source")
 
 grid.arrange(plot2, plot3, plot4, nrow = 2, ncol=2)
