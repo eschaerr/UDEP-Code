@@ -344,23 +344,19 @@ plot1 <- data %>%
 
 ########################################################
 ########################################################
-levels <- c("Fewer basic services than most households","About the same amount of basic services as most households" ,"More basic services than most households")
-
-
+levels <- c(1,2,3)
 plot2 <- data %>%
-  filter(Q38 %in% levels) %>%
-  filter(!Q38 == "") %>%
-  ggplot(aes(x = factor(Q38,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
+  filter(Q38b %in% levels) %>%
+  filter(!Q38b == "") %>%
+  ggplot(aes(x = factor(Q38b,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
+  scale_x_discrete(labels= c("1" = "Fewer","2" = "Same","3" = "More")) +
   labs(
     title = expression(atop("Access to Basic", "Services Comparison")),
     x = "",
     y = "Count" 
   ) 
-
-
 
 ########################################################
 ########################################################
