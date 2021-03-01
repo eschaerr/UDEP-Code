@@ -1244,15 +1244,18 @@ Q88_skewness <- if (skew88 == 0) {
 #  scale_y_continuous(name="Number of Households")+
 #  labs(title = expression(atop("Saftety from assault compared to other households in community")))
 
-levels <- c("Less safe from physical, sexual, or psychological violence than other households","About the same level of safety from physical, sexual, or psychological violence as other households","More safe safe from physical, sexual, or psychological violence than other households")
+#RECODE Q88
+data$Q88b<-recode(data$Q88, "Less safe from physical, sexual, or psychological violence than other households"=1, "About the same level of safety from physical, sexual, or psychological violence as other households"=2, "More safe safe from physical, sexual, or psychological violence than other households"=3)
+data$Q88b <- as.numeric(data$Q88b)
+levels <- c(1,2,3)
 
 plot_gndr88 <- data %>%
-  filter(Q88 %in% levels) %>%
-  filter(!Q88 == "") %>%
-  ggplot(aes(x = factor(Q88,levels=levels,ordered=TRUE)))+
+  filter(Q88b %in% levels) %>%
+  filter(!Q88b == "") %>%
+  ggplot(aes(x = factor(Q88b,levels=levels,ordered=TRUE)))+
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
-  scale_x_discrete(labels= c("Less safe from physical, sexual, or psychological violence than other households" = "Less","About the same level of safety from physical, sexual, or psychological violence as other households" = "Same","More safe safe from physical, sexual, or psychological violence than other households" = "More")) +
+  scale_x_discrete(labels= c("1" = "Less","2" = "Same","3" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Women's Health")),
     x = "",
