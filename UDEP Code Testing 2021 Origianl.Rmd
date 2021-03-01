@@ -323,20 +323,19 @@ Participants were also asked to imagine that all the households in their communi
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 ########################################################
 ########################################################
-levels <- c("Worse than most households (poorer)","About the same as most households","Better than most households (richer)")
+levels <- c(1,2,3)
 
 plot1 <- data %>%
-  filter(Q34 %in% levels) %>%
-  filter(!Q34 == "") %>%
-  ggplot(aes(x = factor(Q34,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
+  filter(Q34b %in% levels) %>%
+  filter(!Q34b == "") %>%
+  ggplot(aes(x = factor(Q34b,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("Worse than most households (poorer)" = "Worse","About the same as most households" = "Same","Better than most households (richer)" = "Better")) +
+  scale_x_discrete(labels= c("1" = "Worse","2" = "Same", "3" = "Better")) +
   labs(
     title = expression(atop("Comparison on", "Household Wealth")),
     x = "",
     y = "Count" 
   ) 
-
 ########################################################
 ########################################################
 
