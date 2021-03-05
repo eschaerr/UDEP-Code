@@ -5,7 +5,9 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      message = FALSE)
 library(ggplot2)
 library(gridExtra)
 library(tidyverse)
@@ -2090,23 +2092,32 @@ plot2 <- data %>%
 grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 ```
 
+<!-- 8. Decent Work and Economic Growth -->
+
 # 8. Decent Work and Economic Growth
 
 ```{r, message=FALSE, warning=FALSE, include = FALSE}
 data$Q137b <- ifelse(data$Q137 == "Local organization", 1, ifelse(data$Q137 == "Self-employed", 2, ifelse(data$Q137 == "Multinational organization", 3, ifelse(data$Q137 == "Government", 4, NA)))) # where people are employed nominal measure NA,1,2,3,4
+# what if they select none AND some of the other answers (computer generated data does this)
 data$Q151b <- ifelse(data$Q151 %like% "None",0,1) # 0 no access 1 access to banking stuff
 data$Q153b <- ifelse(data$Q153 == "Yes",1,0) # Last 12 months made a transaction using mobile phone
+
+
+# do we not count military as employed? 
 prop.emp <- mean(data$Q133b, na.rm = TRUE)*100 # proportion that are employed
 prop.inj <- mean(data$Q147b)*100 # proportion that were injured 
 prop.gen <- aggregate(Q147b ~ Q9b, data=data, mean)*100 # proportion injured by gender
 prop.age <- aggregate(Q147b ~ Q6b, data=data, mean)*100 # proportion injured by age group
-prop.gen.t <- t.test(Q147b ~ Q9b, data=data)
+prop.gen.t <- t.test(Q147b ~ Q9b, data=data) # t-test comparing injuries by gender
 ```
 
-```{r, message=FALSE, error=TRUE, include = FALSE}
+```{r, warning = FALSE, message = FALSE}
 data$Q139b <- as.numeric(data$Q139) #changed from character to numeric
 data$Q143b <- as.numeric(data$Q143) #changed from character to numeric
 data$Q139c <- (data$Q139b/data$Q143b) # hourly income 
+
+# for testing purposes
+data$random <- runif(nrow(data), min = 0, max = 25) # (delete when real data)
 ttests.1 <- data %>% # female only dataset
   filter(Q9b == 1)
 ttests.0 <- data %>% # Male only dataset
@@ -2114,11 +2125,58 @@ ttests.0 <- data %>% # Male only dataset
 avg.8 <- data %>% 
   group_by(Q9b,Q137b) %>% 
   summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and occupation
-t.gen <- t.test(Q139c ~ Q9b, data = data)
+
+t.gen <- t.test(random ~ Q9b, data = data) # (delete when real data comes)
+# t.gen <- t.test(Q139c ~ Q9b, data = data) # (fix with new data)
 avg.8.1 <- data %>% 
   group_by(Q9b,Q6b) %>% 
   summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and age
+
+# for testing purposes
+t.age.1 <- t.test(random ~ Q6b, data = ttests.1) # (delete when real data comes)
+t.age.0 <- t.test(random ~ Q6b, data = ttests.0) # (delete when real data comes)
 #t.age.1 <- t.test(Q139c ~ Q6b, data = ttests.1) (fix with new data) 
+#t.age.0 <- t.test(Q139c ~ Q6b, data = ttests.0) (fix with new data) 
+avg.8.2 <- data %>% 
+  group_by(Q9b,Q13b) %>% 
+  summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and if disabled
+# for testing purposes 
+t.dis.1 <- t.test(random ~ Q13b, data = ttests.1) # female disabled t test (delete when real data comes)
+t.dis.0 <- t.test(random ~ Q13b, data = ttests.0) # male disabled t test (delete when real data comes)
+#t.dis.1 <- t.test(Q139c ~ Q13b, data = ttests.1) # female disabled t test (fix with new data)
+#t.dis.0 <- t.test(Q139c ~ Q13b, data = ttests.0) # male disabled t test (fix with new data) 
+prop.bank <- data %>%
+  filter(Q6 >= "15")
+prop.phone <- mean(prop.bank$Q153b, na.rm = TRUE)*100
+prop.bank <- mean(prop.bank$Q151b, na.rm = TRUE)*100
+```
+
+
+```{r, message=FALSE, error=TRUE, include = FALSE, warning = FALSE, message = FALSE}
+data$Q139b <- as.numeric(data$Q139) #changed from character to numeric
+data$Q143b <- as.numeric(data$Q143) #changed from character to numeric
+# need to remove the NAs in the denominator because they're causing infinite values which don't run well through the t-test. 
+# data2 <- data %>% 
+#   filter(!is.na(Q143b), !is.na(Q139b))
+
+data$Q139c <- (data$Q139b/data$Q143b) # hourly income 
+ttests.1 <- data %>% # female only dataset
+  filter(Q9b == 1)
+ttests.0 <- data %>% # Male only dataset
+  filter(Q9b == 0)
+avg.8 <- data %>%
+  group_by(Q9b,Q137b) %>% 
+  summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and occupation
+data$random <- runif(nrow(data), min = 0, max = 25) # only need this to test the data
+t.gen <- t.test(random ~ Q9b, data = data) # only for knitting
+#t.gen <- t.test(Q139c ~ Q9b, data = avg.8)
+avg.8.1 <- data %>% 
+  group_by(Q9b,Q6b) %>% 
+  summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and age
+
+# t.age.1 <- t.test(Q139c ~ Q6b, data = ttests.1) #(fix with new data) 
+
+prop.gen.t <- t.test(Q147b ~ Q9b, data=data)
 #t.age.0 <- t.test(Q139c ~ Q6b, data = ttests.0) (fix with new data) 
 avg.8.2 <- data %>% 
   group_by(Q9b,Q13b) %>% 
@@ -2135,7 +2193,7 @@ prop.bank <- mean(prop.bank$Q151b, na.rm = TRUE)*100
 
 Of all participants `r round(prop.emp)`% are employed. Of those who are employed `r round(mean(data$Q137b == 1, na.rm = TRUE)*100)`% work in local organizations, `r round(mean(data$Q137b == 2, na.rm = TRUE)*100)`% are self-employed, `r round(mean(data$Q137b == 3, na.rm = TRUE)*100)`% work for multinational organizations, and `r round(mean(data$Q137b == 4, na.rm = TRUE)*100)`% work for the government.
 
-Females make on average `r round(avg.8[1,3])` dollars an hour in local organizations, `r round(avg.8[2,3])` if self-employed, `r round(avg.8[3,3])` in multinational organizations, and `r round(avg.8[4,3])` in government organizations. Males make on average `r round(avg.8[5,3])` dollars an hour in local organizations, `r round(avg.8[6,3])` if self-employed, `r round(avg.8[7,3])` in multinational organizations, and `r round(avg.8[8,3])` in government organizations. ` r if(t.gen$p.value<=0.05 & t.gen$estimate[1] > t.gen$estimate[2]) {"A difference of means test indicates that men earn significantly more per hour than women"}``r if(t.gen$p.value<=0.05 & t.gen$estimate[1] < t.gen$estimate[2]) {"A difference of means test indicates that women earn significantly more per hour than men"}``r if(t.gen$p.value>0.05) {"However, the difference in hourly wage between men and women is not significant."} `
+Females make on average `r round(avg.8[5,3])` dollars an hour in local organizations, `r round(avg.8[6,3])` if self-employed, `r round(avg.8[7,3])` in multinational organizations, and `r round(avg.8[8,3])` in government organizations. Males make on average `r round(avg.8[1,3])` dollars an hour in local organizations, `r round(avg.8[2,3])` if self-employed, `r round(avg.8[3,3])` in multinational organizations, and `r round(avg.8[4,3])` in government organizations. `r if(t.gen$p.value<=0.05 & t.gen$estimate[1] > t.gen$estimate[2]) {"A difference of means test indicates that men earn significantly more per hour than women"}``r if(t.gen$p.value<=0.05 & t.gen$estimate[1] < t.gen$estimate[2]) {"A difference of means test indicates that women earn significantly more per hour than men"}``r if(t.gen$p.value>0.05) {"However, the difference in hourly wage between men and women is not significant."} `
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=Q137, fill=Q9b))+
@@ -2149,7 +2207,12 @@ plot1 <- ggplot(data, aes(x=Q137, fill=Q9b))+
                          breaks=c(0, 1),
                          labels=c("Male", "Female")) +
   coord_flip()
-plot2 <- ggplot(data, aes(x=Q139c, fill=Q9b))+
+
+# Is this the best graph for this? 
+plot2 <- data %>%
+  #filter(Q139c <= 30) %>%
+  #filter(!is.na(Q9b)) %>%
+  ggplot( aes(x=Q139c, fill=Q9b))+
   geom_density(position="dodge", alpha = 0.5) +
   ggtitle("Hourly Wage by Gender") + 
   xlab("Hourly Wage") + ylab("Density") +
@@ -2158,16 +2221,32 @@ plot2 <- ggplot(data, aes(x=Q139c, fill=Q9b))+
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
+
+# alternate graph to show distribution of hourly wages for men and women
+plot3 <- data %>%
+  # attempt to filter the data to keep the graph in view
+  # need a more formulaic way to do this
+  filter(Q139c <= 30) %>%
+  filter(!is.na(Q9b)) %>%
+  ggplot( aes(x=Q139c, fill=Q9b))+
+  geom_boxplot() +
+  ggtitle("Hourly Wage by Gender") + 
+  xlab("Hourly Wage") + ylab("Density") +
+  theme(legend.position = c(0.8, 0.8)) +
+  scale_fill_manual(values=c("#999999", "#56B4E9"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
+
+
+
 grid.arrange(plot1, plot2, ncol=2)
 ```
 
-```{r include = TRUE}
-# this code will produce an error because the data to do the t tests doesnt exist yet
+Females 40 years old and under make on average `r round(avg.8.1[3,3])` dollars an hour, while those above 40 make `r round(avg.8.1[4,3])`. `r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."}` Men 40 years old and under make on average `r round(avg.8.1[1,3])` dollars an hour, while those above 40 make `r round(avg.8.1[2,3])`. `r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."}`
 
-#Females 40 years old and under make on average `r round(avg.8.1[3,3])` dollars an hour, while those above 40 make `r round(avg.8.1[4,3])`. Men 40 years old and under make on average `r round(avg.8.1[1,3])` dollars an hour, while those above 40 make `r round(avg.8.1[2,3])`. `r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."}` `r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."}`
+Females that are disabled make on average `r round(avg.8.2[4,3])` dollars an hour, while those who are not make `r round(avg.8.2[3,3])`. `r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] > t.dis.1$estimate[2]) {"A difference of means test indicates that women that are not disabled earn significantly more per hour than women who are"}``r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] < t.dis.1$estimate[2]) {"A difference of means test indicates that women who are disabled earn significantly more per hour than women who are not"}``r if(t.dis.1$p.value>0.05) {"However, the difference in hourly wage between women that are and are not disabled is not significant."}` Men that are disabled make on average `r round(avg.8.2[2,3])` dollars an hour while those who are not make `r round(avg.8.2[1,3])`. `r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] > t.dis.0$estimate[2]) {"A difference of means test indicates that men that are not disabled earn significantly more per hour than men who are"}``r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] < t.dis.0$estimate[2]) {"A difference of means test indicates that men who are disabled earn significantly more per hour than men who are not"}``r if(t.dis.0$p.value>0.05) {"However, the difference in hourly wage between men that are and are not disabled is not significant."}`
 
-#Females that are disabled make on average `r round(avg.8.2[4,3])` dollars an hour, while those who are not make `r round(avg.8.2[3,3])`. Men that are disabled make on average `r round avg.8.2[2,3]` dollars an hour while those who are not make `r round avg.8.2[1,3]`. `r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] > t.dis.1$estimate[2]) {"A difference of means test indicates that women that are not disabled earn significantly more per hour than women who are"}``r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] < t.dis.1$estimate[2]) {"A difference of means test indicates that women who are disabled earn significantly more per hour than women who are not"}``r if(t.dis.1$p.value>0.05) {"However, the difference in hourly wage between women that are and are not disabled is not significant."}` `r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] > t.dis.0$estimate[2]) {"A difference of means test indicates that men that are not disabled earn significantly more per hour than men who are"}``r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] < t.dis.0$estimate[2]) {"A difference of means test indicates that men who are disabled earn significantly more per hour than men who are not"}``r if(t.dis.0$p.value>0.05) {"However, the difference in hourly wage between men that are and are not disabled is not significant."}`
-```
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=factor(Q6b), y=Q139c, fill=Q9b))+
@@ -2195,7 +2274,7 @@ grid.arrange(plot1, plot2, ncol=2)
 
 ## Workplace Safety and Household Injuries
 
-Of all participants `r round(prop.inj)`% were in households where someone was injured within the last twelve months. `r round(prop.gen[1,2],2)`% of men and `r round(prop.gen[2,2],2)`% of women were in households where someone was injured in the last twelve months. ` r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] > prop.gen[2,2]) {"A difference of means test indicates that significantly more men live in households that have injuries at work in the last twelve months than women."}``r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] < prop.gen[2,2]) {"A difference of means test indicates that significantly more women live in households that have injuries at work in the last twelve months than men."}``r if(prop.gen.t$p.value>0.05) {"However, the difference in household injuries between men and women is not significant."} `
+Of all participants `r round(prop.inj)`% were in households where someone was injured within the last twelve months. `r round(prop.gen[1,2],2)`% of men and `r round(prop.gen[2,2],2)`% of women were in households where someone was injured in the last twelve months. `r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] > prop.gen[2,2]) {"A difference of means test indicates that significantly more men live in households that have injuries at work in the last twelve months than women."}``r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] < prop.gen[2,2]) {"A difference of means test indicates that significantly more women live in households that have injuries at work in the last twelve months than men."}``r if(prop.gen.t$p.value>0.05) {"However, the difference in household injuries between men and women is not significant."} `
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=factor(Q147b), fill=Q9b))+
@@ -2212,7 +2291,7 @@ plot1 <- ggplot(data, aes(x=factor(Q147b), fill=Q9b))+
 
 ## Access to Banking and Finacial Services
 
-Of all participants above the age of 15 `r round(prop.bank)`% have access to a bank, mobile money account, banking/Micro finance account, or loans. `r round(prop.phone)`% have had someone in thier household within the past 12 months that made a finacial transaction using a mobile phone.
+Of all participants above the age of 15, `r round(prop.bank)`% have access to a bank, mobile money account, banking/Micro finance account, or loans. `r round(prop.phone)`% have had someone in their household within the past 12 months that made a financial transaction using a mobile phone.
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 
@@ -2237,44 +2316,41 @@ plot2 <- ggplot(data, aes(x=factor(Q153b), fill = factor(Q153b)))+
 grid.arrange(plot1, plot2, ncol=2)
 ```
 
+
+Participants were asked to compare one member of their household with other members of the community in regards to hazardous jobs. When asked to make this comparison, `r round(mean(data$Q149 == "Less hazardous (dangerous) than other working people's jobs", na.rm = TRUE)*100)`% said the member of their household had less hazardous working conditions than others in the community, `r round(mean(data$Q149 == "About as hazardous (dangerous) as other working people's jobs", na.rm = TRUE)*100)`% said the member of their household had working conditions that were about as hazardous as others in the community, and `r round(mean(data$Q149 == "More hazardous (dangerous) than other working people's jobs", na.rm = TRUE)*100)`% said the member of their household had more hazardous working conditions than others in the community.
+
+
+When asked to compare their household's access to financial services to other households in the community `r round(mean(data$Q155 == "Worse access to financial services than most households", na.rm = TRUE)*100)`% said they had worse access to financial services than most households, `r round(mean(data$Q155 == "About the same access to financial services as most households", na.rm = TRUE)*100)`% said they had about the same access to financial services as most households, and `r round(mean(data$Q155 == "Better access to financial services than most households", na.rm = TRUE)*100)`% said they had better access to financial services than most households.
+
 ```{r}
-order <- c("1","2","3","4","5","6","7","8","9")
-data$Q149 <- factor(data$Q149, levels = order)
-data$Q149b <- as.numeric(data$Q149)
-```
-
-Participants were asked to place a member of their household on a scale from 1 - 9, with those at a nine having the least hazardous jobs and 1 having the most. The average response was `r round(mean(data$Q149b, na.rm = TRUE))` and the distribution was ` r if(mean(data$Q149b, na.rm = TRUE) < median(data$Q149b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q149b, na.rm = TRUE) > median(data$Q149b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q149b, na.rm = TRUE) == median(data$Q149b, na.rm = TRUE)) {"normal."} `
-
-When asked to compare their households access to financial services to other households in the community `r round(mean(data$Q155 == "Worse access to financial services than most households", na.rm = TRUE)*100)`% said they had worse access to financial services than most households, `r round(mean(data$Q155 == "About the same access to financial services as most households", na.rm = TRUE)*100)`% said they had about the same access to financial services as most households, and `r round(mean(data$Q155 == "Better access to financial services than most households", na.rm = TRUE)*100)`% said they had better access to financial services than most households.
-
-```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
-
+levels1 <- c("Less hazardous (dangerous) than other working people's jobs", "About as hazardous (dangerous) as other working people's jobs","More hazardous (dangerous) than other working people's jobs")
 plot1 <- data %>%
-  filter(!Q149 == "") %>%
-  ggplot(aes(x = Q149, fill = Q149)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999","#999999", "#999999","#999999","#999999", "#999999","#999999", "#999999")) +
+  filter(Q149 %in% levels1) %>%
+  ggplot(aes(x = factor(Q149,levels=levels1,ordered=TRUE))) +
+  geom_bar(show.legend = FALSE, fill ="#56B4E9" ) +
+  scale_x_discrete(labels= c("Less hazardous (dangerous) than other working people's jobs" = "Less", "About as hazardous (dangerous) as other working people's jobs" = "Same","More hazardous (dangerous) than other working people's jobs" = "More")) +
   labs(
-    title = "Ladder Comparison on Hazardous Jobs",
+    title = "Comparison on",
+    subtitle = "Hazardous Job Conditions",
     x = "",
     y = "Count"
   )
 
+levels2 <- c("Worse access to financial services than most households","About the same access to financial services as most households","Better access to financial services than most households")
 plot2 <- data %>%
-  filter(!Q155 == "") %>%
-  ggplot(aes(x = Q155, fill = Q155)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("Better access to financial services than most households" = "Better","About the same access to financial services as most households" = "Same","Worse access to financial services than most households" = "Worse")) +
+  filter(Q155 %in% levels2) %>%
+    ggplot(aes(x = factor(Q155,levels=levels2,ordered=TRUE))) +
+  geom_bar(show.legend = FALSE, fill = "#56B4E9") +
+  scale_x_discrete(labels= c("Worse access to financial services than most households" = "Worse","About the same access to financial services as most households" = "Same","Better access to financial services than most households" = "More")) + 
   labs(
-    title = "Community Financial Services Comparison",
+    title = "Comparison Financial Services",
     x = "",
-    y = "Count" 
-  ) + coord_flip() 
+    y = "Count"
+  )
 
 grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
-```
 
+```
 
 <!-- 9. Reduced Inequalities -->
 
