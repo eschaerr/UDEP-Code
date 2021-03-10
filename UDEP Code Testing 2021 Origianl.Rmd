@@ -59,7 +59,7 @@ data$Q147b <- ifelse(data$Q147 == "Yes",1,0)
 data$Q25b <- ifelse(data$Q25=="Rural",1, ifelse(data$Q25=="Urban",3,2)) 
 
 # Q184 Ethnicity: convert ethnicity question to a factor and add all levels present in the question
-data$Q184b <- factor(data$Q184,levels=c("American Indian or Alaska Native", "Asian", "Black or African American", "Hispanic or Latino", "Native Hawaiian or Other Pacific Islander", "White", "I prefer not to respond", "Do not know"))
+#data$Q184b <- factor(data$Q184,levels=c("American Indian or Alaska Native", "Asian", "Black or African American", "Hispanic or Latino", "Native Hawaiian or Other Pacific Islander", "White", "I prefer not to respond", "Do not know"))
 
 # Q185 Marital Status: convert ethnicity question to a factor and add all levels present in the question
 data$Q185b <- factor(data$Q185,levels=c("Single", "In a relationship", "Engaged", "Married", "Widowed", "Separated", "Divorced", "I prefer not to respond", "Don't know"))
