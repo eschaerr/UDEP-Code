@@ -1198,7 +1198,7 @@ grid.arrange(plot_edu122,plot_edu124,ncol=2)
       ######## We don't have information on "ever-partnered"; only if they are currenlty married or in a union . Also this doesn't really make sense since it asks if anyone in the household had been assaulted
 
 # marital status and age
-data$partnered <- ifelse(data$Q100=="Yes",1,ifelse(data$Q100=="No",0,NA))
+#data$partnered <- ifelse(data$Q100=="Yes",1,ifelse(data$Q100=="No",0,NA))
 data$Q6b_15 <- ifelse(data$Q6<15,0, ifelse(data$Q6>=15,1,NA)) # 0-14 vs 15+
 
 # pct of households with a victim of assault
