@@ -328,14 +328,14 @@ Participants were also asked to imagine that all the households in their communi
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 ########################################################
 ########################################################
-levels <- c(1,2,3)
+levels <- c('Worse than most households (poorer)','About the same as most households','Better than other households' )
 
 plot1 <- data %>%
-  filter(Q34b %in% levels) %>%
-  filter(!Q34b == "") %>%
-  ggplot(aes(x = factor(Q34b,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
+  filter(Q34 %in% levels) %>%
+  filter(!Q34 == "") %>%
+  ggplot(aes(x = factor(Q34,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("1" = "Worse","2" = "Same", "3" = "Better")) +
+  scale_x_discrete(labels= c('Worse than most households (poorer)' = "Worse",'About the same as most households' = "Same", 'Better than other households' = "Better")) +
   labs(
     title = expression(atop("Comparison on", "Household Wealth")),
     x = "",
@@ -346,20 +346,20 @@ plot1 <- data %>%
 
 ########################################################
 ########################################################
-levels <- c(1,2,3)
+levels <- c("Fewer basic services than most households","About the same amount of basic services as most households","More basic services than most households")
+
 plot2 <- data %>%
-  filter(Q38b %in% levels) %>%
-  filter(!Q38b == "") %>%
-  ggplot(aes(x = factor(Q38b,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
+  filter(Q38 %in% levels) %>%
+  filter(!Q38 == "") %>%
+  ggplot(aes(x = factor(Q38,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
   geom_bar(show.legend = FALSE) +
   scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c("1" = "Fewer","2" = "Same","3" = "More")) +
+  scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
   labs(
     title = expression(atop("Access to Basic", "Services Comparison")),
     x = "",
     y = "Count" 
   ) 
-
 ########################################################
 ########################################################
 
