@@ -1208,13 +1208,13 @@ pct_assaulted <- round(100*mean(data$assault_victim,na.rm=TRUE),1)
 
 
 # pct of married female respondents over 15 years old living in a household with an assault victim
-n_married_female_15above <- data %>% 
-  filter(Q6b_15==1,partnered==1,Q9=="Woman") %>% 
-  count()
-n_married_female_15above_assaulted <- data %>%
-  filter(Q6b_15==1,partnered==1,Q9=="Woman",assault_victim==1) %>% 
-  count()
-pct_married_female_15_above_assaulted <- round(100*nrow(n_married_female_15above_assaulted)/nrow(n_married_female_15above),1)[[1]]
+#n_married_female_15above <- data %>% 
+#  filter(Q6b_15==1,partnered==1,Q9=="Woman") %>% 
+#  count()
+#n_married_female_15above_assaulted <- data %>%
+#  filter(Q6b_15==1,partnered==1,Q9=="Woman",assault_victim==1) %>% 
+#  count()
+#pct_married_female_15_above_assaulted <- round(100*nrow(n_married_female_15above_assaulted)/nrow(n_married_female_15above),1)[[1]]
 
 
 # Compared to other households in your community, do you think that the residents in your household feel... 
