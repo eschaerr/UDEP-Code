@@ -2116,8 +2116,8 @@ prop.gen.t <- t.test(Q147b ~ Q9b, data=data) # t-test comparing injuries by gend
 
 ```{r, warning = FALSE, message = FALSE}
 #data$Q139b <- as.numeric(data$Q139) #changed from character to numeric
-data$Q143b <- as.numeric(data$Q143) #changed from character to numeric
-data$Q139c <- (data$Q139b/data$Q143b) # hourly income 
+#data$Q143b <- as.numeric(data$Q143) #changed from character to numeric
+#data$Q139c <- (data$Q139b/data$Q143b) # hourly income 
 
 # for testing purposes
 data$random <- runif(nrow(data), min = 0, max = 25) # (delete when real data)
