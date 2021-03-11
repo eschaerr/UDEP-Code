@@ -17,7 +17,7 @@ library(DescTools)
 ```{r}
 # Upload the data here
 # read in the new dataset
-data <- read.csv(file = 'UDEP_v1.03.csv', header = TRUE, stringsAsFactors = FALSE)
+data <- read.csv(file = 'UDEP_v1.04.csv', header = TRUE, stringsAsFactors = FALSE)
 # read in the old dataset
 #data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
 # names(data)
@@ -57,9 +57,6 @@ data$Q147b <- ifelse(data$Q147 == "Yes",1,0)
 
 # Q25b Urban/Rural - rural (1), suburban (2), urban (3)
 data$Q25b <- ifelse(data$Q25=="Rural",1, ifelse(data$Q25=="Urban",3,2)) 
-
-# Q184 Ethnicity: convert ethnicity question to a factor and add all levels present in the question
-#data$Q184b <- factor(data$Q184,levels=c("American Indian or Alaska Native", "Asian", "Black or African American", "Hispanic or Latino", "Native Hawaiian or Other Pacific Islander", "White", "I prefer not to respond", "Do not know"))
 
 # Q185 Marital Status: convert ethnicity question to a factor and add all levels present in the question
 data$Q185b <- factor(data$Q185,levels=c("Single", "In a relationship", "Engaged", "Married", "Widowed", "Separated", "Divorced", "I prefer not to respond", "Don't know"))
@@ -778,28 +775,25 @@ Additionally, `r round(Healthy180.ovrlavg,2)`% of the participants have access t
 ## Comparison to other Households
 
 ```{r}
-order <- c("1","2","3","4","5","6","7","8","9")
-#data$Q87 <- factor(data$Q87, levels = order)
-data$Q87b <- as.numeric(data$Q87)
-#RECODE Q87
-data$Q87b<-recode(data$Q87, "Less healthy than other women"=1, "About the same level of health as other women"=2, "More healthy than other women"=3)
-data$Q87b <- as.numeric(data$Q87b)
-#data$Q63 <- factor(data$Q63, levels = order)
-data$Q63b <- as.numeric(data$Q63)
-data$Q95 <- factor(data$Q95, levels = order)
-data$Q95b <- as.numeric(data$Q95)
-#data$Q71 <- factor(data$Q71, levels = order)
-#data$Q71b <- as.numeric(data$Q71)
-#RECODE Q93
-data$Q93b<-recode(data$Q93, "Less support needed for a healthy birth than most households"=1, "About the same support needed for a healthy birth as most households"=2, "Better support needed for a healthy birth than most households"=3)
-data$Q93b <- as.numeric(data$Q93b)
+# #RECODE Q87
+# #data$Q87b<-as.factor(data$Q87)
+# #data$Q87b <- as.numeric(data$Q87b)
+# #data$Q63 <- factor(data$Q63, levels = order)
+# #data$Q63b <- as.numeric(data$Q63)
+# data$Q95 <- factor(data$Q95, levels = order)
+# data$Q95b <- as.numeric(data$Q95)
+# #data$Q71 <- factor(data$Q71, levels = order)
+# #data$Q71b <- as.numeric(data$Q71)
+# #RECODE Q93
+# data$Q93b<-recode(data$Q93, "Less support needed for a healthy birth than most households"=1, "About the same support needed for a healthy birth as most households"=2, "Better support needed for a healthy birth than most households"=3)
+# data$Q93b <- as.numeric(data$Q93b)
 ```
 
-Participants were asked to imagine that all the women in their community are on a step on a ladder, from 1 to 9, where 9 indicates the women who are healthiest on the top step, and 1 indicates the women who are the least healthy on the bottom step. The average response was `r round(mean(data$Q87b, na.rm = TRUE))` and the distribution was `r if(mean(data$Q87b, na.rm = TRUE) < median(data$Q87b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q87b, na.rm = TRUE) > median(data$Q87b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q87b, na.rm = TRUE) == median(data$Q87b, na.rm = TRUE)) {"normal."} `
+When asked to compare the health of the women in their household to that of other women in their community, `r round(mean(data$Q87 == "Less healthy than other women", na.rm = TRUE)*100)`% said that women in their household were less healthy than other women, `r round(mean(data$Q93 == "About the same level of health as other women", na.rm = TRUE)*100)`% said that women in their household were about the same level of health as other women, and `r round(mean(data$Q93 == "More healthy than other women", na.rm = TRUE)*100)`% said that women in their household were more healthy than other women.
 
 When asked to compare their household's support needed for a healthy birth to other households in the community `r round(mean(data$Q93 == "Less support needed for a healthy birth than most households", na.rm = TRUE)*100)`% said they had less support needed for a healthy birth than most households, `r round(mean(data$Q93 == "About the same support needed for a healthy birth as most households", na.rm = TRUE)*100)`% said they had about the same support needed for a healthy birth as most households, and `r round(mean(data$Q93 == "Better support needed for a healthy birth than most households", na.rm = TRUE)*100)`% said they had better support needed for a healthy birth than most households.
 
-Participants were also asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the healthiest newborns on the top step, and 1 indicates the least healthy newborns on the bottom step. The average response was `r round(mean(data$Q63b, na.rm = TRUE))` and the distribution was `r if(mean(data$Q63b, na.rm = TRUE) < median(data$Q63b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q63b, na.rm = TRUE) > median(data$Q63b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q63b, na.rm = TRUE) == median(data$Q63b, na.rm = TRUE)) {"normal."} `
+When asked to compare the newborns in their household to newborns in other households in the community `r round(mean(data$Q63 == "Less healthy than other households", na.rm = TRUE)*100)`% said that newborns in their household were less healthy than other newborns, `r round(mean(data$Q63 == "About the same level of health as other households", na.rm = TRUE)*100)`% said that newborns in their household were about the same level of health as other newborns, and `r round(mean(data$Q63 == "More healthy than other households", na.rm = TRUE)*100)`% said that newborns in their household were more healthy than other newborns.
 
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8 }
@@ -822,14 +816,14 @@ plot1 <- data %>%
 
 
 
-levels <- c("Less support needed for a healthy birth than most households","About the same support needed for a healthy birth as most households","Better support needed for a healthy birth than most households")
+levels2 <- c("Less support needed for a healthy birth than most households","About the same support needed for a healthy birth as most households","Better support needed for a healthy birth than most households")
 
 plot2 <- data %>%
-  filter(Q93 %in% levels) %>%
+  filter(Q93 %in% levels2) %>%
   filter(!Q93 == "") %>%
-  ggplot(aes(x = factor(Q93,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  ggplot(aes(x = factor(Q93,levels=levels2,ordered=TRUE)))+
+  geom_bar(show.legend = FALSE, fill = "#56B4E9" ) +
+ # scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_x_discrete(labels= c("Less support needed for a healthy birth than most households" = "Less","About the same support needed for a healthy birth as most households" = "Same","Better support needed for a healthy birth than most households" = "Better")) +
   labs(
     title = expression(atop("Support for Healthy", "Births Comparison")),
@@ -838,15 +832,15 @@ plot2 <- data %>%
   )
 
 
-levels <- c("Less healthy than other households","About the same level of health as other households","More healthy than other households")
+levels3 <- c("Less healthy than other households","About the same level of health as other households","More healthy than other households")
 
 
 plot3 <- data %>%
-  filter(Q63 %in% levels) %>%
+  filter(Q63 %in% levels3) %>%
   filter(!Q63 == "") %>%
-  ggplot(aes(x = factor(Q63,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9","#56B4E9")) +
+  ggplot(aes(x = factor(Q63,levels=levels3,ordered=TRUE)))+
+  geom_bar(show.legend = FALSE, fill = "#56B4E9") +
+ # scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Less healthy than other households" = "Less","About the same level of health as other households" = "Same","More healthy than other households" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Healthy Newborns")),
@@ -921,15 +915,6 @@ Education114b_gender_avg <- aggregate(Q114b_educ_in_last_12_months~Q9b,data=data
 Education114b_gender_avg_tertiary<- aggregate(Q114b_tertiary~Q9b,data=data,mean, na.rm = TRUE)*100
 Education114b_gender_avg_technical<- aggregate(Q114b_technical~Q9b,data=data,mean, na.rm = TRUE)*100
 Education114b_gender_avg_primary<- aggregate(Q114b_primary~Q9b,data=data,mean, na.rm = TRUE)*100
-
-# TRY THIS
-# educ_by_gender114 <- data %>%
-#   select(Q9b, Q114b_educ_in_last_12_months, Q114b_tertiary, Q114b_technical, Q114b_primary) %>%
-#   group_by(Gender = Q9b) %>%
-#   summarize(Education_12Months = mean(Q114b_educ_in_last_12_months, na.rm = TRUE),
-#             Primary = mean(Q114b_primary, na.rm = TRUE),
-#             Tertiary =  mean(Q114b_tertiary, na.rm= TRUE), 
-#             Technical = mean(Q114b_technical, na.rm = TRUE))
 
 ```
 
