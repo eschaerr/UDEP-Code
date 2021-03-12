@@ -1143,7 +1143,7 @@ grid.arrange(plot_edu112, plot_edu114,ncol=2)
 
 ## Computer Activities
 
-Of the following nine computer skills, the average number that each household possesses is `r round(mean(data$Q122_sum, na.rm = TRUE),1)`.
+Of the following nine computer skills, the average number that each household possesses is `r round(mean(data$Q122_sum, na.rm = TRUE),1)` skills.
 
 -   `r pct_by_skill[[2]][1]`% of respondents live with someone able to copy or move a file or folder.
 -   `r pct_by_skill[[2]][2]`% of respondents live with someone able to use copy and paste tools to duplicate or move information within a document.
