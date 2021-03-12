@@ -12,6 +12,8 @@ library(ggplot2)
 library(gridExtra)
 library(tidyverse)
 library(DescTools)
+library(dplyr)
+
 ```
 
 ```{r}
@@ -32,6 +34,7 @@ data <- data[-(1:2),]
 
 # Q9b Gender - man (0), woman (1)
 data$Q9b <- as.factor(ifelse(data$Q9=="Man",0, ifelse(data$Q9=="Woman",1,NA)))
+data <- data %>% filter(!is.na(Q9b))
 
 # Q6b Age - 40 and under (0), over 40 (1)
 data$Q6b <- as.factor(ifelse(data$Q6<=40,0, ifelse(data$Q6>40,1,NA)))
@@ -116,9 +119,8 @@ religion_plot1 <- data %>%
 religion_plot2 <- data %>%
   filter(!Q19b == "") %>%
   ggplot(aes(x = Q19b, fill = Q19b)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9","#56B4E9")) +
-  #scale_x_discrete(labels= c("0" = "No Religion","1" = "Religion")) + 
+  geom_bar(show.legend = FALSE, fill = "#56B4E9") +
+  scale_x_discrete(drop = FALSE) + 
   labs(
     title = "Religious Identities",
     y = "Count",
@@ -302,16 +304,16 @@ grid.arrange(plot1, plot2, ncol=2)
 #data$Q44 <- factor(data$Q44, levels = order)
 #data$Q44b <- as.numeric(data$Q44)
 
-#RECODE Q34
-data$Q34b<-recode(data$Q34, 'Worse than most households (poorer)'=1, 'About the same as most households'=2, 'Better than most households (richer)'=3)
-data$Q34b <- as.numeric(data$Q34b)
-#RECODE Q38
-data$Q38b<-recode(data$Q38, "Fewer basic services than most households"=1, "About the same amount of basic services as most households"=2, "More basic services than most households"=3)
-data$Q38b <- as.numeric(data$Q38b)
-#RECODE Q44
-data$Q44b<-recode(data$Q44, 'Worse than other households'=1, 'About the same as other households'=2, 'Better than other households'=3)
-data$Q44b <- as.numeric(data$Q44b)
-
+# #RECODE Q34
+# data$Q34b<-recode(data$Q34, 'Worse than most households (poorer)'=1, 'About the same as most households'=2, 'Better than most households (richer)'=3)
+# data$Q34b <- as.numeric(data$Q34b)
+# #RECODE Q38
+# data$Q38b<-recode(data$Q38, "Fewer basic services than most households"=1, "About the same amount of basic services as most households"=2, "More basic services than most households"=3)
+# data$Q38b <- as.numeric(data$Q38b)
+# #RECODE Q44
+# data$Q44b<-recode(data$Q44, 'Worse than other households'=1, 'About the same as other households'=2, 'Better than other households'=3)
+# data$Q44b <- as.numeric(data$Q44b)
+# 
 
 
 ```
@@ -325,14 +327,13 @@ Participants were also asked to imagine that all the households in their communi
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 ########################################################
 ########################################################
-levels <- c('Worse than most households (poorer)','About the same as most households','Better than other households' )
+
+levels <- c('Worse than most households (poorer)','About the same as most households','Better than most households (richer)' )
 
 plot1 <- data %>%
   filter(Q34 %in% levels) %>%
-  filter(!Q34 == "") %>%
-  ggplot(aes(x = factor(Q34,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
-  scale_x_discrete(labels= c('Worse than most households (poorer)' = "Worse",'About the same as most households' = "Same", 'Better than other households' = "Better")) +
+  ggplot(aes(x = factor(Q34,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE, fill ="#56B4E9" ) +
+  scale_x_discrete(labels= c('Worse than most households (poorer)' = "Worse",'About the same as most households' = "Same", 'Better than most households (richer)' = "Better")) +
   labs(
     title = expression(atop("Comparison on", "Household Wealth")),
     x = "",
@@ -343,14 +344,13 @@ plot1 <- data %>%
 
 ########################################################
 ########################################################
-levels <- c("Fewer basic services than most households","About the same amount of basic services as most households","More basic services than most households")
 
+levels2 <- c("Fewer basic services than most households","About the same amount of basic services as most households","More basic services than most households")
 plot2 <- data %>%
-  filter(Q38 %in% levels) %>%
-  filter(!Q38 == "") %>%
-  ggplot(aes(x = factor(Q38,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
+  filter(Q38 %in% levels2) %>%
+  ggplot(aes(x = factor(Q38,levels=levels2,ordered=TRUE))) +
+  geom_bar(show.legend = FALSE, fill = "#56B4E9" ) +
+#  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
   labs(
     title = expression(atop("Access to Basic", "Services Comparison")),
@@ -362,15 +362,12 @@ plot2 <- data %>%
 
 ########################################################
 ########################################################
-levels <- c("Worse than other households","About the same as other households","Better than other households")
-
+levels3 <- c("Worse than other households","About the same as other households","Better than other households")
 
 plot3 <- data %>%
-  filter(Q44 %in% levels) %>%
-  filter(!Q44 == "") %>%
-  ggplot(aes(x = factor(Q44,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  filter(Q44 %in% levels3) %>%
+  ggplot(aes(x = factor(Q44,levels=levels3,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
+  geom_bar(show.legend = FALSE, fill = "#56B4E9") +
   scale_x_discrete(labels= c("Worse than other households" = "Worse","About the same as other households" = "Same","Better than other households" = "Better")) +
   labs(
     title = expression(atop("Comparison on", "Ability to Buy Land")),
@@ -800,13 +797,10 @@ When asked to compare the newborns in their household to newborns in other house
 
 levels <- c("Less healthy than other women","About the same level of health as other women","More healthy than other women")
 
-
 plot1 <- data %>%
   filter(Q87 %in% levels) %>%
-  filter(!Q87 == "") %>%
   ggplot(aes(x = factor(Q87,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  geom_bar(show.legend = FALSE, fill = "#56B4E9") +
   scale_x_discrete(labels= c("Less healthy than other women" = "Less","About the same level of health as other women" = "Same","More healthy than other women" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Women's Health")),
@@ -820,10 +814,8 @@ levels2 <- c("Less support needed for a healthy birth than most households","Abo
 
 plot2 <- data %>%
   filter(Q93 %in% levels2) %>%
-  filter(!Q93 == "") %>%
   ggplot(aes(x = factor(Q93,levels=levels2,ordered=TRUE)))+
   geom_bar(show.legend = FALSE, fill = "#56B4E9" ) +
- # scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
   scale_x_discrete(labels= c("Less support needed for a healthy birth than most households" = "Less","About the same support needed for a healthy birth as most households" = "Same","Better support needed for a healthy birth than most households" = "Better")) +
   labs(
     title = expression(atop("Support for Healthy", "Births Comparison")),
@@ -837,10 +829,8 @@ levels3 <- c("Less healthy than other households","About the same level of healt
 
 plot3 <- data %>%
   filter(Q63 %in% levels3) %>%
-  filter(!Q63 == "") %>%
   ggplot(aes(x = factor(Q63,levels=levels3,ordered=TRUE)))+
   geom_bar(show.legend = FALSE, fill = "#56B4E9") +
- # scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9","#56B4E9")) +
   scale_x_discrete(labels= c("Less healthy than other households" = "Less","About the same level of health as other households" = "Same","More healthy than other households" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Healthy Newborns")),
@@ -1241,10 +1231,8 @@ levels <- c("Less safe from physical, sexual, or psychological violence than oth
 
 plot_gndr88 <- data %>%
   filter(Q88 %in% levels) %>%
-  filter(!Q88 == "") %>%
   ggplot(aes(x = factor(Q88,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9")) +
+  geom_bar(show.legend = FALSE, fill = "#56B4E9") +
   scale_x_discrete(labels= c("Less safe from physical, sexual, or psychological violence than other households" = "Less","About the same level of safety from physical, sexual, or psychological violence as other households" = "Same","More safe safe from physical, sexual, or psychological violence than other households" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Women's Health")),
@@ -1545,20 +1533,14 @@ iftiedwomen <- if (table_Q92[1,2]==table_Q92[2,2]) {
   "."
 }
 
-#data$Q92 = str_wrap(data$Q92, width = 20)
-
-data$Q92_fct <- factor(data$Q92,levels=c("More control over these decisions than most women",
-                                    "About the same amount of control over these decisions as most women",
-                                    "Less control over these decisions than most women"))
+levels2 <- c("Less control over these decisions than most women","About the same amount of control over these decisions as most women","More control over these decisions than most women")
 
 plot_gndr92 <- data %>% 
   filter(Q9=="Woman") %>% 
-  ggplot(aes(x=fct_recode(Q92_fct,
-                          "More"="More control over these decisions than most women",
-                          "Same"="About the same amount of control over these decisions as most women",
-                          "Less"="Less control over these decisions than most women")))+
-  scale_x_discrete(drop=FALSE)+
-  geom_bar(fill="#56B4E9")+
+  filter(Q92 %in% levels2) %>%
+  ggplot(aes(x=factor(Q92,levels = levels2, ordered = TRUE))) + 
+  geom_bar(fill = "#56B4E9")  + 
+  scale_x_discrete(labels = c("Less control over these decisions than most women" = "Less", "About the same amount of control over these decisions as most women" = "Same", "More control over these decisions than most women" = "More")) +
   labs(x="",
        y="Number of women",
        title="Control over reproductive health decisions, \ncompared to other women")
@@ -1615,7 +1597,6 @@ plot_gndr92 <- data %>%
 
 # Do you know of services that can help you regarding decisions of your sexual relations including contraceptive use and reproductive health? 
 # Yes/No/Don't know
-library(dplyr)
 
 know_of_services <- data %>% mutate(know_of_services=ifelse(Q178=="Yes",1,0)) %>% select(know_of_services)
 
@@ -1674,13 +1655,13 @@ same_pct <- Q110_pct$pct[1]
 less_pct <- Q110_pct$pct[2]
 more_pct <- Q110_pct$pct[3]
 
-levels <- c("Less property/land than most women in other households","About the same amount of property/land as most women in other households","More property/land than most women in other households")
+levels3 <- c("Less property/land than most women in other households","About the same amount of property/land as most women in other households","More property/land than most women in other households")
 
 
 plot_gndr110 <- data %>%
   filter(Q110!="") %>% 
-  filter(Q110 %in% levels) %>%
-  ggplot(aes(x = factor(Q110,levels=levels,ordered=TRUE)))+
+  filter(Q110 %in% levels3) %>%
+  ggplot(aes(x = factor(Q110,levels=levels3,ordered=TRUE)))+
   geom_bar(fill="#56B4E9")+
   scale_x_discrete(labels= c("Less property/land than most women in other households" = "Less","About the same amount of property/land as most women in other households" = "Same","More property/land than most women in other households" = "More")) +
   labs(title="Land ownership compared to women in other households in community",
