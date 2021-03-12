@@ -1834,11 +1834,10 @@ plot1 <- data %>%
   filter(Q191 != "") %>% 
   ggplot(aes(y = factor(Q191, levels = c("Never (0)", "Rarely (1-2 times in the prior 4 weeks)", "Sometimes (3-10 times in the prior 4 weeks)", "Often (11-20 times in the prior 4 weeks)", "Always (above 20 times in prior 4 weeks)"), ordered = TRUE))) +
   geom_bar(show.legend = FALSE, fill = "#999999") +
-  scale_x_discrete(labels= c("1" = "Never (0)", "2" = expression(atop("Rarely (1-2 times in", "the prior 4 weeks)")), "3" = expression(atop("Sometimes (3-10 times in", "the prior 4 weeks)")), "4" = "Often (11-20 times in the prior 4 weeks)", "5" = expression(atop("Always (above 20 times", "in prior 4 weeks)")))) +
+  scale_y_discrete(labels= c("1" = "Never (0)", "2" = expression(atop("Rarely (1-2 times in", "the prior 4 weeks)")), "3" = expression(atop("Sometimes (3-10 times in", "the prior 4 weeks)")), "4" = "Often (11-20 times in the prior 4 weeks)", "5" = expression(atop("Always (above 20 times", "in prior 4 weeks)")))) +
   labs(title = expression(atop("Unsafe Water Consumption", "Per Week")),
        x = "Numer of Times",
-       y = ""
-  )
+       y = "")
 
 plot2 <- total_water_counts %>%
   ggplot(aes(y = type, x = count)) +
