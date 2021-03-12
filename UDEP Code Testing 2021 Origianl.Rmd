@@ -1730,7 +1730,7 @@ plot_gndr110
 
 ## Reproductive Health and Decision Making
 
-`r round(100*mean(know_of_services$know_of_services,na.rm=TRUE),1)`% of respondents know of services that can help them regarding decisions of their sexual relations including contraceptive use and reproductive health. Of those respondents who know of services,`r round(100*mean(access$has_access,na.rm=TRUE),1)`% have access to those services.
+`r round(100*mean(know_of_services$know_of_services,na.rm=TRUE),1)`% of respondents know of services that can help them regarding decisions of their sexual relations including contraceptive use and reproductive health. Of those respondents who know of services, `r round(100*mean(access$has_access,na.rm=TRUE),1)`% have access to those services.
 
 `r pct_always_rep_health`% of women aged 15-49 always feel like they are in control of decisions regarding their sexual relations including contraceptive use and reproductive health.
 
