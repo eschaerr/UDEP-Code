@@ -1098,7 +1098,9 @@ menwomen_ttest <- t.test(data$Q112_proficient~Q9b,data)
 
 # Education
 
-`r round(mean(data$Q128_proficient, na.rm = TRUE)*100,1)`% of households have somebody with at least some grade school completed. \
+`r round(mean(data$Q128_proficient, na.rm = TRUE)*100,1)`% of households have somebody with at least some grade school completed.
+
+\
 When asked to compare the most educated person in their household to other members of the community, `r round(mean(data$Q130 == "Less formal education than others", na.rm = TRUE)*100)`% said they had less education than members of the community, `r round(mean(data$Q130 == "About the same amount of formal education as others", na.rm = TRUE)*100)`% said they had about the same amount education as most households, and `r round(mean(data$Q130 == "More formal education than others", na.rm = TRUE)*100)`% said they had more formal education than others.
 
 ```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8, eval = FALSE}
@@ -1106,7 +1108,6 @@ When asked to compare the most educated person in their household to other membe
 grid.arrange(plot_edu128, plot1, ncol = 2)
 
 ```
-\
 
 `r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed`r menwomendiff`
 
