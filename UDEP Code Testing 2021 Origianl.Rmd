@@ -765,7 +765,7 @@ xx. Yaws (Endemic treponematoses)  -`r round(Healthy177yaws.ovrlavg,2)` out of 1
 
 `r round(Healthy69.ovrlavg,2)`% of the partcipants know of access to substance abuse treatment, `r round(Healthy83.ovrlavg,2)`% have access to health coverage, and `r round(Healthy85.ovrlavg,2)`% have current health insurance.
 
-`r round(Healthy75.ovrlavg,2)`% can afford the medicine their family needs, `r round(Healthy75.ovrlavg,2)`% can provide medicine when their family needs it, and `r round(Healthy171.1.ovrlavg,2)`has an access to prescription medicines.
+`r round(Healthy75.ovrlavg,2)`% can afford the medicine their family needs, `r round(Healthy75.ovrlavg,2)`% can provide medicine when their family needs it, and `r round(Healthy171.1.ovrlavg,2)`% has an access to prescription medicines.
 
 Additionally, `r round(Healthy180.ovrlavg,2)`% of the participants have access to vaccinations, `r round(Healthy181.ovrlavg,2)`% can afford vaccinations, and `r round(Healthy182.ovrlavg,2)`% have received vaccinations.
 
