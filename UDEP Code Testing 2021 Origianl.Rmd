@@ -1109,7 +1109,7 @@ grid.arrange(plot_edu128, plot1, ncol = 2)
 
 ```
 
-`r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed`r menwomendiff`
+`r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed `r menwomendiff`
 
 `r round(Education114b_overall,1)`% of all the participants have participated in education or vocational training in the past 12 months. `r round(Education114b_gender_avg[1,2],1)`% of men in the sample have participated and `r round(Education114b_gender_avg[2,2],1)`% of women in the sample have participated. `r if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] > Education114b_gender_avg[2,2]) {"A difference of means indicates that significantly more men participated in educational or training activites in the past 12 months than women."}` `r if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] < Education114b_gender_avg[2,2]) {"A difference of means test indicates that significantly more women participated in educational or training activities in the past 12 months than men."}` `r if(Education114b_overall_gendert$p.value>0.05) {"However, the difference in education/training participation between men and women is not significant."}`
 
