@@ -2032,7 +2032,7 @@ Of those who have access to electricity `r round(mean(data$Q43b == 1, na.rm = TR
 
 On average famalies use electricity `r round(mean(data$Q44.1, na.rm = TRUE))` hours a day. Households also on average lose electricty `r round(mean(data$Q45, na.rm = TRUE))` times a week. The average length of a power outage is `r round(mean(data$Q46.1, na.rm = TRUE))` hours.
 
-When asked to compare thier home's access to electricity to other households in the community `r round(mean(data$Q56 == "Worse access to electricity than most households", na.rm = TRUE)*100)`% said they had a home with worse access to electricity than most households, `r round(mean(data$Q56 == "About the same access to electricity as most households", na.rm = TRUE)*100)`% said they had a home with about the same access to electricity as most households, and `r round(mean(data$Q56 == "Better access to electricity than most households", na.rm = TRUE)*100)`% said they had a home with Better access to electricity than most households.
+When asked to compare thier home's access to electricity to other households in the community `r round(mean(data$Q56 == "Worse access to electricity than most households", na.rm = TRUE)*100)`% said they had a home with worse access to electricity than most households, `r round(mean(data$Q56 == "About the same access to electricity as most households", na.rm = TRUE)*100)`% said they had a home with about the same access to electricity as most households, and `r round(mean(data$Q56 == "Better access to electricity than most households", na.rm = TRUE)*100)`% said they had a home with better access to electricity than most households.
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- data %>%
