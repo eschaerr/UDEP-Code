@@ -874,24 +874,21 @@ plot1 <- data %>%
 
 training_levels <- c("Grade school (including home school)","Technical and Vocational Education and Training (TVET)","Tertiary education (university, trade school, or college)","None of the above")
 
-data$Q114 <- factor(data$Q114,levels=training_levels,ordered=TRUE)
+data$Q114b_primary <- grepl("Grade school", data$Q114)
+data$Q114b_technical <- grepl("Technical and Vocational", data$Q114)
+data$Q114b_tertiary <- grepl("Tertiary education", data$Q114)
+data$Q114b_none <- grepl("None", data$Q114)
+data$Q114b_educ_in_last_12_months <- ifelse(sum(data$Q114_primary, data$Q114b_technical, data$Q114b_tertiary) > 0,1,0)
 
+  
 #4.3.1 Participation rate of youth and adults in formal and non-formal education and training in the last 12 months, by sex
 
-data <- data %>% 
-  mutate(Q114b_primary=ifelse(Q114=="",NA,ifelse(Q114==training_levels[1],1,0)),
-        Q114b_technical=ifelse(Q114=="",NA,ifelse(Q114==training_levels[2],1,0)),
-         Q114b_tertiary=ifelse(Q114=="",NA,ifelse(Q114==training_levels[3],1,0)),
-         Q114b_none=ifelse(Q114=="",NA,ifelse(Q114==training_levels[4],1,0)),
-         Q114b_educ_in_last_12_months=ifelse(Q114b_primary==1|Q114b_tertiary==1|Q114b_technical==1,1,0))
-
 # difference between the proportion of females and males participating in education in last 12 months
-Education114b_overall_gendert <-t.test(Q114b_educ_in_last_12_months~Q9b,data=data)
-#t.test(data$Q114b_educ_in_last_12_months[data$Q9b==1],data$Q114b_educ_in_last_12_months[data$Q9b==0])  
+# Education114b_overall_gendert <-t.test(Q114b_educ_in_last_12_months~Q9b,data=data)
 # difference between the proportion of females and males participating in  tertiary education in last 12 months
 Education114b_tertiary_gendert <-t.test(Q114b_tertiary~Q9b,data=data) #t.test(data$Q114b_tertiary[data$Q9b==1],data$Q114b_tertiary[data$Q9b==0]) 
-# difference between the proportion of females and males participating in  techical or vocational education in last 12 months
-Education114b_technical_gendert <-t.test(Q114b_technical~Q9b,data=data) #t.test(data$Q114b_technical[data$Q9b==1],data$Q114b_technical[data$Q9b==0]) 
+# difference between the proportion of females and males participating in  technical or vocational education in last 12 months
+Education114b_technical_gendert <-t.test(Q114b_technical~Q9b,data=data)
 Education114b_primary_gendert <-t.test(Q114b_primary~Q9b,data=data)
 
 # percentages - see tidyverse summary below
@@ -971,10 +968,20 @@ pct_by_skill <- prop_data %>%
 
 plot_edu122_pct <- pct_by_skill %>% 
   ggplot(aes(x=Skill,y=Percent))+
-  geom_col()+
-  coord_flip()+
+  geom_col() +
+  scale_x_discrete(labels = c("Copying or moving a file or folder" = "Copy file",
+                              "Using copy and paste tools to duplicate or move information within a document" = "Copy and Paste", 
+                              "Sending e-mails with attached files" = "Send Emails",
+                              "Using basic arithmetic formulae in a spreadsheet" = "Use Spreadsheet Formulae",
+                              "Connecting and installing new devices" = "Connect New Devices",
+                              "Finding, downloading, installing and configuring software" = "Download Software",
+                              "Creating electronic presentations with presentation software" = "Create Presentations",
+                              "Transferring files between a computer and other devices" = "Transfer Files",
+                              "Writing a computer program using a specialized programming language" = "Write Computer Program" )) + 
+    coord_flip()+
   labs(title="Percent of households \npossessing computer skills, \nby skill",
        x="")
+  
 plot_edu122 <- data %>% 
   ggplot(aes(x=Q122_sum))+
   geom_bar(fill="#999999")+
@@ -1111,7 +1118,7 @@ grid.arrange(plot_edu128, plot1, ncol = 2)
 
 `r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed `r menwomendiff`
 
-`r round(Education114b_overall,1)`% of all the participants have participated in education or vocational training in the past 12 months. `r round(Education114b_gender_avg[1,2],1)`% of men in the sample have participated and `r round(Education114b_gender_avg[2,2],1)`% of women in the sample have participated. `r if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] > Education114b_gender_avg[2,2]) {"A difference of means indicates that significantly more men participated in educational or training activites in the past 12 months than women."}` `r if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] < Education114b_gender_avg[2,2]) {"A difference of means test indicates that significantly more women participated in educational or training activities in the past 12 months than men."}` `r if(Education114b_overall_gendert$p.value>0.05) {"However, the difference in education/training participation between men and women is not significant."}`
+`r round(Education114b_overall,1)`% of all the participants have participated in education or vocational training in the past 12 months. `r round(Education114b_gender_avg[1,2],1)`% of men in the sample have participated and `r round(Education114b_gender_avg[2,2],1)`% of women in the sample have participated. `r # if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] > Education114b_gender_avg[2,2]) {"A difference of means indicates that significantly more men participated in educational or training activites in the past 12 months than women."}` `r # if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] < Education114b_gender_avg[2,2]) {"A difference of means test indicates that significantly more women participated in educational or training activities in the past 12 months than men."}` `r # if(Education114b_overall_gendert$p.value>0.05) {"However, the difference in education/training participation between men and women is not significant."}`
 
 <!-- Education type breakdown -->
 
@@ -1121,22 +1128,34 @@ Of the men in the sample, `r round(Education114b_gender_avg_tertiary[1,2],1)`% a
 
 ```{r message=FALSE, warning=FALSE, fig.height=4,fig.width=8}
 
-plot_edu114 <- data %>% 
-  select(Q9b, Q114) %>% 
-  ggplot(aes(x=fct_recode(Q114,
-                        "None"=training_levels[[4]],
-                        "College"=training_levels[[3]],
-                        "TVET"=training_levels[[2]],
-                        "Grade school"=training_levels[[1]]),fill=Q9b))+
+
+# for the graph
+plot114_data <- data %>%
+  select(Q114b_primary:Q114b_none, Q9b) %>%
+  pivot_longer(
+    cols = Q114b_primary:Q114b_none,
+    names_to = "type",
+    values_to = "education"
+  ) %>%
+  group_by(type, Q9b) %>%
+  summarize(proportion = mean(education,na.rm = TRUE))
+
+plot_edu114 <- plot114_data %>%
+  ggplot(aes(x = type, y = proportion, fill = factor(Q9b))) +
+  geom_col(position = "dodge") + 
+  scale_x_discrete(labels= c("Q114b_primary" = "Grade school",
+                    "Q114b_technical" = "TVET",
+                    "Q114b_tertiary" = "College",
+                    "Q114b_none" = "None")) + 
   ggtitle("Participation in education and \ntraining in the past 12 months, \nby sex") + 
-  geom_bar(position = "dodge",show.legend = FALSE)+
-  xlab("")+
-  coord_flip()+
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  labs(
+    title = "Participation in education and \ntraining in the past 12 months, \nby sex",
+    y = "Proportion"
+  ) + 
+    scale_fill_manual(values=c("#999999", "#56B4E9"),
                          name="",
                          breaks=c(0, 1),
-                         labels=c("Male", "Female"))+
-  scale_x_discrete(drop=FALSE)
+                         labels=c("Male", "Female"))
 
 grid.arrange(plot_edu112, plot_edu114,ncol=2) 
 
@@ -1156,7 +1175,12 @@ Of the following nine computer skills, the average number that each household po
 -   `r pct_by_skill[[2]][8]`% of respondents live with someone able to transfer files between a computer and other devices.
 -   `r pct_by_skill[[2]][9]`% of respondents live with someone able to Writing a computer program using a specialized programming language.
 
-When asked to compare their household's technology skills to those of other members of the community, `r round(mean(data$Q124 == "Fewer technology skills than other households", na.rm = TRUE)*100)`% said they had fewer technology skills than other households, `r round(mean(data$Q130 == "About the same amount of technology skills as other households", na.rm = TRUE)*100)`% said they had about the about the same amount of technology skills as other households, and `r round(mean(data$Q130 == "More technology skills than other households", na.rm = TRUE)*100)`% said they had more technology skills than other households.
+```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
+plot_edu122_pct
+```
+
+
+When asked to compare their household's technology skills to those of other members of the community, `r round(mean(data$Q124 == "Fewer technology skills than other households", na.rm = TRUE)*100)`% said they had fewer technology skills than other households, `r round(mean(data$Q124 == "About the same amount of technology skills as other households", na.rm = TRUE)*100)`% said they had about the about the same amount of technology skills as other households, and `r round(mean(data$Q124 == "More technology skills than other households", na.rm = TRUE)*100)`% said they had more technology skills than other households.
 
 ```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
 grid.arrange(plot_edu122,plot_edu124,ncol=2)
