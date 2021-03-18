@@ -29,6 +29,8 @@ questions <- data[1,]
 data <- data[-(1:2),]
 ```
 
+<!-- 0. Demographics -->
+
 ```{r Demographics}
 # Define some of the Demographic variables
 
@@ -134,7 +136,7 @@ religion_plot1
 religion_plot2
 ```
 
-
+<!-- 1. Poverty -->
 
 ```{r}
 # Set up for Poverty analysis:
@@ -297,32 +299,11 @@ grid.arrange(plot1, plot2, ncol=2)
 
 ## Comparisons to other Households
 
-```{r}
-#order <- c("1","2","3","4","5","6","7","8","9") 
-#data$Q34 <- factor(data$Q34, levels = order)
-#data$Q34b <- as.numeric(data$Q34)
-#data$Q44 <- factor(data$Q44, levels = order)
-#data$Q44b <- as.numeric(data$Q44)
-
-# #RECODE Q34
-# data$Q34b<-recode(data$Q34, 'Worse than most households (poorer)'=1, 'About the same as most households'=2, 'Better than most households (richer)'=3)
-# data$Q34b <- as.numeric(data$Q34b)
-# #RECODE Q38
-# data$Q38b<-recode(data$Q38, "Fewer basic services than most households"=1, "About the same amount of basic services as most households"=2, "More basic services than most households"=3)
-# data$Q38b <- as.numeric(data$Q38b)
-# #RECODE Q44
-# data$Q44b<-recode(data$Q44, 'Worse than other households'=1, 'About the same as other households'=2, 'Better than other households'=3)
-# data$Q44b <- as.numeric(data$Q44b)
-# 
-
-
-```
-
-Participants were asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the richest households on the top step, and 1 indicates the poorest households on the bottom step. The average response was `r round(mean(data$Q34b, na.rm = TRUE))` and the distribution was `r if(mean(data$Q34b, na.rm = TRUE) < median(data$Q34b, na.rm = TRUE)) {"positively skewed."}` `r if(mean(data$Q34b, na.rm = TRUE) > median(data$Q34b, na.rm = TRUE)) {"negatively skewed."}` `r if(mean(data$Q34b, na.rm = TRUE) == median(data$Q34b, na.rm = TRUE)) {"normal."} `
+When asked to compare their household's household income and overall financial situation to other households in the community `r round(mean(data$Q34 == "Worse than most households (poorer)", na.rm = TRUE)*100)`% said they had a worse financial situation than most households, `r round(mean(data$Q34 == "About the same as most households", na.rm = TRUE)*100)`% said they had about the same financial situation as most households, and `r round(mean(data$Q34 == "Better than most households (richer)", na.rm = TRUE)*100)`% said they had a better financial situation than most households.
 
 When asked to compare their household's access to basic services (critical services including electricity and energy, water and sanitation, refuse and waste removal) to other households in the community `r round(mean(data$Q38 == "Less basic services than most households", na.rm = TRUE)*100)`% said they had less basic services than most households, `r round(mean(data$Q38 == "About the same amount of basic services as most households", na.rm = TRUE)*100)`% said they had about the same amount of basic services as most households, and `r round(mean(data$Q38 == "More basic services than most households", na.rm = TRUE)*100)`% said they had more basic services than most households.
 
-Participants were also asked to imagine that all the households in their community are on a step on a ladder, from 1 to 9, where 9 indicates the households that are most able to buy land on the top step, and 1 indicates the households that are least able to buy land on the bottom step. The average response was `r round(mean(data$Q44b, na.rm = TRUE))` and the distribution was `r if(mean(data$Q44b, na.rm = TRUE) < median(data$Q44b, na.rm = TRUE)) {"positively skewed."}``r if(mean(data$Q44b, na.rm = TRUE) > median(data$Q44b, na.rm = TRUE)) {"negatively skewed."}``r if(mean(data$Q44b, na.rm = TRUE) == median(data$Q44b, na.rm = TRUE)) {"normal."}`
+When asked to compare their ability to buy land to others in the community, `r round(mean(data$Q44 == "Worse than other households", na.rm = TRUE)*100)`% said they had a worse ability to buy land than other households, `r round(mean(data$Q44 == "About the same as other households", na.rm = TRUE)*100)`% said they had about the same ability to buy land as other households, and `r round(mean(data$Q44 == "Better than other households", na.rm = TRUE)*100)`% said they had a greater ability to buy land than other households.
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 ########################################################
@@ -379,6 +360,7 @@ grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
 ########################################################
 ########################################################
 ```
+<!-- 2. Hunger -->
 
 ```{r}
 # Set up for Hunger analysis:
@@ -485,6 +467,7 @@ plot2 <- data %>%
 grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 ```
 
+<!-- 3. Healthy Lives -->
 ```{r}
 # Set up for Healthy Lives analysis:
 N <- dim(data)[1]
@@ -492,7 +475,13 @@ N <- dim(data)[1]
 data$Q89b <- ifelse(data$Q89=="Yes", 1, ifelse(data$Q89=="No", 0, NA))
 data$Q89ab <- ifelse(data$Q89b==1 & data$Q6>14 & data$Q6<20,1, ifelse(data$Q89b==0 & data$Q6>14 & data$Q6<20,0,NA))
 #SKILLED STAFF
-data$Q91b <- ifelse(data$Q91=="Doctor"|data$Q91=="Trained midwife", 1, ifelse(is.na(data$Q91), NA, 0)) 
+data$doctor <- grepl("Doctor",data$Q91)
+data$midwife <- grepl("Trained midwife", data$Q91)
+data <- data %>%
+  mutate(Q91b = ifelse(doctor + midwife>=1,1,0))
+
+
+
 # Need to figure out how to identify "Skilled Staff" - who is qualified?
 # data$Rand226b <- ifelse(data$Rand226=="Yes", 1, ifelse(data$HealthyF89=="No", 0, NA)) # data on someone else passing away
 data$Q65b <- ifelse(data$Q65=="No one in my household has been infected by any of these diseases in the last 12 months", 0, ifelse(is.na(data$Q65), NA, 1))
@@ -771,21 +760,6 @@ Additionally, `r round(Healthy180.ovrlavg,2)`% of the participants have access t
 
 ## Comparison to other Households
 
-```{r}
-# #RECODE Q87
-# #data$Q87b<-as.factor(data$Q87)
-# #data$Q87b <- as.numeric(data$Q87b)
-# #data$Q63 <- factor(data$Q63, levels = order)
-# #data$Q63b <- as.numeric(data$Q63)
-# data$Q95 <- factor(data$Q95, levels = order)
-# data$Q95b <- as.numeric(data$Q95)
-# #data$Q71 <- factor(data$Q71, levels = order)
-# #data$Q71b <- as.numeric(data$Q71)
-# #RECODE Q93
-# data$Q93b<-recode(data$Q93, "Less support needed for a healthy birth than most households"=1, "About the same support needed for a healthy birth as most households"=2, "Better support needed for a healthy birth than most households"=3)
-# data$Q93b <- as.numeric(data$Q93b)
-```
-
 When asked to compare the health of the women in their household to that of other women in their community, `r round(mean(data$Q87 == "Less healthy than other women", na.rm = TRUE)*100)`% said that women in their household were less healthy than other women, `r round(mean(data$Q93 == "About the same level of health as other women", na.rm = TRUE)*100)`% said that women in their household were about the same level of health as other women, and `r round(mean(data$Q93 == "More healthy than other women", na.rm = TRUE)*100)`% said that women in their household were more healthy than other women.
 
 When asked to compare their household's support needed for a healthy birth to other households in the community `r round(mean(data$Q93 == "Less support needed for a healthy birth than most households", na.rm = TRUE)*100)`% said they had less support needed for a healthy birth than most households, `r round(mean(data$Q93 == "About the same support needed for a healthy birth as most households", na.rm = TRUE)*100)`% said they had about the same support needed for a healthy birth as most households, and `r round(mean(data$Q93 == "Better support needed for a healthy birth than most households", na.rm = TRUE)*100)`% said they had better support needed for a healthy birth than most households.
@@ -840,6 +814,7 @@ plot3 <- data %>%
 
 grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
 ```
+<!-- 4. Quality Education -->
 
 # 4. Quality Education
 
@@ -1092,7 +1067,6 @@ plot_edu112 <- data %>%
                                   "40 years old and younger"="0",
                                   "Above 40 years old"="1")))
 
-
 menwomendiff <- if(men_gradeschool !=  women_gradeschool){
     paste0("(",men_gradeschool,"% of men and ",women_gradeschool,"% of women).")
 } else {
@@ -1152,7 +1126,7 @@ plot_edu114 <- plot114_data %>%
     title = "Participation in education and \ntraining in the past 12 months, \nby sex",
     y = "Proportion"
   ) + 
-    scale_fill_manual(values=c("#999999", "#56B4E9"),
+    scale_fill_manual(values=c("#56B4E9", "#999999"),
                          name="",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -1186,7 +1160,7 @@ When asked to compare their household's technology skills to those of other memb
 grid.arrange(plot_edu122,plot_edu124,ncol=2)
 ```
 
-# 5. Gender Equality
+<!-- 5. Gender Equality -->
 
 ```{r Gender 80}
 
@@ -1198,7 +1172,7 @@ grid.arrange(plot_edu122,plot_edu124,ncol=2)
       ######## We don't have information on "ever-partnered"; only if they are currenlty married or in a union . Also this doesn't really make sense since it asks if anyone in the household had been assaulted
 
 # marital status and age
-#data$partnered <- ifelse(data$Q100=="Yes",1,ifelse(data$Q100=="No",0,NA))
+data$partnered <- ifelse(data$Q180=="Yes",1,ifelse(data$Q180=="No",0,NA))
 data$Q6b_15 <- ifelse(data$Q6<15,0, ifelse(data$Q6>=15,1,NA)) # 0-14 vs 15+
 
 # pct of households with a victim of assault
@@ -1207,14 +1181,14 @@ data$assault_victim=ifelse(data$assault=="Yes",1,ifelse(data$assault=="No",0,NA)
 pct_assaulted <- round(100*mean(data$assault_victim,na.rm=TRUE),1)
 
 
-# pct of married female respondents over 15 years old living in a household with an assault victim
-#n_married_female_15above <- data %>% 
-#  filter(Q6b_15==1,partnered==1,Q9=="Woman") %>% 
-#  count()
-#n_married_female_15above_assaulted <- data %>%
-#  filter(Q6b_15==1,partnered==1,Q9=="Woman",assault_victim==1) %>% 
-#  count()
-#pct_married_female_15_above_assaulted <- round(100*nrow(n_married_female_15above_assaulted)/nrow(n_married_female_15above),1)[[1]]
+#pct of married female respondents over 15 years old living in a household with an assault victim
+n_married_female_15above <- data %>%
+ filter(Q6b_15==1,partnered==1,Q9=="Woman") %>%
+ count()
+n_married_female_15above_assaulted <- data %>%
+ filter(Q6b_15==1,partnered==1,Q9=="Woman",assault_victim==1) %>%
+ count()
+pct_married_female_15_above_assaulted <- round(100*nrow(n_married_female_15above_assaulted)/nrow(n_married_female_15above),1)[[1]]
 
 
 # Compared to other households in your community, do you think that the residents in your household feel... 
@@ -1228,16 +1202,16 @@ data$safety_scale=ifelse(data$safety=="Less safe from physical, sexual, or psych
 #Imagine that all the households in your community are on a ladder with nine steps. The households where residents feel most safe from physical, sexual, or psychological violence are on the top step. The households where residents feel the least safe on the bottom step. On which step do you think your household is? 
 #assault_ladder <- as.numeric(data$Q88)
 
-skew88 <- Skew(data$safety_scale,na.rm=TRUE)
-Q88_skewness <- if (skew88 == 0) {
-    "The distribution is normally distributed."
-  } else if (abs(skew88) > 0 & abs(skew88) < .5){
-    "The variable is approximately normally distributed."
-  } else if (skew88 <= -.5)  {
-    "The distribution is negatively skewed."
-  } else {
-    "The distribution is positively skewed."
-  }
+# skew88 <- Skew(data$safety_scale,na.rm=TRUE)
+# Q88_skewness <- if (skew88 == 0) {
+#     "The distribution is normally distributed."
+#   } else if (abs(skew88) > 0 & abs(skew88) < .5){
+#     "The variable is approximately normally distributed."
+#   } else if (skew88 <= -.5)  {
+#     "The distribution is negatively skewed."
+#   } else {
+#     "The distribution is positively skewed."
+#   }
 
 
 #plot_gndr88 <- data %>% 
@@ -1248,9 +1222,9 @@ Q88_skewness <- if (skew88 == 0) {
 #  labs(title = expression(atop("Saftety from assault compared to other households in community")))
 
 #RECODE Q88
-data$Q88b<-recode(data$Q88, "Less safe from physical, sexual, or psychological violence than other households"=1, "About the same level of safety from physical, sexual, or psychological violence as other households"=2, "More safe safe from physical, sexual, or psychological violence than other households"=3)
-data$Q88b <- as.numeric(data$Q88b)
-
+# data$Q88b<-recode(data$Q88, "Less safe from physical, sexual, or psychological violence than other households"=1, "About the same level of safety from physical, sexual, or psychological violence as other households"=2, "More safe safe from physical, sexual, or psychological violence than other households"=3)
+# data$Q88b <- as.numeric(data$Q88b)
+# 
 
 levels <- c("Less safe from physical, sexual, or psychological violence than other households","About the same level of safety from physical, sexual, or psychological violence as other households","More safe safe from physical, sexual, or psychological violence than other households")
 
@@ -1268,12 +1242,6 @@ plot_gndr88 <- data %>%
 
 ```
 
-```{r Gender 82}
-#Gender 82 only shows if 80 is "Yes"
-#Q84 is NULL
-#Q86 is NULL
-
-```
 
 ```{r Gender 100 and 221}
 
@@ -1291,8 +1259,7 @@ pct_married <- round(100*mean(data$partnered,na.rm=TRUE),1)
 plot_gndr221 <- data %>%
   filter(!Q221 == "") %>%
   ggplot(aes(x = Q221, fill = Q221)) +
-  geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9", "#56B4E9"))+
+  geom_bar(show.legend = FALSE, fill = "#56B4E9") +
   labs(
     title = expression(atop("What year were you married or joined in a union?")),
     x = "Year",
@@ -1406,11 +1373,6 @@ beta_age <- coef(lm(data$Q102~data$Q6,data))[2]
 
 pval_age <- summary(lm(data$Q102~data$Q6,data))$coefficients[2,4]
 
-
-
-
-
-
 ```
 
 ```{r Gender 104}
@@ -1461,7 +1423,7 @@ table_Q199$Q199 = str_wrap(table_Q199$Q199, width = 20)
 plot_gndr_unpaid1 <- age_and_sex %>% 
   ggplot(aes(x=age_group,y=mean_unpaid_hours,fill=Q9))+
   geom_col(position="dodge")+
-  scale_fill_manual(values=c("grey99", "grey85", "#56B4E9", "#999999"),
+  scale_fill_manual(values=c("grey99", "grey85", "#999999", "#56B4E9"),
                          name="")+
   theme(legend.position = "bottom")+
   labs(title="Average amount of unpaid work by age, sex, and location",
@@ -1481,7 +1443,7 @@ plot_gndr_unpaid1 <- age_and_sex %>%
 
 plot_gndr_unpaid2 <- table_Q104 %>% 
   ggplot(aes(x=Q104,y=n))+
-  geom_col(fill="#56B4E9")+
+  geom_col(fill="#999999")+
   coord_flip()+
   labs(title="",
        x="",
@@ -1490,7 +1452,7 @@ plot_gndr_unpaid2 <- table_Q104 %>%
 plot_gndr_unpaid3 <- table_Q199 %>% 
   filter(!is.na(Q199)&Q199!="") %>%
   ggplot(aes(x=Q199,y=n))+
-  geom_col(fill="#999999")+
+  geom_col(fill="#56B4E9")+
   coord_flip()+
   labs(title="",
        x="",
@@ -1714,6 +1676,7 @@ pct_own_mobile <- round(mean(data$owns_mobile,na.rm=TRUE)*100,1)
 has_internet_through_mobile <- data %>% mutate(has_internet_through_mobile=ifelse(data$Q23=="Yes",1,ifelse(data$Q23=="No",0,NA))) %>% select(has_internet_through_mobile)
 pct_has_internet_through_mobile <- round(mean(has_internet_through_mobile[[1]],na.rm = TRUE)*100,1)
 ```
+# 5. Gender Equality
 
 `r pct_married`% of respondents in the sample are married or joined in a union. `r pct_own_mobile`% of respondents own a mobile phone (`r pct_men_own_mobile`% of men and `r pct_women_own_mobile`% of women). Of those with a mobile phone, `r pct_has_internet_through_mobile`% have internet access through their mobile phone.
 
@@ -1728,9 +1691,6 @@ The average amount of unpaid labor per week (such as caregiving, cleaning, erran
 ```{r plots unpaid,fig.height=3,fig.width=8}
 plot_gndr_unpaid1
 grid.arrange(plot_gndr_unpaid1, plot_gndr_unpaid2,plot_gndr_unpaid3,ncol=3)
-
-
-
 ```
 
 ## Physical, Sexual, and Psychological Violence
@@ -1760,7 +1720,6 @@ plot_gndr110
 `r pct_always_rep_health`% of women aged 15-49 always feel like they are in control of decisions regarding their sexual relations including contraceptive use and reproductive health.
 
 ```{r plots reproductive health, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
-
 grid.arrange(plot_gndr178,
              plot_gndr90,ncol=2)
 ```
@@ -1769,13 +1728,8 @@ grid.arrange(plot_gndr178,
 `r table_Q92_highest_freq` `r iftiedwomen`
 
 ```{r plots reproductive health 2, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
-
 grid.arrange(plot_gndr92,ncol=1)
-
-
 ```
-
-
 <!-- 6. Clean Water and Sanitation -->
 
 ```{r Clean Water}
@@ -1783,23 +1737,28 @@ data$Q191b <- ifelse(data$Q191 == "Never (0)",1, ifelse(data$Q191 == "Rarely (1-
 
 water_source <- data %>%
   mutate(a = ifelse(Q192.1 %like% "%Piped water into dwelling, yard or plot%",1,0)) %>%
-  mutate(b = ifelse(Q192.1 %like% "%Public taps or standpipes%",1,0)) %>%
-  mutate(c = ifelse(Q192.1 %like% "%Boreholes or tubewells%",1,0)) %>%
-  mutate(d = ifelse(Q192.1 %like% "%Protected dug wells%",1,0)) %>%
-  mutate(e = ifelse(Q192.1 %like% "%Protected springs and rainwater%",1,0)) %>%
-  select(a:e)
+  mutate(b = ifelse(Q192.1 %like% "%Public tap or standpipe%",1,0)) %>%
+  mutate(c = ifelse(Q192.1 %like% "%Tubewell or borehole%",1,0)) %>%
+  mutate(d = ifelse(Q192.1 %like% "%Protected dug well%",1,0)) %>%
+  mutate(e = ifelse(Q192.1 %like% "%spring%",1,0)) %>%
+  mutate(f = ifelse(Q192.1 %like% "%Unprotected spring%",1,0)) %>%
+  mutate(g = ifelse(Q192.1 %like% "%Rainwater collection%",1,0)) %>%
+  mutate(h = ifelse(Q192.1 %like% "%Bottled water%",1,0)) %>%
+  mutate(i = ifelse(Q192.1 %like% "%cart with small tank/drum%",1,0)) %>%
+  mutate(j = ifelse(Q192.1 %like% "%Tanker-truck%",1,0)) %>%
+  mutate(k = ifelse(Q192.1 %like% "%Surface water%",1,0)) %>%
+  mutate(l = ifelse(Q192.1 %like% "%Other%",1,0)) %>%
+  select(a:l)
 
 # provides averages
 total_water_avg <- water_source %>%
-  summarise(mean(a), mean(b), mean(c), mean(d), mean(e))
+  summarise(mean(a), mean(b), mean(c), mean(d), mean(e), mean(f), 
+            mean(g),mean(h), mean(i), mean(j), mean(k), mean(l))
 
-# provides counts
-total_water_counts <- tibble(nrow(subset(water_source, a== 1)),
-nrow(subset(water_source, b== 1)),
-nrow(subset(water_source, c== 1)),
-nrow(subset(water_source, d== 1)),
-nrow(subset(water_source, e== 1))) %>%
-  gather("nrow(subset(water_source, a == 1))", "nrow(subset(water_source, b == 1))", "nrow(subset(water_source, c == 1))", "nrow(subset(water_source, d == 1))", "nrow(subset(water_source, e == 1))",key = type, value = count)
+total_water_counts <- water_source %>%
+  summarize(a = sum(a),b = sum(b), c = sum(c),d = sum(d),e = sum(e),f = sum(f),g = sum(g), h = sum(h),i = sum(i),j = sum(j),k = sum(k),l = sum(l))
+
+
 
 sanitation <- data %>%
   mutate(a = ifelse(Q193.1 %like% "%Flush or pour flush%",1,0)) %>%
@@ -1844,7 +1803,7 @@ sanitation_2 <- sanitation %>%
 
 When asked about how frequently a household member had to drink water they felt was unsafe `r round(mean(data$Q191 == "Never (0)", na.rm = TRUE)*100)`% said never, `r round(mean(data$Q191 == "Rarely (1-2 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said rarely (1-2 times in the prior 4 weeks), `r round(mean(data$Q191 == "Sometimes (3-10 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said sometimes (3-10 times in the prior 4 weeks), `r round(mean(data$Q191 == "Often (11-20 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said often (11-20 times in the prior 4 weeks), and `r round(mean(data$Q191 == "Always (above 20 times in prior 4 weeks)", na.rm = TRUE)*100)`% said always (above 20 times in prior 4 weeks).
 
-When asked about what water sources they had access to `r round(mean(water_source$a == 1, na.rm = TRUE)*100)`% of participants said they had access to piped water into their dwelling, yard or plot, `r round(mean(water_source$b == 1, na.rm = TRUE)*100)`% said they had access to public taps or standpipes, `r round(mean(water_source$c == 1, na.rm = TRUE)*100)`% said they had access to boreholes or tubewells, `r round(mean(water_source$d == 1, na.rm = TRUE)*100)`% said they had access to protected dug wells, and `r round(mean(water_source$e == 1, na.rm = TRUE)*100)`% said they had access to protected springs and rainwater.
+When asked about what water sources they had access to `r round(mean(water_source$a == 1, na.rm = TRUE)*100)`% of participants said they had access to piped water into their dwelling, yard or plot, `r round(mean(water_source$b == 1, na.rm = TRUE)*100)`% said they had access to public taps or standpipes, `r round(mean(water_source$c == 1, na.rm = TRUE)*100)`% said they had access to boreholes or tubewells, `r round(mean(water_source$d == 1, na.rm = TRUE)*100)`% said they had access to protected dug wells, `r round(mean(water_source$e == 1, na.rm = TRUE)*100)`% said they had access to a protected spring, etc. Do we really need to list all of these? .
 
 
 When asked about restroom facilities `r round(sanitation_2$prop[1]*100)`% said they had access to a flush or pour flush toilet to a sewer system with just hand sanitizer. `r round(sanitation_2$prop[2]*100)`% said they had access to a flush or pour flush toilet to a sewer system with soap and water. The rest of participants either did not respond or used another form of restroom with less access to sanitation.
@@ -1865,9 +1824,21 @@ plot1 <- data %>%
        y = "")
 
 plot2 <- total_water_counts %>%
+  pivot_longer(cols = a:l, names_to = "type", values_to = "count") %>%
   ggplot(aes(y = type, x = count)) +
   geom_col(show.legend = FALSE, fill = "#56B4E9") +
-  scale_y_discrete(labels= c("nrow(subset(water_source, a == 1))" = expression(atop("Piped water into dwelling,","yard or plot")), "nrow(subset(water_source, b == 1))" = "public taps or standpipes", "nrow(subset(water_source, c == 1))" = "boreholes or tubewells", "nrow(subset(water_source, d == 1))" = "protected dug wells", "nrow(subset(water_source, e == 1))" = expression(atop("protected springs and","rainwater")))) +
+  scale_y_discrete(labels= c("a" = expression(atop("Piped water into dwelling,","yard or plot")), 
+                             "b" = "Public taps or standpipes", 
+                             "c" = "Tubewell or borehole",
+                             "d" = "Protected dug well",
+                             "e" = "Protected spring",
+                             "f" = "Unprotected Spring",
+                             "g" = "Rainwater collection",
+                             "h" = "Bottled water",
+                             "i" = "Cart with tank",
+                             "j" = "Tanker-truck",
+                             "k" = "Surface water",
+                             "l" = "Other")) +
   labs(title = "Water Source Access",
        x = "Count"
   )
