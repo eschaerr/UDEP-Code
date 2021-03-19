@@ -192,15 +192,15 @@ Poverty175.ovrlavg <- mean(data$Q175b, na.rm=TRUE) * 100
   
 #### Poverty 40 (Land ownership) ####
 # Percentage of participants, overall and disaggregated by sex
-Poverty40.ovrlavg <- mean(data$Q40b, na.rm=TRUE) * 100
-Poverty40.genderavg <- aggregate(Q40b ~ Q9b, data=data, mean) * 100
+Poverty40.ovrlavg <- mean(data$Q40b, na.rm=TRUE) *100
+Poverty40.genderavg <- aggregate(Q40b ~ Q9b, data=data, mean)
 # t test for sex disaggreagated values
 Poverty40.gendert <- t.test(Q40b ~ Q9b, data=data)
   
 #### Poverty 42 (Legal documentation of land ownership)
 # Percentage of participants, overall and disaggregated by sex
 Poverty42.ovrlavg <- mean(data$Q42b, na.rm=TRUE) * 100
-Poverty42.genderavg <- aggregate(Q42b ~ Q9b, data=data, mean) * 100
+Poverty42.genderavg <- aggregate(Q42b ~ Q9b, data=data, mean)
 # t test for sex disaggreagated values
 Poverty42.gendert <- t.test(Q42b ~ Q9b, data=data)
 ```
@@ -267,11 +267,11 @@ In this sample, `r round(Poverty173.ovrlavg,2)`% of the participants have access
 
 ## Land Ownership
 
-`r round(Poverty40.ovrlavg,2)`% of all the participants own land. `r round(Poverty40.genderavg[1,2],2)`% of men in the sample own land and `r round(Poverty40.genderavg[2,2],2)`% of women in the sample own land. `r if(Poverty40.gendert$p.value<=0.05 & Poverty40.genderavg[1,2] > Poverty40.genderavg[2,2]) { "A difference of means indicates that significantly more men own land than women." }` `r if(Poverty40.gendert$p.value<=0.05 & Poverty40.genderavg[1,2] < Poverty40.genderavg[2,2]) { "A difference of means test indicates that significantly more women own land than men." }` `r if(Poverty40.gendert$p.value>0.05) { "However, the difference in land ownership between men and women is not significant." }`
+`r round(Poverty40.ovrlavg,2)`% of all the participants own land. `r round(Poverty40.genderavg[1,2],2)*100`% of men in the sample own land and `r round(Poverty40.genderavg[2,2],2)*100`% of women in the sample own land. `r if(Poverty40.gendert$p.value<=0.05 & Poverty40.genderavg[1,2] > Poverty40.genderavg[2,2]) { "A difference of means indicates that significantly more men own land than women." }` `r if(Poverty40.gendert$p.value<=0.05 & Poverty40.genderavg[1,2] < Poverty40.genderavg[2,2]) { "A difference of means test indicates that significantly more women own land than men." }` `r if(Poverty40.gendert$p.value>0.05) { "However, the difference in land ownership between men and women is not significant." }`
 
 <!-- LEGAL DECLARATION OF LAND OWNERSHIP -->
 
-Additionally, `r round(Poverty42.ovrlavg,2)`% of the participants who indicated they own land also have legal documentation that proves the land ownership. `r round(Poverty42.genderavg[1,2],2)`% of men and `r round(Poverty42.genderavg[2,2],2)`% of women in this smaller sample have the legal documentation. `r if(Poverty42.gendert$p.value<=0.05 & Poverty42.genderavg[1,2] > Poverty42.genderavg[2,2]) {"A difference of means test indicates that significantly more men who own land have legal documentation of it than women."}` `r if(Poverty42.gendert$p.value<=0.05 & Poverty42.genderavg[1,2] < Poverty42.genderavg[2,2]) {"A difference of means indicates that significantly more women who own land have legal documentation of it than men."}` `r if(Poverty42.gendert$p.value>0.05) {"However, the difference in legal documentation given land ownership between men and women is not significant."}`
+Additionally, `r round(Poverty42.ovrlavg,2)`% of the participants who indicated they own land also have legal documentation that proves the land ownership. `r round(Poverty42.genderavg[1,2],2)*100`% of men and `r round(Poverty42.genderavg[2,2],2)*100`% of women in this smaller sample have the legal documentation. `r if(Poverty42.gendert$p.value<=0.05 & Poverty42.genderavg[1,2] > Poverty42.genderavg[2,2]) {"A difference of means test indicates that significantly more men who own land have legal documentation of it than women."}` `r if(Poverty42.gendert$p.value<=0.05 & Poverty42.genderavg[1,2] < Poverty42.genderavg[2,2]) {"A difference of means indicates that significantly more women who own land have legal documentation of it than men."}` `r if(Poverty42.gendert$p.value>0.05) {"However, the difference in legal documentation given land ownership between men and women is not significant."}`
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=Q40, fill=Q9b))+
@@ -280,7 +280,7 @@ plot1 <- ggplot(data, aes(x=Q40, fill=Q9b))+
   xlab("Land Ownership") + ylab("Count") + 
   scale_x_discrete(labels= c("No","Yes")) +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -290,7 +290,7 @@ plot2 <- ggplot(data, aes(x=Q42, fill=Q9b))+
   xlab("Legal Land Ownership") + ylab("Count") + 
   scale_x_discrete(labels= c("No","Yes")) +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -1056,7 +1056,7 @@ plot_edu112 <- data %>%
                           "Doctorate"=levels(data$Q112)[[11]]),
              fill=Q9b))+
   geom_bar(position = "dodge") +  
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9","#999999"),
                          name="",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))+
@@ -1603,8 +1603,6 @@ plot_gndr178 <- data %>%
 #Yes/No/Don't know
 
 access <- data %>% filter(Q178=="Yes") %>% mutate(has_access=ifelse(Q179=="Yes",1,0)) %>% select(has_access)
-
-
 ```
 
 ```{r Gender 108}
@@ -1695,7 +1693,7 @@ grid.arrange(plot_gndr_unpaid1, plot_gndr_unpaid2,plot_gndr_unpaid3,ncol=3)
 
 ## Physical, Sexual, and Psychological Violence
 
-In the last 12 months, `r pct_married_female_15_above_assaulted`% of married female respondents 15 years and older reported that a household member had been a victim of physical, sexual, or psychological violence. On a scale of 1-9, with 9 being most safe from violence and 1 being least safe, respondents rate their household a `r round(mean(data$safety_scale,na.rm=TRUE),1)` on average. `r Q88_skewness`
+In the last 12 months, `r pct_married_female_15_above_assaulted`% of married female respondents 15 years and older reported that a household member had been a victim of physical, sexual, or psychological violence. When respondents were asked to compare their physical, sexual, or psychological safety to those in other households,  `r round(mean(data$Q88 == "Less safe from physical, sexual, or psychological violence than other households", na.rm = TRUE)*100)`% said they felt less safe from physical, sexual, or psychological violence than others in the community, `r round(mean(data$Q88 == "About the same level of safety from physical, sexual, or psychological violence as other households", na.rm = TRUE)*100)`% said they felt about as safe as others in the community, and `r round(mean(data$Q93 == "More safe safe from physical, sexual, or psychological violence than other households", na.rm = TRUE)*100)`% said they felt more safe from physical, sexual, or psychological vioence than others in the community. 
 
 ```{r assault plot,  message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
 plot_gndr88
@@ -2081,7 +2079,8 @@ prop.gen.t <- t.test(Q147b ~ Q9b, data=data) # t-test comparing injuries by gend
 #data$Q139c <- (data$Q139b/data$Q143b) # hourly income 
 
 # for testing purposes
-data$random <- runif(nrow(data), min = 0, max = 25) # (delete when real data)
+data$Q139c <- runif(nrow(data), min = 0, max = 25) # (delete when real data)
+#data$Q139c <- (data$Q139b/data$Q143b) # hourly income # uncomment with real data
 ttests.1 <- data %>% # female only dataset
   filter(Q9b == 1)
 ttests.0 <- data %>% # Male only dataset
@@ -2090,63 +2089,21 @@ avg.8 <- data %>%
   group_by(Q9b,Q137b) %>% 
   summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and occupation
 
-t.gen <- t.test(random ~ Q9b, data = data) # (delete when real data comes)
-# t.gen <- t.test(Q139c ~ Q9b, data = data) # (fix with new data)
+
+t.gen <- t.test(Q139c ~ Q9b, data = data) # (fix with new data)
 avg.8.1 <- data %>% 
   group_by(Q9b,Q6b) %>% 
   summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and age
 
 # for testing purposes
-t.age.1 <- t.test(random ~ Q6b, data = ttests.1) # (delete when real data comes)
-t.age.0 <- t.test(random ~ Q6b, data = ttests.0) # (delete when real data comes)
-#t.age.1 <- t.test(Q139c ~ Q6b, data = ttests.1) (fix with new data) 
-#t.age.0 <- t.test(Q139c ~ Q6b, data = ttests.0) (fix with new data) 
+t.age.1 <- t.test(Q139c ~ Q6b, data = ttests.1) 
+t.age.0 <- t.test(Q139c ~ Q6b, data = ttests.0) 
 avg.8.2 <- data %>% 
   group_by(Q9b,Q13b) %>% 
   summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and if disabled
 # for testing purposes 
-t.dis.1 <- t.test(random ~ Q13b, data = ttests.1) # female disabled t test (delete when real data comes)
-t.dis.0 <- t.test(random ~ Q13b, data = ttests.0) # male disabled t test (delete when real data comes)
-#t.dis.1 <- t.test(Q139c ~ Q13b, data = ttests.1) # female disabled t test (fix with new data)
-#t.dis.0 <- t.test(Q139c ~ Q13b, data = ttests.0) # male disabled t test (fix with new data) 
-prop.bank <- data %>%
-  filter(Q6 >= "15")
-prop.phone <- mean(prop.bank$Q153b, na.rm = TRUE)*100
-prop.bank <- mean(prop.bank$Q151b, na.rm = TRUE)*100
-```
-
-
-```{r, message=FALSE, error=TRUE, include = FALSE, warning = FALSE, message = FALSE}
-data$Q139b <- as.numeric(data$Q139) #changed from character to numeric
-data$Q143b <- as.numeric(data$Q143) #changed from character to numeric
-# need to remove the NAs in the denominator because they're causing infinite values which don't run well through the t-test. 
-# data2 <- data %>% 
-#   filter(!is.na(Q143b), !is.na(Q139b))
-
-data$Q139c <- (data$Q139b/data$Q143b) # hourly income 
-ttests.1 <- data %>% # female only dataset
-  filter(Q9b == 1)
-ttests.0 <- data %>% # Male only dataset
-  filter(Q9b == 0)
-avg.8 <- data %>%
-  group_by(Q9b,Q137b) %>% 
-  summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and occupation
-data$random <- runif(nrow(data), min = 0, max = 25) # only need this to test the data
-t.gen <- t.test(random ~ Q9b, data = data) # only for knitting
-#t.gen <- t.test(Q139c ~ Q9b, data = avg.8)
-avg.8.1 <- data %>% 
-  group_by(Q9b,Q6b) %>% 
-  summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and age
-
-# t.age.1 <- t.test(Q139c ~ Q6b, data = ttests.1) #(fix with new data) 
-
-prop.gen.t <- t.test(Q147b ~ Q9b, data=data)
-#t.age.0 <- t.test(Q139c ~ Q6b, data = ttests.0) (fix with new data) 
-avg.8.2 <- data %>% 
-  group_by(Q9b,Q13b) %>% 
-  summarise(Q139c = mean(Q139c, na.rm = TRUE)) # avg hourly income by gender and if disabled
-#t.dis.1 <- t.test(Q139c ~ Q13b, data = ttests.1) # female disabled t test (fix with new data)
-#t.dis.0 <- t.test(Q139c ~ Q13b, data = ttests.0) # male disabled t test (fix with new data) 
+t.dis.1 <- t.test(Q139c ~ Q13b, data = ttests.1) # female disabled t test 
+t.dis.0 <- t.test(Q139c ~ Q13b, data = ttests.0) # male disabled t test 
 prop.bank <- data %>%
   filter(Q6 >= "15")
 prop.phone <- mean(prop.bank$Q153b, na.rm = TRUE)*100
@@ -2166,7 +2123,7 @@ plot1 <- ggplot(data, aes(x=Q137, fill=Q9b))+
   xlab("Sector") + ylab("Count") + 
   scale_x_discrete(labels= c("Unemployed","Government","Local Organization","Multinational Organization","Self-employed")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female")) +
@@ -2181,7 +2138,7 @@ plot2 <- data %>%
   ggtitle("Hourly Wage by Gender") + 
   xlab("Hourly Wage") + ylab("Density") +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2197,14 +2154,14 @@ plot3 <- data %>%
   ggtitle("Hourly Wage by Gender") + 
   xlab("Hourly Wage") + ylab("Density") +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9", "#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
 
 
 
-grid.arrange(plot1, plot2, ncol=2)
+grid.arrange(plot1, plot2, plot3, ncol=3)
 ```
 
 Females 40 years old and under make on average `r round(avg.8.1[3,3])` dollars an hour, while those above 40 make `r round(avg.8.1[4,3])`. `r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."}` Men 40 years old and under make on average `r round(avg.8.1[1,3])` dollars an hour, while those above 40 make `r round(avg.8.1[2,3])`. `r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."}`
@@ -2219,7 +2176,7 @@ plot1 <- ggplot(data, aes(x=factor(Q6b), y=Q139c, fill=Q9b))+
   xlab("Age") + ylab("Hourly Wage") +
   scale_x_discrete(labels= c("40 years old and younger","Above 40 years old")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2229,7 +2186,7 @@ plot2 <- ggplot(data, aes(x=factor(Q13b), y=Q139c, fill=Q9b))+
   xlab("Disabled") + ylab("Hourly Wage") +
   scale_x_discrete(labels= c("Not Disabled","Disabled")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2247,7 +2204,7 @@ plot1 <- ggplot(data, aes(x=factor(Q147b), fill=Q9b))+
   xlab("Injury within the last 12 months") + ylab("Count") +
   scale_x_discrete(labels= c("No Injury","Injury")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56B4E9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2262,7 +2219,7 @@ Of all participants above the age of 15, `r round(prop.bank)`% have access to a 
 plot1 <- ggplot(data, aes(x=factor(Q151b), fill = factor(Q151b)))+
   geom_bar() +
   labs(x = "", y = "Count", title = "Proportion of Participants", subtitle = "With Access to Financial Institutions") +
-  scale_x_discrete(labels= c("No","Yes")) +
+  scale_x_discrete(labels= c("Yes","No")) +
   theme(legend.position = c(0.8, 0.8), plot.title = element_text(size = 12) , plot.subtitle = element_text(size = 12)) +
   scale_fill_manual(values=c("#999999", "#56B4E9"),
                     name="Access", 
@@ -2335,11 +2292,11 @@ When asked what describes their home `r round(mean(data$Q48b == 1, na.rm = TRUE)
 
 When asked to compare thier home to other households in the community `r round(mean(data$Q50 == "Less nice than most homes", na.rm = TRUE)*100)`% said they had a home less nice than most homes, `r round(mean(data$Q50 == "About the same as most homes", na.rm = TRUE)*100)`% said they had a home about the same as most homes, and `r round(mean(data$Q50 == "Nicer than most homes", na.rm = TRUE)*100)`% said they had a home nicer than most homes.
 
-```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
+```{r message=FALSE, warning=FALSE, fig.height=8,fig.width=8}
 plot1 <- ggplot(data, aes(x=Q46, fill = Q46))+
-  geom_bar(show.legend = FALSE) +
+  geom_bar(show.legend = FALSE, fill = "#999999") +
   ggtitle("Housing Situation") + 
-  scale_fill_manual(values=c("#999999","#999999","#999999","#999999","#999999")) +
+ # scale_fill_manual(values=c("#999999","#999999","#999999","#999999","#999999")) +
   scale_x_discrete(labels=c("I don't have a place to call home.","I have a home that is missing one or more walls or roof and has a dirt floor."=expression(atop("I have a home that is missing one or","more walls or roof and has a dirt floor")),"I have a home that includes temporary walls or roof and has a dirt floor."=expression(atop("I have a home that includes temporary","walls or roof and has a dirt floor")),"I have a home with solid walls and floor."=expression(atop("I have a home with","solid walls and floor"))))+
   xlab("") + ylab("Count") +
   coord_flip()
