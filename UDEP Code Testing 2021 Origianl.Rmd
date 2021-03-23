@@ -74,7 +74,7 @@ gender_plot <- data %>%
   filter(!Q9b == "") %>%
   ggplot(aes(y = Q9b, fill = Q9b)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("#999999", "#999999")) +
+  scale_fill_manual(values=c("#56b4e9", "#999999")) +
   scale_y_discrete(labels= c("0" = "Male","1" = "Female")) + 
   labs(
     title = "Male and Female Respondents",
@@ -120,7 +120,7 @@ religion_plot1 <- data %>%
 # Which Religions - how to get options to show up even if there were no respondents with that answer??
 religion_plot2 <- data %>%
   filter(!Q19b == "") %>%
-  ggplot(aes(x = Q19b, fill = Q19b)) +
+  ggplot(aes(x = fct_infreq(Q19b), fill = Q19b)) +
   geom_bar(show.legend = FALSE, fill = "#56B4E9") +
   scale_x_discrete(drop = FALSE) + 
   labs(
@@ -230,7 +230,7 @@ plot2 <- ggplot(data, aes(x = Q28pd, fill=Q9b)) +
   theme(legend.position = c(0.8, 0.8)) +
   ggtitle("Density of Income by Gender") +
   ylab("Density") + xlab("Income ($ per day)") +
-  scale_fill_manual(values=c("#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -280,7 +280,7 @@ plot1 <- ggplot(data, aes(x=Q40, fill=Q9b))+
   xlab("Land Ownership") + ylab("Count") + 
   scale_x_discrete(labels= c("No","Yes")) +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("#56B4E9","#999999"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -290,7 +290,7 @@ plot2 <- ggplot(data, aes(x=Q42, fill=Q9b))+
   xlab("Legal Land Ownership") + ylab("Count") + 
   scale_x_discrete(labels= c("No","Yes")) +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("#56B4E9","#999999"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -943,7 +943,7 @@ pct_by_skill <- prop_data %>%
 
 plot_edu122_pct <- pct_by_skill %>% 
   ggplot(aes(x=Skill,y=Percent))+
-  geom_col() +
+  geom_col(fill = "#999999") +
   scale_x_discrete(labels = c("Copying or moving a file or folder" = "Copy file",
                               "Using copy and paste tools to duplicate or move information within a document" = "Copy and Paste", 
                               "Sending e-mails with attached files" = "Send Emails",
@@ -991,7 +991,7 @@ school_levels_numeric <- data.frame(school_levels,level=c(1:11))
 
 data <- data %>%
   left_join(school_levels_numeric,by=c("Q128"="school_levels")) %>%
-  rename(Q128_level=level)
+  rename(Q128_level = level)
 
 data <- data %>%
   mutate(Q128_proficient=ifelse(is.na(Q128_level),NA,ifelse(Q128_level>1,1,0)))
@@ -1056,7 +1056,7 @@ plot_edu112 <- data %>%
                           "Doctorate"=levels(data$Q112)[[11]]),
              fill=Q9b))+
   geom_bar(position = "dodge") +  
-  scale_fill_manual(values=c("#56B4E9","#999999"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))+
@@ -1126,7 +1126,7 @@ plot_edu114 <- plot114_data %>%
     title = "Participation in education and \ntraining in the past 12 months, \nby sex",
     y = "Proportion"
   ) + 
-    scale_fill_manual(values=c("#56B4E9", "#999999"),
+    scale_fill_manual(values=c("#56b4e9", "#999999"),
                          name="",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -1423,7 +1423,7 @@ table_Q199$Q199 = str_wrap(table_Q199$Q199, width = 20)
 plot_gndr_unpaid1 <- age_and_sex %>% 
   ggplot(aes(x=age_group,y=mean_unpaid_hours,fill=Q9))+
   geom_col(position="dodge")+
-  scale_fill_manual(values=c("grey99", "grey85", "#999999", "#56B4E9"),
+  scale_fill_manual(values=c("#56b4e9", "grey85", "#999999", "#56B4E9"),
                          name="")+
   theme(legend.position = "bottom")+
   labs(title="Average amount of unpaid work by age, sex, and location",
@@ -1687,7 +1687,7 @@ The average amount of unpaid labor per week (such as caregiving, cleaning, erran
 ### Amount of unpaid labor compared to other women and men in community
 
 ```{r plots unpaid,fig.height=3,fig.width=8}
-plot_gndr_unpaid1
+#plot_gndr_unpaid1
 grid.arrange(plot_gndr_unpaid1, plot_gndr_unpaid2,plot_gndr_unpaid3,ncol=3)
 ```
 
@@ -2042,9 +2042,8 @@ plot2 <- data %>%
   filter(Q56 %in% levels) %>%
   filter(!is.na(Q56)) %>%
   ggplot(aes(x = factor(Q56,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE) +
+  geom_bar(show.legend = FALSE, fill = "#999999") +
   scale_x_discrete(labels= c("Worse access to electricity than most households" = "Worse","About the same access to electricity as most households" = "Same","Better access to electricity than most households" = "Better"))+
-  scale_fill_manual(values = c("#56B4E9", "#56B4E9","#56B4E9","#56B4E9")) +
   labs(
     title = expression(atop("Community Electricity Accecibility","Comparison")),
     x = "",
@@ -2123,7 +2122,7 @@ plot1 <- ggplot(data, aes(x=Q137, fill=Q9b))+
   xlab("Sector") + ylab("Count") + 
   scale_x_discrete(labels= c("Unemployed","Government","Local Organization","Multinational Organization","Self-employed")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#56B4E9","#999999"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female")) +
@@ -2138,7 +2137,7 @@ plot2 <- data %>%
   ggtitle("Hourly Wage by Gender") + 
   xlab("Hourly Wage") + ylab("Density") +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("#56B4E9","#999999"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2154,7 +2153,7 @@ plot3 <- data %>%
   ggtitle("Hourly Wage by Gender") + 
   xlab("Hourly Wage") + ylab("Density") +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("#56B4E9", "#999999"),
+  scale_fill_manual(values=c("#56b4e9", "#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2176,7 +2175,7 @@ plot1 <- ggplot(data, aes(x=factor(Q6b), y=Q139c, fill=Q9b))+
   xlab("Age") + ylab("Hourly Wage") +
   scale_x_discrete(labels= c("40 years old and younger","Above 40 years old")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#56B4E9","#999999"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2186,7 +2185,7 @@ plot2 <- ggplot(data, aes(x=factor(Q13b), y=Q139c, fill=Q9b))+
   xlab("Disabled") + ylab("Hourly Wage") +
   scale_x_discrete(labels= c("Not Disabled","Disabled")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#56B4E9","#999999"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2204,7 +2203,7 @@ plot1 <- ggplot(data, aes(x=factor(Q147b), fill=Q9b))+
   xlab("Injury within the last 12 months") + ylab("Count") +
   scale_x_discrete(labels= c("No Injury","Injury")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#56B4E9","#999999"),
+  scale_fill_manual(values=c("#56b4e9","#999999"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2321,9 +2320,8 @@ plot3 <- data %>%
   filter(Q50 %in% levels) %>%
   filter(!Q50== "") %>%
   ggplot(aes(x = factor(Q50,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE) +
+  geom_bar(show.legend = FALSE, fill = "#999999") +
   scale_x_discrete(labels= c("Less nice than most homes"="Less","About the same as most homes"="Same","Nicer than most homes"="Nicer")) +
-  scale_fill_manual(values = c("#999999","#999999","#999999")) +
   labs(
     title = "Community Housing Comparison",
     x = "",
