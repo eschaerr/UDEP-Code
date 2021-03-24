@@ -1064,8 +1064,8 @@ plot_edu112 <- data %>%
        x="Count",
        y = "") +
   facet_grid(rows=vars(fct_recode(factor(Q6b),
-                                  "40 years old and younger"="0",
-                                  "Above 40 years old"="1")))
+                                  "40 years old and younger"="1",
+                                  "Above 40 years old"="0")))
 
 menwomendiff <- if(men_gradeschool !=  women_gradeschool){
     paste0("(",men_gradeschool,"% of men and ",women_gradeschool,"% of women).")
