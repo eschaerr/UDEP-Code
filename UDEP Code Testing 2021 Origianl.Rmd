@@ -74,7 +74,7 @@ gender_plot <- data %>%
   filter(!Q9b == "") %>%
   ggplot(aes(y = Q9b, fill = Q9b)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("midnightblue", "sandybrown")) +
+  scale_fill_manual(values=c("#003399", "sandybrown")) +
   scale_y_discrete(labels= c("0" = "Male","1" = "Female")) + 
   labs(
     title = "Male and Female Respondents",
@@ -85,7 +85,7 @@ gender_plot <- data %>%
 # Histogram of Age
 age_plot <- data %>% 
   ggplot(aes(x=as.numeric(Q6) ))+
-  geom_histogram(show.legend=FALSE,fill="midnightblue")+
+  geom_histogram(show.legend=FALSE,fill="#99CCCC")+
   labs(title = "Age of Respondents",
        x = "Age",
        y = "Count")
@@ -95,8 +95,7 @@ age_plot <- data %>%
 disability_plot <- data %>%
   filter(!Q13b == "") %>%
   ggplot(aes(y = Q13b, fill = Q13b)) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
- # scale_fill_manual(values=c("sandybrown", "sandybrown")) +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_y_discrete(labels= c("0" = "No Disability","1" = "Disability")) + 
   labs(
     title = "Disability",
@@ -109,7 +108,7 @@ religion_plot1 <- data %>%
   filter(!Q17b == "") %>%
   ggplot(aes(x = Q17b, fill = Q17b)) +
   geom_bar(show.legend = FALSE) +
-  scale_fill_manual(values=c("midnightblue", "midnightblue")) +
+  scale_fill_manual(values=c("#99CCCC", "#99CCCC")) +
   scale_x_discrete(labels= c("0" = "No Religion","1" = "Religion")) + 
   labs(
     title = "Count of Respondents who Identify with a Religion",
@@ -121,7 +120,7 @@ religion_plot1 <- data %>%
 religion_plot2 <- data %>%
   filter(!Q19b == "") %>%
   ggplot(aes(x = fct_infreq(Q19b), fill = Q19b)) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(drop = FALSE) + 
   labs(
     title = "Religious Identities",
@@ -224,13 +223,18 @@ plot1 <- data %>%
   ggplot(aes(Q9b, Q28pd)) + geom_boxplot()+ 
   ggtitle("Income Trends by Gender") + 
   xlab("Gender") + ylab("Income ($ per day)") + 
-  scale_x_discrete(labels= c("Male","Female"))
+  scale_x_discrete(labels= c("Male","Female")) + 
+  scale_fill_manual(values=c("#003399","sandybrown"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
+
 plot2 <- ggplot(data, aes(x = Q28pd, fill=Q9b)) +
   geom_density(alpha = 0.7) +
   theme(legend.position = c(0.8, 0.8)) +
   ggtitle("Density of Income by Gender") +
   ylab("Density") + xlab("Income ($ per day)") +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -244,13 +248,17 @@ The average income per day for the population ages 0 to 40 is \$`r round(Poverty
 plot1 <- ggplot(data, aes(Q6b, Q28pd)) + geom_boxplot()+ 
   ggtitle("Income Trends by Age") + 
   xlab("Age") + ylab("Income ($ per day)") + 
-  scale_x_discrete(labels= c("0-40","40+"))
+  scale_x_discrete(labels= c("0-40","40+")) +
+  scale_fill_manual(values=c("#003399","sandybrown"),
+                         name="Gender",
+                         breaks=c(0, 1),
+                         labels=c("Male", "Female"))
 plot2 <- ggplot(data, aes(x = Q28pd, fill=Q6b)) +
   geom_density(alpha = 0.7) +
   theme(legend.position = c(0.8, 0.8)) +
   ggtitle("Density of Income by Age") +
   ylab("Density") + xlab("Income ($ per day)") +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#66B3B3","#BBDDDD"),
                          name="Age Range",
                          breaks=c(0, 1),
                          labels=c("0-40", "40+"))
@@ -280,7 +288,7 @@ plot1 <- ggplot(data, aes(x=Q40, fill=Q9b))+
   xlab("Land Ownership") + ylab("Count") + 
   scale_x_discrete(labels= c("No","Yes")) +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -290,7 +298,7 @@ plot2 <- ggplot(data, aes(x=Q42, fill=Q9b))+
   xlab("Legal Land Ownership") + ylab("Count") + 
   scale_x_discrete(labels= c("No","Yes")) +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -313,7 +321,7 @@ levels <- c('Worse than most households (poorer)','About the same as most househ
 
 plot1 <- data %>%
   filter(Q34 %in% levels) %>%
-  ggplot(aes(x = factor(Q34,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE, fill ="midnightblue" ) +
+  ggplot(aes(x = factor(Q34,levels=levels,ordered=TRUE))) +  geom_bar(show.legend = FALSE, fill ="#99CCCC" ) +
   scale_x_discrete(labels= c('Worse than most households (poorer)' = "Worse",'About the same as most households' = "Same", 'Better than most households (richer)' = "Better")) +
   labs(
     title = expression(atop("Comparison on", "Household Wealth")),
@@ -330,8 +338,8 @@ levels2 <- c("Fewer basic services than most households","About the same amount 
 plot2 <- data %>%
   filter(Q38 %in% levels2) %>%
   ggplot(aes(x = factor(Q38,levels=levels2,ordered=TRUE))) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue" ) +
-#  scale_fill_manual(values = c("midnightblue", "midnightblue","midnightblue","midnightblue")) +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC" ) +
+#  scale_fill_manual(values = c("#003399", "#003399","#003399","#003399")) +
   scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
   labs(
     title = expression(atop("Access to Basic", "Services Comparison")),
@@ -348,7 +356,7 @@ levels3 <- c("Worse than other households","About the same as other households",
 plot3 <- data %>%
   filter(Q44 %in% levels3) %>%
   ggplot(aes(x = factor(Q44,levels=levels3,ordered=TRUE))) +  geom_bar(show.legend = FALSE) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Worse than other households" = "Worse","About the same as other households" = "Same","Better than other households" = "Better")) +
   labs(
     title = expression(atop("Comparison on", "Ability to Buy Land")),
@@ -444,7 +452,7 @@ levels1 <- c("Less food to eat than most households", "About the same amount of 
 plot1 <- data %>%
   filter(Q70 %in% levels1) %>%
   ggplot(aes(x = factor(Q70,levels=levels1,ordered=TRUE))) +
-  geom_bar(show.legend = FALSE, fill ="midnightblue" ) +
+  geom_bar(show.legend = FALSE, fill ="#99CCCC" ) +
   scale_x_discrete(labels= c("Less food to eat than most households" = "Less", "About the same amount of food to eat as most households" = "Same","More food to eat than most households" = "More")) +
   labs(
     title = "Comparison Amount of Food",
@@ -456,7 +464,7 @@ levels2 <- c("Less healthy than other children","About the same level of health 
 plot2 <- data %>%
   filter(Q72 %in% levels2) %>%
     ggplot(aes(x = factor(Q72,levels=levels2,ordered=TRUE))) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Less healthy than other children" = "Less","About the same level of health as other children" = "Same","More healthy than other children" = "More")) + 
   labs(
     title = "Comparison on Health",
@@ -774,7 +782,7 @@ levels <- c("Less healthy than other women","About the same level of health as o
 plot1 <- data %>%
   filter(Q87 %in% levels) %>%
   ggplot(aes(x = factor(Q87,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE, fill = "sandybrown") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Less healthy than other women" = "Less","About the same level of health as other women" = "Same","More healthy than other women" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Women's Health")),
@@ -789,7 +797,7 @@ levels2 <- c("Less support needed for a healthy birth than most households","Abo
 plot2 <- data %>%
   filter(Q93 %in% levels2) %>%
   ggplot(aes(x = factor(Q93,levels=levels2,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE, fill = "midnightblue" ) +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC" ) +
   scale_x_discrete(labels= c("Less support needed for a healthy birth than most households" = "Less","About the same support needed for a healthy birth as most households" = "Same","Better support needed for a healthy birth than most households" = "Better")) +
   labs(
     title = expression(atop("Support for Healthy", "Births Comparison")),
@@ -804,7 +812,7 @@ levels3 <- c("Less healthy than other households","About the same level of healt
 plot3 <- data %>%
   filter(Q63 %in% levels3) %>%
   ggplot(aes(x = factor(Q63,levels=levels3,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Less healthy than other households" = "Less","About the same level of health as other households" = "Same","More healthy than other households" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Healthy Newborns")),
@@ -831,7 +839,7 @@ levels1 <- c("Less formal education than others","About the same amount of forma
 plot1 <- data %>%
   filter(Q130 %in% levels1) %>%
   ggplot(aes(x = factor(Q130,levels=levels1,ordered=TRUE), fill = Q130)) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Less formal education than others" = "Less","About the same amount of formal education as others" = "Same","More formal education than others" = "More")) +
   labs(
     title = "Comparison of Education",
@@ -943,7 +951,7 @@ pct_by_skill <- prop_data %>%
 
 plot_edu122_pct <- pct_by_skill %>% 
   ggplot(aes(x=Skill,y=Percent))+
-  geom_col(fill = "midnightblue") +
+  geom_col(fill = "#99CCCC") +
   scale_x_discrete(labels = c("Copying or moving a file or folder" = "Copy file",
                               "Using copy and paste tools to duplicate or move information within a document" = "Copy and Paste", 
                               "Sending e-mails with attached files" = "Send Emails",
@@ -959,7 +967,7 @@ plot_edu122_pct <- pct_by_skill %>%
   
 plot_edu122 <- data %>% 
   ggplot(aes(x=Q122_sum))+
-  geom_bar(fill="midnightblue")+
+  geom_bar(fill="#99CCCC")+
   labs(title="Number of computer skills in each \nhousehold",
        x="Sum of Computer Skills",
        y="Number of Households")
@@ -968,7 +976,7 @@ levels <- c("Fewer technology skills than other households", "About the same amo
 plot_edu124 <- data %>%
   filter( Q124 %in% levels) %>%
   ggplot(aes(x = factor(Q124,levels=levels,ordered=TRUE))) + 
-  geom_bar(show.legend = FALSE, fill ="midnightblue" ) + 
+  geom_bar(show.legend = FALSE, fill ="#99CCCC" ) + 
   scale_x_discrete(labels = c("Fewer technology skills than other households" = "Fewer","About the same amount of technology skills as other households" = "Same", "More technology skills than other households" = "More" )) + 
   labs(
     title = "Comparison on Technology Skills",
@@ -1011,7 +1019,7 @@ plot_edu128 <- data %>%
                           "Master's"=levels(data$Q128)[[9]],
                           "Professional"=levels(data$Q128)[[10]],
                           "Doctorate"=levels(data$Q128)[[11]]))) +
-  geom_bar(position = "dodge",fill="midnightblue") +  
+  geom_bar(position = "dodge",fill="#99CCCC") +  
   theme(legend.position = c(0.8, 0.8)) +
   coord_flip() +
   scale_x_discrete(drop=FALSE) +
@@ -1056,7 +1064,7 @@ plot_edu112 <- data %>%
                           "Doctorate"=levels(data$Q112)[[11]]),
              fill=Q9b))+
   geom_bar(position = "dodge") +  
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))+
@@ -1126,7 +1134,7 @@ plot_edu114 <- plot114_data %>%
     title = "Participation in education and \ntraining in the past 12 months, \nby sex",
     y = "Proportion"
   ) + 
-    scale_fill_manual(values=c("midnightblue", "sandybrown"),
+    scale_fill_manual(values=c("#003399", "sandybrown"),
                          name="",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -1231,7 +1239,7 @@ levels <- c("Less safe from physical, sexual, or psychological violence than oth
 plot_gndr88 <- data %>%
   filter(Q88 %in% levels) %>%
   ggplot(aes(x = factor(Q88,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Less safe from physical, sexual, or psychological violence than other households" = "Less","About the same level of safety from physical, sexual, or psychological violence as other households" = "Same","More safe safe from physical, sexual, or psychological violence than other households" = "More")) +
   labs(
     title = expression(atop("Comparison on", "Women's Health")),
@@ -1259,7 +1267,7 @@ pct_married <- round(100*mean(data$partnered,na.rm=TRUE),1)
 plot_gndr221 <- data %>%
   filter(!Q221 == "") %>%
   ggplot(aes(x = Q221, fill = Q221)) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   labs(
     title = expression(atop("What year were you married or joined in a union?")),
     x = "Year",
@@ -1423,7 +1431,7 @@ table_Q199$Q199 = str_wrap(table_Q199$Q199, width = 20)
 plot_gndr_unpaid1 <- age_and_sex %>% 
   ggplot(aes(x=age_group,y=mean_unpaid_hours,fill=Q9))+
   geom_col(position="dodge")+
-  scale_fill_manual(values=c("midnightblue","sandybrown", "midnightblue", "sandybrown", "midnightblue", "sandybrown"), name = "Gender") +
+  scale_fill_manual(values=c("#003399","sandybrown", "#003399", "sandybrown", "#003399", "sandybrown"), name = "Gender") +
   theme(legend.position = "bottom")+
   labs(title="Average amount of unpaid work by age, sex, and location",
        x="Age",
@@ -1442,7 +1450,7 @@ plot_gndr_unpaid1 <- age_and_sex %>%
 
 plot_gndr_unpaid2 <- table_Q104 %>% 
   ggplot(aes(x=Q104,y=n))+
-  geom_col(fill="sandybrown")+
+  geom_col(fill="#99CCCC")+
   coord_flip()+
   labs(title="",
        x="",
@@ -1451,7 +1459,7 @@ plot_gndr_unpaid2 <- table_Q104 %>%
 plot_gndr_unpaid3 <- table_Q199 %>% 
   filter(!is.na(Q199)&Q199!="") %>%
   ggplot(aes(x=Q199,y=n))+
-  geom_col(fill="midnightblue")+
+  geom_col(fill="#99CCCC")+
   coord_flip()+
   labs(title="",
        x="",
@@ -1484,7 +1492,7 @@ pct_always_rep_health <- round(100*mean(data$always_reproductive_health,na.rm=TR
 plot_gndr90 <- data %>% 
   filter(Q6>=15,Q6<=49,Q9=="Woman") %>% 
   ggplot(aes(x=factor(Q90,levels=c("Always","Most of the time","About half the time", "Sometimes", "Never"))))+
-  geom_bar(fill="midnightblue")+
+  geom_bar(fill="#99CCCC")+
   scale_x_discrete(drop=FALSE)+
   labs(x="",
        y="Number of women aged 15-49",
@@ -1525,7 +1533,7 @@ plot_gndr92 <- data %>%
   filter(Q9=="Woman") %>% 
   filter(Q92 %in% levels2) %>%
   ggplot(aes(x=factor(Q92,levels = levels2, ordered = TRUE))) + 
-  geom_bar(fill = "midnightblue")  + 
+  geom_bar(fill = "#99CCCC")  + 
   scale_x_discrete(labels = c("Less control over these decisions than most women" = "Less", "About the same amount of control over these decisions as most women" = "Same", "More control over these decisions than most women" = "More")) +
   labs(x="",
        y="Number of women",
@@ -1571,7 +1579,7 @@ plot_gndr92 <- data %>%
 #                          "More"="More control over these decisions than most men",
 #                          "About the same"="About the same amount of control over these decisions as most men",
 #                          "Less"="Less control over these decisions than most men")))+
-#  geom_bar(fill="midnightblue")+
+#  geom_bar(fill="#003399")+
 #  labs(x="",
 #       y="Number of men",
  #      title="Control over reproductive health decsions, \ncompared to other men")+
@@ -1590,7 +1598,7 @@ plot_gndr178 <- data %>%
   filter(!is.na(Q178)&Q178!="") %>% 
   ggplot(aes(x=fct_recode(Q178,
                              "Don't know"="3"))) +
-  geom_bar(fill="midnightblue")+
+  geom_bar(fill="#99CCCC")+
   labs(title="Do you know of services that can help you \nregarding decisions of your sexual relations \nincluding contraceptive use and \nreproductive health? ",
        x="",
        y="Count")
@@ -1646,7 +1654,7 @@ plot_gndr110 <- data %>%
   filter(Q110!="") %>% 
   filter(Q110 %in% levels3) %>%
   ggplot(aes(x = factor(Q110,levels=levels3,ordered=TRUE)))+
-  geom_bar(fill="midnightblue")+
+  geom_bar(fill="#99CCCC")+
   scale_x_discrete(labels= c("Less property/land than most women in other households" = "Less","About the same amount of property/land as most women in other households" = "Same","More property/land than most women in other households" = "More")) +
   labs(title="Land ownership compared to women in other households in community",
        x="",
@@ -1814,7 +1822,7 @@ When asked to compare their access to clean drinking water to other households i
 plot1 <- data %>%
   filter(Q191 != "") %>% 
   ggplot(aes(y = factor(Q191, levels = c("Never (0)", "Rarely (1-2 times in the prior 4 weeks)", "Sometimes (3-10 times in the prior 4 weeks)", "Often (11-20 times in the prior 4 weeks)", "Always (above 20 times in prior 4 weeks)"), ordered = TRUE))) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_y_discrete(labels= c("1" = "Never (0)", "2" = expression(atop("Rarely (1-2 times in", "the prior 4 weeks)")), "3" = expression(atop("Sometimes (3-10 times in", "the prior 4 weeks)")), "4" = "Often (11-20 times in the prior 4 weeks)", "5" = expression(atop("Always (above 20 times", "in prior 4 weeks)")))) +
   labs(title = expression(atop("Unsafe Water Consumption", "Per Week")),
        x = "Numer of Times",
@@ -1823,7 +1831,7 @@ plot1 <- data %>%
 plot2 <- total_water_counts %>%
   pivot_longer(cols = a:l, names_to = "type", values_to = "count") %>%
   ggplot(aes(y = type, x = count)) +
-  geom_col(show.legend = FALSE, fill = "midnightblue") +
+  geom_col(show.legend = FALSE, fill = "#99CCCC") +
   scale_y_discrete(labels= c("a" = expression(atop("Piped water into dwelling,","yard or plot")), 
                              "b" = "Public taps or standpipes", 
                              "c" = "Tubewell or borehole",
@@ -1844,7 +1852,7 @@ levels1 <- c("Worse access to sanitary facilities than most households","About t
 plot3 <- data %>%
   filter(Q195 %in% levels1) %>%
   ggplot(aes(x = factor(Q195, levels = levels1, ordered = TRUE))) +
-  geom_bar(show.legend = FALSE, fill ="midnightblue" ) +
+  geom_bar(show.legend = FALSE, fill ="#99CCCC" ) +
   scale_x_discrete(labels= c("Worse access to sanitary facilities than most households" = "Worse", "About the same access to sanitary facilities as most households" = "Same","Better access to sanitary facilities than most households" = "More")) +
   labs(title = "Comparison on Access to Sanitary Facilities",
        x = "",
@@ -1855,7 +1863,7 @@ levels <- c("Fewer technology skills than other households", "About the same amo
 plot_edu124 <- data %>%
   filter( Q124 %in% levels) %>%
   ggplot(aes(x = factor(Q124,levels=levels,ordered=TRUE))) + 
-  geom_bar(show.legend = FALSE, fill ="midnightblue" ) + 
+  geom_bar(show.legend = FALSE, fill ="#99CCCC" ) + 
   scale_x_discrete(labels = c("Fewer technology skills than other households" = "Fewer","About the same amount of technology skills as other households" = "Same", "More technology skills than other households" = "More" )) + 
   labs(
     title = "Comparison on Technology Skills",
@@ -1867,7 +1875,7 @@ levels2 <- c("Worse access to clean drinking water than most households", "About
 plot5 <- data %>%
   filter( Q196 %in% levels2) %>%
   ggplot(aes(x = factor(Q196, levels = levels2, ordered = TRUE))) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels = c("Worse access to clean drinking water than most households" = "Worse", "About the same access to clean drinking water as most households" = "Same", "Better access to clean drinking water than most households" = "Better")) + 
   labs(
     title = "Comparison on Clean Water",
@@ -1878,7 +1886,7 @@ plot5 <- data %>%
 plot4 <- sanitation_2 %>%
   filter(type %in% c("propS", "propW", "propHS", "propO", "propN")) %>%
   ggplot(aes(x = type, y = prop)) +
-  geom_col(fill = "midnightblue") +
+  geom_col(fill = "#99CCCC") +
    scale_x_discrete(labels= c("propS" = "Soap", "propW" = "Water", "propHS" = "Hand Sanitizer", "propO" = "Other", "propN" = "None")) +
   labs(title = "Restroom Facilities",
     x = "Sanitation Services",
@@ -1990,7 +1998,7 @@ When asked about primary fuel source lighting `r round(mean(data$Q50.1b == 1, na
 #  geom_bar(show.legend = FALSE) +
 #  scale_x_discrete(labels= c("National grid connection","Local mini grid connection","Electric generator", "Rechargeable battery", "Dry-cell battery", "Solar latern", "Solar multi-light product", "Solar home system", "Pico-hydro", "Other")) +
 #  labs(x= "Source" , y= "Count", title = "Electricity Source") +
-#  scale_fill_manual(values=c("midnightblue", "midnightblue","midnightblue", "midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue","midnightblue")) +
+#  scale_fill_manual(values=c("#003399", "#003399","#003399", "#003399","#003399","#003399","#003399","#003399","#003399","#003399")) +
 #  coord_flip()
 
 plot2 <- data %>%
@@ -1998,7 +2006,7 @@ plot2 <- data %>%
 ggplot(aes(x = as.factor(Q48.1b), fill = as.factor(Q48.1b))) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern", "4"="Not Needed", "5"="Needed")) +
-  scale_fill_manual(values = c("midnightblue", "midnightblue","midnightblue", "midnightblue","midnightblue")) +
+  scale_fill_manual(values = c("#99CCCC", "#99CCCC","#99CCCC", "#99CCCC","#99CCCC")) +
   labs(x = "Source", y= "Count", title= "Cooking Fuel Source")
 
 plot3 <- data %>%
@@ -2006,7 +2014,7 @@ plot3 <- data %>%
 ggplot(aes(x = as.factor(Q49b), fill = as.factor(Q49b))) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern", "4"="Not Needed", "5"="Needed")) +
-  scale_fill_manual(values = c("midnightblue", "midnightblue","midnightblue", "midnightblue", "midnightblue")) +
+  scale_fill_manual(values = c("#99CCCC", "#99CCCC","#99CCCC", "#99CCCC", "#99CCCC")) +
   labs(x = "Source", y= "Count", title= "Heating Fuel Source")
 
 plot4 <- data %>%
@@ -2014,7 +2022,7 @@ plot4 <- data %>%
 ggplot(aes(x = as.factor(Q50.1b), fill = as.factor(Q50.1b))) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels = c("1" = "Traditional", "2" = "Intermediate", "3" = "Modern", "4"="Not needed","5"="Needed"  )) +
-  scale_fill_manual(values = c("midnightblue", "midnightblue","midnightblue", "midnightblue","midnightblue")) +
+  scale_fill_manual(values = c("#99CCCC", "#99CCCC","#99CCCC", "#99CCCC","#99CCCC")) +
   labs(x = "Source", y= "Count", title= "Lighting Fuel Source")
 
 grid.arrange(plot2, plot3, plot4, nrow = 2, ncol=2)
@@ -2033,7 +2041,7 @@ ggplot(aes(x = as.factor(Q43b), fill = as.factor(Q43b))) +
   geom_bar(show.legend = FALSE) +
   scale_x_discrete(labels= c("1" = "appliances", "2" = "cooking", "3" = "entertainment and electronics", "4" = "heating", "5" = "lighting")) +
   labs(x= "Source" , y= "Count", title = "Electriciy Use Type") +
-  scale_fill_manual(values=c("midnightblue", "midnightblue","midnightblue", "midnightblue","midnightblue")) 
+  scale_fill_manual(values=c("#99CCCC", "#99CCCC","#99CCCC", "#99CCCC","#99CCCC")) 
 
 levels <- c("Worse access to electricity than most households","About the same access to electricity as most households","Better access to electricity than most households")
 
@@ -2041,7 +2049,7 @@ plot2 <- data %>%
   filter(Q56 %in% levels) %>%
   filter(!is.na(Q56)) %>%
   ggplot(aes(x = factor(Q56,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Worse access to electricity than most households" = "Worse","About the same access to electricity as most households" = "Same","Better access to electricity than most households" = "Better"))+
   labs(
     title = expression(atop("Community Electricity Accecibility","Comparison")),
@@ -2121,7 +2129,7 @@ plot1 <- ggplot(data, aes(x=Q137, fill=Q9b))+
   xlab("Sector") + ylab("Count") + 
   scale_x_discrete(labels= c("Unemployed","Government","Local Organization","Multinational Organization","Self-employed")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female")) +
@@ -2136,7 +2144,7 @@ plot2 <- data %>%
   ggtitle("Hourly Wage by Gender") + 
   xlab("Hourly Wage") + ylab("Density") +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2152,7 +2160,7 @@ plot3 <- data %>%
   ggtitle("Hourly Wage by Gender") + 
   xlab("Hourly Wage") + ylab("Density") +
   theme(legend.position = c(0.8, 0.8)) +
-  scale_fill_manual(values=c("midnightblue", "sandybrown"),
+  scale_fill_manual(values=c("#003399", "sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2174,7 +2182,7 @@ plot1 <- ggplot(data, aes(x=factor(Q6b), y=Q139c, fill=Q9b))+
   xlab("Age") + ylab("Hourly Wage") +
   scale_x_discrete(labels= c("40 years old and younger","Above 40 years old")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#BBDDDD","#66B3B3"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2184,7 +2192,7 @@ plot2 <- ggplot(data, aes(x=factor(Q13b), y=Q139c, fill=Q9b))+
   xlab("Disabled") + ylab("Hourly Wage") +
   scale_x_discrete(labels= c("Not Disabled","Disabled")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2202,7 +2210,7 @@ plot1 <- ggplot(data, aes(x=factor(Q147b), fill=Q9b))+
   xlab("Injury within the last 12 months") + ylab("Count") +
   scale_x_discrete(labels= c("No Injury","Injury")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("midnightblue","sandybrown"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2219,7 +2227,7 @@ plot1 <- ggplot(data, aes(x=factor(Q151b), fill = factor(Q151b)))+
   labs(x = "", y = "Count", title = "Proportion of Participants", subtitle = "With Access to Financial Institutions") +
   scale_x_discrete(labels= c("Yes","No")) +
   theme(legend.position = c(0.8, 0.8), plot.title = element_text(size = 12) , plot.subtitle = element_text(size = 12)) +
-  scale_fill_manual(values=c("midnightblue", "midnightblue"),
+  scale_fill_manual(values=c("#99CCCC", "#99CCCC"),
                     name="Access", 
                     breaks=c(0, 1), 
                     labels=c("No Access", "Have Access"))
@@ -2228,7 +2236,7 @@ plot2 <- ggplot(data, aes(x=factor(Q153b), fill = factor(Q153b)))+
   labs(x = "", y = "Count", title = "Proportion of Participants That Used Phones", subtitle = "For Transactions Within the Past 12 Months") +
   scale_x_discrete(labels= c("No","Yes")) +
   theme(legend.position = c(0.8, 0.8), plot.title = element_text(size = 12) , plot.subtitle = element_text(size = 12)) +
-  scale_fill_manual(values=c("midnightblue", "midnightblue"),
+  scale_fill_manual(values=c("#99CCCC", "#99CCCC"),
                     name="Use", 
                     breaks=c(0, 1), 
                     labels=c("Have Not", "Have"))
@@ -2246,7 +2254,7 @@ levels1 <- c("Less hazardous (dangerous) than other working people's jobs", "Abo
 plot1 <- data %>%
   filter(Q149 %in% levels1) %>%
   ggplot(aes(x = factor(Q149,levels=levels1,ordered=TRUE))) +
-  geom_bar(show.legend = FALSE, fill ="midnightblue" ) +
+  geom_bar(show.legend = FALSE, fill ="#99CCCC" ) +
   scale_x_discrete(labels= c("Less hazardous (dangerous) than other working people's jobs" = "Less", "About as hazardous (dangerous) as other working people's jobs" = "Same","More hazardous (dangerous) than other working people's jobs" = "More")) +
   labs(
     title = "Comparison on",
@@ -2259,7 +2267,7 @@ levels2 <- c("Worse access to financial services than most households","About th
 plot2 <- data %>%
   filter(Q155 %in% levels2) %>%
     ggplot(aes(x = factor(Q155,levels=levels2,ordered=TRUE))) +
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Worse access to financial services than most households" = "Worse","About the same access to financial services as most households" = "Same","Better access to financial services than most households" = "More")) + 
   labs(
     title = "Comparison Financial Services",
@@ -2292,9 +2300,9 @@ When asked to compare thier home to other households in the community `r round(m
 
 ```{r message=FALSE, warning=FALSE, fig.height=8,fig.width=8}
 plot1 <- ggplot(data, aes(x=Q46, fill = Q46))+
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   ggtitle("Housing Situation") + 
- # scale_fill_manual(values=c("midnightblue","midnightblue","midnightblue","midnightblue","midnightblue")) +
+ # scale_fill_manual(values=c("#99CCCC","#99CCCC","#99CCCC","#99CCCC","#99CCCC")) +
   scale_x_discrete(labels=c("I don't have a place to call home.","I have a home that is missing one or more walls or roof and has a dirt floor."=expression(atop("I have a home that is missing one or","more walls or roof and has a dirt floor")),"I have a home that includes temporary walls or roof and has a dirt floor."=expression(atop("I have a home that includes temporary","walls or roof and has a dirt floor")),"I have a home with solid walls and floor."=expression(atop("I have a home with","solid walls and floor"))))+
   xlab("") + ylab("Count") +
   coord_flip()
@@ -2305,7 +2313,7 @@ plot2 <- data %>%
   geom_bar(show.legend = FALSE) +
   ggtitle("Housing Description") + 
   scale_x_discrete(labels=c("My home is too small for my family's needs."=expression(atop("My home is too small","for my family's needs")),"My home is big enough for my family's needs."=expression(atop("My home is big enough","for my family's needs")),"My home is too big for my family's needs."=expression(atop("My home is too big","for my family's needs")))) +
-  scale_fill_manual(values=c("midnightblue", "midnightblue","midnightblue","midnightblue")) +
+  scale_fill_manual(values=c("#99CCCC", "#99CCCC","#99CCCC","#99CCCC")) +
   xlab("") + ylab("Count") +
   coord_flip()
   
@@ -2319,7 +2327,7 @@ plot3 <- data %>%
   filter(Q50 %in% levels) %>%
   filter(!Q50== "") %>%
   ggplot(aes(x = factor(Q50,levels=levels,ordered=TRUE)))+
-  geom_bar(show.legend = FALSE, fill = "midnightblue") +
+  geom_bar(show.legend = FALSE, fill = "#99CCCC") +
   scale_x_discrete(labels= c("Less nice than most homes"="Less","About the same as most homes"="Same","Nicer than most homes"="Nicer")) +
   labs(
     title = "Community Housing Comparison",
