@@ -220,7 +220,7 @@ The average income per day for men is \$`r round(Poverty28.genderavg[1,2],2)`, a
 plot1 <- data %>%
   filter(!is.na(Q9b)) %>%
   filter(!Q9b == "") %>%
-  ggplot(aes(Q9b, Q28pd)) + geom_boxplot()+ 
+  ggplot(aes(Q9b, Q28pd, fill = Q9b)) + geom_boxplot()+ 
   ggtitle("Income Trends by Gender") + 
   xlab("Gender") + ylab("Income ($ per day)") + 
   scale_x_discrete(labels= c("Male","Female")) + 
@@ -245,14 +245,14 @@ The average income per day for the population ages 0 to 40 is \$`r round(Poverty
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 
-plot1 <- ggplot(data, aes(Q6b, Q28pd)) + geom_boxplot()+ 
+plot1 <- ggplot(data, aes(Q6b, Q28pd,fill=Q6b)) + geom_boxplot()+ 
   ggtitle("Income Trends by Age") + 
   xlab("Age") + ylab("Income ($ per day)") + 
   scale_x_discrete(labels= c("0-40","40+")) +
-  scale_fill_manual(values=c("#003399","sandybrown"),
+  scale_fill_manual(values=c("#66B3B3","#BBDDDD"),
                          name="Gender",
                          breaks=c(0, 1),
-                         labels=c("Male", "Female"))
+                         labels=c("0-40", "40+"))
 plot2 <- ggplot(data, aes(x = Q28pd, fill=Q6b)) +
   geom_density(alpha = 0.7) +
   theme(legend.position = c(0.8, 0.8)) +
@@ -309,7 +309,7 @@ grid.arrange(plot1, plot2, ncol=2)
 
 When asked to compare their household's household income and overall financial situation to other households in the community `r round(mean(data$Q34 == "Worse than most households (poorer)", na.rm = TRUE)*100)`% said they had a worse financial situation than most households, `r round(mean(data$Q34 == "About the same as most households", na.rm = TRUE)*100)`% said they had about the same financial situation as most households, and `r round(mean(data$Q34 == "Better than most households (richer)", na.rm = TRUE)*100)`% said they had a better financial situation than most households.
 
-When asked to compare their household's access to basic services (critical services including electricity and energy, water and sanitation, refuse and waste removal) to other households in the community `r round(mean(data$Q38 == "Less basic services than most households", na.rm = TRUE)*100)`% said they had less basic services than most households, `r round(mean(data$Q38 == "About the same amount of basic services as most households", na.rm = TRUE)*100)`% said they had about the same amount of basic services as most households, and `r round(mean(data$Q38 == "More basic services than most households", na.rm = TRUE)*100)`% said they had more basic services than most households.
+When asked to compare their household's access to basic services (critical services including electricity and energy, water and sanitation, refuse and waste removal) to other households in the community `r round(mean(data$Q38 == "Less basic services than most households", na.rm = TRUE)*100)`% said they had fewer basic services than most households, `r round(mean(data$Q38 == "About the same amount of basic services as most households", na.rm = TRUE)*100)`% said they had about the same amount of basic services as most households, and `r round(mean(data$Q38 == "More basic services than most households", na.rm = TRUE)*100)`% said they had more basic services than most households.
 
 When asked to compare their ability to buy land to others in the community, `r round(mean(data$Q44 == "Worse than other households", na.rm = TRUE)*100)`% said they had a worse ability to buy land than other households, `r round(mean(data$Q44 == "About the same as other households", na.rm = TRUE)*100)`% said they had about the same ability to buy land as other households, and `r round(mean(data$Q44 == "Better than other households", na.rm = TRUE)*100)`% said they had a greater ability to buy land than other households.
 
@@ -342,7 +342,7 @@ plot2 <- data %>%
 #  scale_fill_manual(values = c("#003399", "#003399","#003399","#003399")) +
   scale_x_discrete(labels= c("Fewer basic services than most households" = "Fewer","About the same amount of basic services as most households" = "Same","More basic services than most households" = "More")) +
   labs(
-    title = expression(atop("Access to Basic", "Services Comparison")),
+    title = expression(atop("Comparison on", "Access to Basic Services")),
     x = "",
     y = "Count" 
   ) 
@@ -368,6 +368,7 @@ grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
 ########################################################
 ########################################################
 ```
+
 <!-- 2. Hunger -->
 
 ```{r}
@@ -444,7 +445,7 @@ Finally, in the past 12 months, `r round(Hunger66.ovrlavg,2)`% of the participan
 
 When asked to compare their household's amount of food to eat to other households in the community `r round(mean(data$Q70 == "Less food to eat than most households", na.rm = TRUE)*100)`% said they had less food to eat than most households, `r round(mean(data$Q70 == "About the same amount of food to eat as most households", na.rm = TRUE)*100)`% said they had about the same amount of food to eat as most households, and `r round(mean(data$Q70 == "More food to eat than most households", na.rm = TRUE)*100)`% said they had more food to eat than most households.
 
-When asked to compare the health of the children in their household to that of other children, `r round(mean(data$Q72 == "Less healthy than other households", na.rm = TRUE)*100)`% of participants said they had less food to eat than most households, `r round(mean(data$Q72 == "About the same level of health as other households", na.rm = TRUE)*100)`% said they had about the same amount of food to eat as most households, and `r round(mean(data$Q72 == "More healthy than other households", na.rm = TRUE)*100)`% said they had more food to eat than most households.
+When asked to compare the health of the children in their household to that of other children, `r round(mean(data$Q72 == "Less healthy than other children", na.rm = TRUE)*100)`% of participants said that their children were less healthy than children in other households, `r round(mean(data$Q72 == "About the same level of health as other children", na.rm = TRUE)*100)`% said that their children were about as healthy as children in other households, and `r round(mean(data$Q72 == "More healthy than other children", na.rm = TRUE)*100)`% said that their children were more healthy than children in other households.
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 
@@ -476,6 +477,7 @@ grid.arrange(plot1, plot2, nrow = 1, ncol = 2)
 ```
 
 <!-- 3. Healthy Lives -->
+
 ```{r}
 # Set up for Healthy Lives analysis:
 N <- dim(data)[1]
@@ -492,9 +494,10 @@ data <- data %>%
 
 # Need to figure out how to identify "Skilled Staff" - who is qualified?
 # data$Rand226b <- ifelse(data$Rand226=="Yes", 1, ifelse(data$HealthyF89=="No", 0, NA)) # data on someone else passing away
-data$Q65b <- ifelse(data$Q65=="No one in my household has been infected by any of these diseases in the last 12 months", 0, ifelse(is.na(data$Q65), NA, 1))
+#data$Q65b <- ifelse(data$Q65=="No one in my household has been infected by any of these diseases in the last 12 months", 0, ifelse(is.na(data$Q65), NA, 1))
+
 #data$HIV <- ifelse(data$Q65=="HIV or AIDS",1, ifelse(is.na(data$Q65), NA, 0))
-data$HIV <- grepl("IV or AIDS",data$Q65)
+data$HIV <- grepl("HIV/AIDS",data$Q65)
 #data$tuberculosis <- ifelse(data$Q65=="Tuberculosis",1, ifelse(is.na(data$Q65), NA, 0))
 data$tuberculosis <- grepl("Tuberculosis",data$Q65)
 #data$malaria <- ifelse(data$Q65=="Malaria",1, ifelse(is.na(data$Q65), NA, 0))
@@ -555,7 +558,7 @@ HealthyF91.ovrlavg <- mean(data$Q91b, na.rm = TRUE) * 100
   
 #### Healthy 65 (Any diseases) ####
 # Proportion of participants with any disease
-Healthy65.ovrlavg <- mean(data$Q65b, na.rm = TRUE) * 100
+Healthy65.ovrlavg <- mean(data$Q170b, na.rm = TRUE) * 100
 # Proportion of participants with HIV/AIDS - per 1000
 Healthy65hiv.ovrlavg <- mean(data$HIV, na.rm = TRUE) * 1000 
 #Healthy65hiv.genderavg <- aggregate(HIV ~ Q9b, data=data, mean) * 1000
@@ -568,7 +571,7 @@ Healthy65tub.ovrlavg <- mean(data$tuberculosis, na.rm = TRUE) * 1000
 # Proportion of participants with malaria - per 1000
 Healthy65mal.ovrlavg <- mean(data$malaria, na.rm = TRUE) * 1000
 # Proportion of participants with hepatitis B - per 100,000
-Healthy65hepb.ovrlavg <- mean(data$hepatitisb, na.rm = TRUE) * 100000
+Healthy65hepb.ovrlavg <- mean(data$hepatitisb, na.rm = TRUE) * 1000
 # also need to find a way to measure neglected tropical diseases - number
 # NEED MORE DATA FOR SOME OF THESE RESULTS ^^  
 
@@ -646,7 +649,7 @@ data$echinococcosis_count <- grepl("Echinococcosis",data$Q177)
 Healthy177echinococcosis.ovrlavg <- mean(data$echinococcosis_count, na.rm = TRUE) * 1000
 #Foodborne trematodiases  
 data$Foodbornes_count <- grepl("Foodborne trematodiases",data$Q177)
-Healthy177foodborne.ovrlavg <- mean(data$Foodbornes_counts, na.rm = TRUE) * 1000
+Healthy177foodborne.ovrlavg <- mean(data$Foodbornes_count, na.rm = TRUE) * 1000
 #Human African trypanosomiasis (sleeping sickness)
 data$trypanosomiasis_count <- grepl("Human African trypanosomiasis (sleeping sickness)",data$Q177)
 Healthy177trypanosomiasis.ovrlavg <- mean(data$trypanosomiasis_count, na.rm = TRUE) * 1000
@@ -654,7 +657,7 @@ Healthy177trypanosomiasis.ovrlavg <- mean(data$trypanosomiasis_count, na.rm = TR
 data$leishmaniasis_count <- grepl("Leishmaniasis",data$Q177)
 Healthy177leishmaniasis.ovrlavg <- mean(data$leishmaniasis_count, na.rm = TRUE) * 1000
 #Leprosy (Hansen's disease)  
-data$Leprosy_count <- grepl("Leprosy (Hansen's disease)",data$Q177)
+data$Leprosy_count <- grepl("Leprosy",data$Q177)
 Healthy177Leprosy.ovrlavg <- mean(data$Leprosy_count, na.rm = TRUE) * 1000
 #Lymphatic filariasis  
 data$Lymphatic_count <- grepl("Lymphatic filariasis",data$Q177)
@@ -663,7 +666,7 @@ Healthy177Lymphatic.ovrlavg <- mean(data$Lymphatic_count, na.rm = TRUE) * 1000
 data$mycoses_count <- grepl("Mycetoma, chromoblastomycosis and other deep mycoses",data$Q177)
 Healthy177mycoses.ovrlavg <- mean(data$mycoses_count, na.rm = TRUE) * 1000
 #Onchocerciasis (river blindness) 
-data$Onchocerciasis_count <- grepl("Onchocerciasis (river blindness)",data$Q177)
+data$Onchocerciasis_count <- grepl("Onchocerciasis",data$Q177)
 Healthy177onchocerciasis.ovrlavg <- mean(data$Onchocerciasis_count, na.rm = TRUE) * 1000
 #Rabies  
 data$rabies_count <- grepl("Rabies",data$Q177)
@@ -687,7 +690,7 @@ Healthy177taeniasis.ovrlavg <- mean(data$taeniasis_count, na.rm = TRUE) * 100
 data$trachoma_count <- grepl("Trachoma",data$Q177)
 Healthy177trachoma.ovrlavg <- mean(data$trachoma_count, na.rm = TRUE) * 100
 #Yaws (Endemic treponematoses) 
-data$yaws_count <- grepl("Yaws (Endemic treponematoses)",data$Q177)
+data$yaws_count <- grepl("Yaws",data$Q177)
 Healthy177yaws.ovrlavg <- mean(data$yaws_count, na.rm = TRUE) * 100
 
 ###Healthy 180 (Do you have access to vaccinations? )
@@ -707,7 +710,7 @@ In the past 12 months, `r round(HealthyF89.ovrlavg,2)`% of all participants have
 
 ## Diseases
 
-In the sample, `r round(Healthy65.ovrlavg,2)`% of participants had a disease, and `r round(HealthyF170.ovrlavg,2)`% of participants had someone in their household been affected with a disease in the last 12 months.The following are the proportions for specific diseases:
+In the sample, and `r round(HealthyF170.ovrlavg,2)`% of participants had someone in their household been affected with a disease in the last 12 months.The following are the proportions for specific diseases:
 
 i.  HIV - `r round(Healthy65hiv.ovrlavg,2)` out of 1000 have HIV.
 
@@ -718,49 +721,50 @@ iii. Malaria - `r round(Healthy65mal.ovrlavg,2)` out of 1000 have malaria.
 iv. Hepatitis B - `r round(Healthy65hepb.ovrlavg,2)` out of 1000 have Hepatitis B.
 
 ## Other Diseases
-i. Buruli ulcer  - `r round(Healthy177buruli.ovrlavg,2)` out of 1000 have Buruli ulcer.
+
+i.  Buruli ulcer - `r round(Healthy177buruli.ovrlavg,2)` out of 1000 have Buruli ulcer.
 
 ii. Chagas disease - `r round(Healthy177chagas.ovrlavg,2)` out of 1000 have Chagas disease.
 
-iii. Dengue and Chikungunya -  `r round(Healthy177dengue.ovrlavg,2)` out of 1000 have Dengue and Chikungunya.
+iii. Dengue and Chikungunya - `r round(Healthy177dengue.ovrlavg,2)` out of 1000 have Dengue and Chikungunya.
 
-iV. Dracunculiasis (guinea-worm disease)  - `r round(Healthy177dracunculiasis.ovrlavg,2)` out of 1000 have Dracunculiasis (guinea-worm disease) .
+iv. Dracunculiasis (guinea-worm disease) - `r round(Healthy177dracunculiasis.ovrlavg,2)` out of 1000 have Dracunculiasis (guinea-worm disease).
 
-v. Echinococcosis - `r round(Healthy177echinococcosis.ovrlavg,2)` out of 1000 have Echinococcosis .
+v.  Echinococcosis - `r round(Healthy177echinococcosis.ovrlavg,2)` out of 1000 have Echinococcosis.
 
-vi. Foodborne trematodiases - `r round(Healthy177foodborne.ovrlavg,2)` out of 1000 have Foodborne trematodiases . 
+vi. Foodborne trematodiases - `r round(Healthy177foodborne.ovrlavg,2)` out of 1000 have Foodborne trematodiases.
 
-vii. Human African trypanosomiasis (sleeping sickness)  - `r round(Healthy177trypanosomiasis.ovrlavg,2)` out of 1000 have Human African trypanosomiasis (sleeping sickness) . 
+vii. Human African trypanosomiasis (sleeping sickness) - `r round(Healthy177trypanosomiasis.ovrlavg,2)` out of 1000 have Human African trypanosomiasis (sleeping sickness).
 
-viii. Leishmaniasis - `r round(Healthy177leishmaniasis.ovrlavg,2)` out of 1000 have Leishmaniasis .
+viii. Leishmaniasis - `r round(Healthy177leishmaniasis.ovrlavg,2)` out of 1000 have Leishmaniasis.
 
-ix. Leprosy (Hansen's disease)  - `r round(Healthy177Leprosy.ovrlavg,2)` out of 1000 have Leprosy (Hansen's disease) .
+ix. Leprosy (Hansen's disease) - `r round(Healthy177Leprosy.ovrlavg,2)` out of 1000 have Leprosy (Hansen's disease).
 
-x. Lymphatic filariasis  - `r round(Healthy177Lymphatic.ovrlavg,2)` out of 1000 have Lymphatic filariasis .
+x.  Lymphatic filariasis - `r round(Healthy177Lymphatic.ovrlavg,2)` out of 1000 have Lymphatic filariasis.
 
-xi. Mycetoma, chromoblastomycosis and other deep mycoses - `r round(Healthy177mycoses.ovrlavg,2)` out of 1000 have Mycetoma, chromoblastomycosis and other deep mycoses .
+xi. Mycetoma, chromoblastomycosis and other deep mycoses - `r round(Healthy177mycoses.ovrlavg,2)` out of 1000 have Mycetoma, chromoblastomycosis and other deep mycoses.
 
-xii. Onchocerciasis (river blindness) - `r round(Healthy177onchocerciasis.ovrlavg,2)` out of 1000 have Onchocerciasis (river blindness) .
+xii. Onchocerciasis (river blindness) - `r round(Healthy177onchocerciasis.ovrlavg,2)` out of 1000 have Onchocerciasis (river blindness).
 
-xiii. Rabies -`r round(Healthy177rabies.ovrlavg,2)` out of 1000 have Rabies .
+xiii. Rabies -`r round(Healthy177rabies.ovrlavg,2)` out of 1000 have Rabies.
 
-xiv. Scabies and other ectoparasites  -`r round(Healthy177ectoparasites.ovrlavg,2)` out of 1000 have cabies and other ectoparasites .
+xiv. Scabies and other ectoparasites -`r round(Healthy177ectoparasites.ovrlavg,2)` out of 1000 have cabies and other ectoparasites.
 
-xv. Schistosomiasis -`r round(Healthy177schistosomiasis.ovrlavg,2)` out of 1000 have Schistosomiasis .
+xv. Schistosomiasis -`r round(Healthy177schistosomiasis.ovrlavg,2)` out of 1000 have Schistosomiasis.
 
-xvi. Soil-transmitted helminthiases -`r round(Healthy177helminthiases.ovrlavg,2)` out of 1000 have Soil-transmitted helminthiases .
+xvi. Soil-transmitted helminthiases -`r round(Healthy177helminthiases.ovrlavg,2)` out of 1000 have Soil-transmitted helminthiases.
 
-xvii. Snakebite envenoming  -`r round(Healthy177envenoming.ovrlavg,2)` out of 1000 have Snakebite envenoming .
+xvii. Snakebite envenoming -`r round(Healthy177envenoming.ovrlavg,2)` out of 1000 have Snakebite envenoming.
 
-xviii. Taeniasis/Cysticercosis  -`r round(Healthy177taeniasis.ovrlavg,2)` out of 1000 have Taeniasis/Cysticercosis .
+xviii. Taeniasis/Cysticercosis -`r round(Healthy177taeniasis.ovrlavg,2)` out of 1000 have Taeniasis/Cysticercosis.
 
-xix. Trachoma -`r round(Healthy177trachoma.ovrlavg,2)` out of 1000 have Trachoma .
+xix. Trachoma -`r round(Healthy177trachoma.ovrlavg,2)` out of 1000 have Trachoma.
 
-xx. Yaws (Endemic treponematoses)  -`r round(Healthy177yaws.ovrlavg,2)` out of 1000 have Yaws (Endemic treponematoses) .
+xx. Yaws (Endemic treponematoses) -`r round(Healthy177yaws.ovrlavg,2)` out of 1000 have Yaws (Endemic treponematoses).
 
 ## Health Care Access
 
-`r round(Healthy69.ovrlavg,2)`% of the partcipants know of access to substance abuse treatment, `r round(Healthy83.ovrlavg,2)`% have access to health coverage, and `r round(Healthy85.ovrlavg,2)`% have current health insurance.
+Regarding health care access, `r round(Healthy69.ovrlavg,2)`% of the partcipants know of access to substance abuse treatment, `r round(Healthy83.ovrlavg,2)`% have access to health coverage, and `r round(Healthy85.ovrlavg,2)`% have current health insurance.
 
 `r round(Healthy75.ovrlavg,2)`% can afford the medicine their family needs, `r round(Healthy75.ovrlavg,2)`% can provide medicine when their family needs it, and `r round(Healthy171.1.ovrlavg,2)`% has an access to prescription medicines.
 
@@ -768,12 +772,11 @@ Additionally, `r round(Healthy180.ovrlavg,2)`% of the participants have access t
 
 ## Comparison to other Households
 
-When asked to compare the health of the women in their household to that of other women in their community, `r round(mean(data$Q87 == "Less healthy than other women", na.rm = TRUE)*100)`% said that women in their household were less healthy than other women, `r round(mean(data$Q93 == "About the same level of health as other women", na.rm = TRUE)*100)`% said that women in their household were about the same level of health as other women, and `r round(mean(data$Q93 == "More healthy than other women", na.rm = TRUE)*100)`% said that women in their household were more healthy than other women.
+When asked to compare the health of the women in their household to that of other women in their community, `r round(mean(data$Q87 == "Less healthy than other women", na.rm = TRUE)*100)`% said that women in their household were less healthy than other women, `r round(mean(data$Q87 == "About the same level of health as other women", na.rm = TRUE)*100)`% said that women in their household were about as healthy as other women, and `r round(mean(data$Q87 == "More healthy than other women", na.rm = TRUE)*100)`% said that women in their household were more healthy than other women.
 
 When asked to compare their household's support needed for a healthy birth to other households in the community `r round(mean(data$Q93 == "Less support needed for a healthy birth than most households", na.rm = TRUE)*100)`% said they had less support needed for a healthy birth than most households, `r round(mean(data$Q93 == "About the same support needed for a healthy birth as most households", na.rm = TRUE)*100)`% said they had about the same support needed for a healthy birth as most households, and `r round(mean(data$Q93 == "Better support needed for a healthy birth than most households", na.rm = TRUE)*100)`% said they had better support needed for a healthy birth than most households.
 
 When asked to compare the newborns in their household to newborns in other households in the community `r round(mean(data$Q63 == "Less healthy than other households", na.rm = TRUE)*100)`% said that newborns in their household were less healthy than other newborns, `r round(mean(data$Q63 == "About the same level of health as other households", na.rm = TRUE)*100)`% said that newborns in their household were about the same level of health as other newborns, and `r round(mean(data$Q63 == "More healthy than other households", na.rm = TRUE)*100)`% said that newborns in their household were more healthy than other newborns.
-
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8 }
 
@@ -822,18 +825,13 @@ plot3 <- data %>%
 
 grid.arrange(plot1, plot2, plot3, nrow = 1, ncol = 3)
 ```
+
 <!-- 4. Quality Education -->
 
 # 4. Quality Education
 
-```{r Education 130 PCM}
+```{r Education 130 }
 data$Q6ord <- cut(as.numeric(data$Q6),c(0,14,19,29,39,49,100),labels=c("Under 15","15-19","20-29","30-39","40-49","50 and above"))
-
-# Education 130 
-# Think about the person who has the most formal education in your household. Compared to other households in your community, do you feel that this person has... 
-  # Less formal education than others  (1)  
-  # About the same amount of formal education as others  (10)  
-  # More formal education than others  (11)  
 
 levels1 <- c("Less formal education than others","About the same amount of formal education as others","More formal education than others")
 plot1 <- data %>%
@@ -889,11 +887,7 @@ Education114b_gender_avg_primary<- aggregate(Q114b_primary~Q9b,data=data,mean, n
 ```
 
 ```{r Education 122, message=FALSE,warning=FALSE}
-########### Q122 Computer Activities
-
-# 4.4.1 Proportion of youth and adults with information and communications technology (ICT) skills, by type of skill		4.4.1.i 	Education 122
-#Can anyone in your household do the following computer activities?	
-#Copying or moving a file or folder/Using copy and paste tools to duplicate or move information within a document/Sending e-mails with attached files (e.g. document, picture, video)/Using basic arithmetic formulae in a spreadsheet/Connecting and installing new devices (e.g. a modem, camera, printer)/Finding, downloading, installing and configuring software/Creating electronic presentations with presentation software (including text, images, sound, video or charts)/Transferring files between a computer and other devices/Writing a computer program using a specialized programming language
+# Q122 Computer Activities
 
 data <- data %>%
   mutate(Q122_copy_file=ifelse(Q122=="",NA,ifelse(grepl("Copying or moving a file or folder",Q122),1,0)),
@@ -985,7 +979,6 @@ plot_edu124 <- data %>%
   )
 
 ```
-
 
 ```{r Education 128,  message=FALSE,warning=FALSE}
 # Think of the person in your household with the most formal education. What is the highest level of education that person has completed?
@@ -1092,10 +1085,8 @@ menwomen_ttest <- t.test(data$Q112_proficient~Q9b,data)
 \
 When asked to compare the most educated person in their household to other members of the community, `r round(mean(data$Q130 == "Less formal education than others", na.rm = TRUE)*100)`% said they had less education than members of the community, `r round(mean(data$Q130 == "About the same amount of formal education as others", na.rm = TRUE)*100)`% said they had about the same amount of education as most households, and `r round(mean(data$Q130 == "More formal education than others", na.rm = TRUE)*100)`% said they had more formal education than others.
 
-```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8, eval = FALSE}
-
+```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
 grid.arrange(plot_edu128, plot1, ncol = 2)
-
 ```
 
 `r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed `r menwomendiff`
@@ -1109,8 +1100,6 @@ Of the women in the sample, `r round(Education114b_gender_avg_tertiary[2,2],1)`%
 Of the men in the sample, `r round(Education114b_gender_avg_tertiary[1,2],1)`% are or were enrolled in college, university, or trade school, `r round(Education114b_gender_avg_technical[1,2],1)`% are or were enrolled in technical or vocational training (TVET), and `r round(Education114b_gender_avg_primary[1,2],1)`% are or were enrolled in grade school.
 
 ```{r message=FALSE, warning=FALSE, fig.height=4,fig.width=8}
-
-
 # for the graph
 plot114_data <- data %>%
   select(Q114b_primary:Q114b_none, Q9b) %>%
@@ -1160,7 +1149,6 @@ Of the following nine computer skills, the average number that each household po
 ```{r, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
 plot_edu122_pct
 ```
-
 
 When asked to compare their household's technology skills to those of other members of the community, `r round(mean(data$Q124 == "Fewer technology skills than other households", na.rm = TRUE)*100)`% said they had fewer technology skills than other households, `r round(mean(data$Q124 == "About the same amount of technology skills as other households", na.rm = TRUE)*100)`% said they had about the about the same amount of technology skills as other households, and `r round(mean(data$Q124 == "More technology skills than other households", na.rm = TRUE)*100)`% said they had more technology skills than other households.
 
@@ -1249,7 +1237,6 @@ plot_gndr88 <- data %>%
 
 
 ```
-
 
 ```{r Gender 100 and 221}
 
@@ -1541,52 +1528,6 @@ plot_gndr92 <- data %>%
 
 ```
 
-```{r Gender 198}
-##################GENDER 198 IS NOT IN THE LATEST VERSION OF THE SURVEY##############################
-#Only if Dem 9 or Dem-I 34 = Man			Think about your decisions regarding sexual relations including contraceptive use and reproductive health. Compared to other men within your community, do you feel that you have...	More control over these decisions than most men/About the same amount of control over these decisions as most men/Less control over these decisions than most men
-
-# doesn't account for if there is a tie for most  selected  answer choice 
-
-#table_Q198 <- data %>% 
-#  filter(Q9=="Man"|Q34=="Man") %>% 
-#  group_by(Q198) %>% 
-#  count() %>% 
-#  arrange(desc(n))
-
-
-#table_Q198_highest_freq <- if (table_Q198[1,1]=="About the same amount of control over these decisions as most men"){
-#  "Men are most likely to report having the same amount of control over decisions affecting their reproductive health compared to most men"
-#} else if(table_Q92[1,1]=="More control over these decisions than most men"){
-#   "Men are most likely to report having more control over decisions affecting their reproductive health compared to most men"
-#} else {
-#   "Men are most likely to report having less control over decisions affecting their reproductive health compared to most men"
-#}
-
-#iftiedmen <- if (table_Q198[1,2]==table_Q198[2,2]) {
-#  paste0(" and ",tolower(table_Q198[2,1]),".")
-#} else {
-#  "."
-#}
-
-
-#data$Q198_fct <- factor(data$Q198,levels=c("More control over these decisions than most men",
-#                                    "About the same amount of control over these decisions as most men",
-#                                    "Less control over these decisions than most men"))
-
-#plot_gndr198 <- data %>% 
-#  filter(Q9=="Man") %>% 
-#  ggplot(aes(x=fct_recode(Q198_fct,
-#                          "More"="More control over these decisions than most men",
-#                          "About the same"="About the same amount of control over these decisions as most men",
-#                          "Less"="Less control over these decisions than most men")))+
-#  geom_bar(fill="#003399")+
-#  labs(x="",
-#       y="Number of men",
- #      title="Control over reproductive health decsions, \ncompared to other men")+
-#  scale_x_discrete(drop=FALSE)
-
-```
-
 ```{r Gender 178}
 
 # Do you know of services that can help you regarding decisions of your sexual relations including contraceptive use and reproductive health? 
@@ -1681,6 +1622,7 @@ pct_own_mobile <- round(mean(data$owns_mobile,na.rm=TRUE)*100,1)
 has_internet_through_mobile <- data %>% mutate(has_internet_through_mobile=ifelse(data$Q23=="Yes",1,ifelse(data$Q23=="No",0,NA))) %>% select(has_internet_through_mobile)
 pct_has_internet_through_mobile <- round(mean(has_internet_through_mobile[[1]],na.rm = TRUE)*100,1)
 ```
+
 # 5. Gender Equality
 
 `r pct_married`% of respondents in the sample are married or joined in a union. `r pct_own_mobile`% of respondents own a mobile phone (`r pct_men_own_mobile`% of men and `r pct_women_own_mobile`% of women). Of those with a mobile phone, `r pct_has_internet_through_mobile`% have internet access through their mobile phone.
@@ -1700,7 +1642,9 @@ grid.arrange(plot_gndr_unpaid2,plot_gndr_unpaid3,ncol=2)
 
 ## Physical, Sexual, and Psychological Violence
 
-In the last 12 months, `r pct_married_female_15_above_assaulted`% of married female respondents 15 years and older reported that a household member had been a victim of physical, sexual, or psychological violence. When respondents were asked to compare their physical, sexual, or psychological safety to those in other households,  `r round(mean(data$Q88 == "Less safe from physical, sexual, or psychological violence than other households", na.rm = TRUE)*100)`% said they felt less safe from physical, sexual, or psychological violence than others in the community, `r round(mean(data$Q88 == "About the same level of safety from physical, sexual, or psychological violence as other households", na.rm = TRUE)*100)`% said they felt about as safe as others in the community, and `r round(mean(data$Q93 == "More safe safe from physical, sexual, or psychological violence than other households", na.rm = TRUE)*100)`% said they felt more safe from physical, sexual, or psychological vioence than others in the community. 
+In the last 12 months, `r pct_married_female_15_above_assaulted`% of married female respondents 15 years and older reported that a household member had been a victim of physical, sexual, or psychological violence.
+
+When respondents were asked to compare their physical, sexual, or psychological safety to those in other households, `r round(mean(data$Q88 == "Less safe from physical, sexual, or psychological violence than other households", na.rm = TRUE)*100)`% said they felt less safe from physical, sexual, or psychological violence than others in the community, `r round(mean(data$Q88 == "About the same level of safety from physical, sexual, or psychological violence as other households", na.rm = TRUE)*100)`% said they felt about as safe as others in the community, and `r round(mean(data$Q93 == "More safe safe from physical, sexual, or psychological violence than other households", na.rm = TRUE)*100)`% said they felt more safe from physical, sexual, or psychological vioence than others in the community.
 
 ```{r assault plot,  message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
 plot_gndr88
@@ -1729,12 +1673,12 @@ grid.arrange(plot_gndr178,
              plot_gndr90,ncol=2)
 ```
 
-
 `r table_Q92_highest_freq` `r iftiedwomen`
 
 ```{r plots reproductive health 2, message=FALSE, warning=FALSE,fig.height=3,fig.width=8}
 grid.arrange(plot_gndr92,ncol=1)
 ```
+
 <!-- 6. Clean Water and Sanitation -->
 
 ```{r Clean Water}
@@ -1745,25 +1689,39 @@ water_source <- data %>%
   mutate(b = ifelse(Q192.1 %like% "%Public tap or standpipe%",1,0)) %>%
   mutate(c = ifelse(Q192.1 %like% "%Tubewell or borehole%",1,0)) %>%
   mutate(d = ifelse(Q192.1 %like% "%Protected dug well%",1,0)) %>%
-  mutate(e = ifelse(Q192.1 %like% "%spring%",1,0)) %>%
+  mutate(e = ifelse(Q192.1 %like% "%Protected spring%",1,0)) %>%
   mutate(f = ifelse(Q192.1 %like% "%Unprotected spring%",1,0)) %>%
   mutate(g = ifelse(Q192.1 %like% "%Rainwater collection%",1,0)) %>%
   mutate(h = ifelse(Q192.1 %like% "%Bottled water%",1,0)) %>%
-  mutate(i = ifelse(Q192.1 %like% "%cart with small tank/drum%",1,0)) %>%
+  mutate(i = ifelse(Q192.1 %like% "%Cart with small tank%",1,0)) %>%
   mutate(j = ifelse(Q192.1 %like% "%Tanker-truck%",1,0)) %>%
   mutate(k = ifelse(Q192.1 %like% "%Surface water%",1,0)) %>%
   mutate(l = ifelse(Q192.1 %like% "%Other%",1,0)) %>%
   select(a:l)
 
+water_source2 <- water_source %>%
+  mutate(pipe = ifelse(a ==1,1,0),
+         public_tap = ifelse(b ==1,1,0),
+         well = ifelse(c==1 | d ==1,1,0),
+         spring = ifelse(e==1 |f==1,1,0),
+         rain_surface = ifelse(g ==1|k==1,1,0),
+         vehicle = ifelse(i==1|j==1,1,0),
+         other = l) %>%
+  select(pipe:other)
+         
+    
+           
+
 # provides averages
-total_water_avg <- water_source %>%
-  summarise(mean(a), mean(b), mean(c), mean(d), mean(e), mean(f), 
-            mean(g),mean(h), mean(i), mean(j), mean(k), mean(l))
-
-total_water_counts <- water_source %>%
-  summarize(a = sum(a),b = sum(b), c = sum(c),d = sum(d),e = sum(e),f = sum(f),g = sum(g), h = sum(h),i = sum(i),j = sum(j),k = sum(k),l = sum(l))
-
-
+# total_water_avg <- water_source %>%
+#   summarise(mean(a), mean(b), mean(c), mean(d), mean(e), mean(f), 
+#             mean(g),mean(h), mean(i), mean(j), mean(k), mean(l))
+# provides totals
+# total_water_counts <- water_source %>%
+#   summarize(a = sum(a),b = sum(b), c = sum(c),d = sum(d),e = sum(e),f = sum(f),g = sum(g), h = sum(h),i = sum(i),j = sum(j),k = sum(k),l = sum(l))
+# totals with groupings
+total_water_counts <- water_source2 %>%
+  summarize(pipe = sum(pipe), public_tap = sum(public_tap), well = sum(well),spring = sum(spring), rain_surface= sum(rain_surface),vehicle = sum(vehicle),other = sum(other))
 
 sanitation <- data %>%
   mutate(a = ifelse(Q193.1 %like% "%Flush or pour flush%",1,0)) %>%
@@ -1808,11 +1766,23 @@ sanitation_2 <- sanitation %>%
 
 When asked about how frequently a household member had to drink water they felt was unsafe `r round(mean(data$Q191 == "Never (0)", na.rm = TRUE)*100)`% said never, `r round(mean(data$Q191 == "Rarely (1-2 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said rarely (1-2 times in the prior 4 weeks), `r round(mean(data$Q191 == "Sometimes (3-10 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said sometimes (3-10 times in the prior 4 weeks), `r round(mean(data$Q191 == "Often (11-20 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said often (11-20 times in the prior 4 weeks), and `r round(mean(data$Q191 == "Always (above 20 times in prior 4 weeks)", na.rm = TRUE)*100)`% said always (above 20 times in prior 4 weeks).
 
-When asked about what water sources they had access to `r round(mean(water_source$a == 1, na.rm = TRUE)*100)`% of participants said they had access to piped water into their dwelling, yard or plot, `r round(mean(water_source$b == 1, na.rm = TRUE)*100)`% said they had access to public taps or standpipes, `r round(mean(water_source$c == 1, na.rm = TRUE)*100)`% said they had access to boreholes or tubewells, `r round(mean(water_source$d == 1, na.rm = TRUE)*100)`% said they had access to protected dug wells, `r round(mean(water_source$e == 1, na.rm = TRUE)*100)`% said they had access to a protected spring, etc. Do we really need to list all of these? .
+When asked about what water sources they had access to, participants responded that they have access to various sources in the following proportions:
 
+-    `r round(mean(water_source2$pipe == 1, na.rm = TRUE)*100)`% of participants said they had access to piped water into their dwelling, yard or plot.
+
+-    `r round(mean(water_source2$public_tap == 1, na.rm = TRUE)*100)`% said they had access to public taps or standpipes.
+
+-    `r round(mean(water_source2$well == 1, na.rm = TRUE)*100)`% said they had access to boreholes, tubewells, or a protected dug well.
+
+-    `r round(mean(water_source2$spring == 1, na.rm = TRUE)*100)`% said they had access to a protected or unprotected spring.
+
+-    `r round(mean(water_source2$rain_surface == 1, na.rm = TRUE)*100)`% said they had access to rainwater collection or surface water.
+
+-   `r round(mean(water_source2$vehicle == 1, na.rm = TRUE)*100)`% said they had access to a cart with tank or tanker-truck.
+
+-   `r round(mean(water_source2$other == 1, na.rm = TRUE)*100)`% said they had access to another water source.
 
 When asked about restroom facilities `r round(sanitation_2$prop[1]*100)`% said they had access to a flush or pour flush toilet to a sewer system with just hand sanitizer. `r round(sanitation_2$prop[2]*100)`% said they had access to a flush or pour flush toilet to a sewer system with soap and water. The rest of participants either did not respond or used another form of restroom with less access to sanitation.
-
 
 When asked to compare their access to sanitary facilities to other households in the community, `r round(mean(data$Q195 == "Worse access to sanitary facilities than most households", na.rm = TRUE)*100)`% said they had worse access to sanitary facilities than most households, `r round(mean(data$Q93 == "About the same access to sanitary facilities as most households", na.rm = TRUE)*100)`% said they had about the same access to sanitary facilities as most households, and `r round(mean(data$Q93 == "Better access to sanitary facilities than most households", na.rm = TRUE)*100)`% said they had better access to sanitary facilities tha nmost households.
 
@@ -1828,25 +1798,41 @@ plot1 <- data %>%
        x = "Numer of Times",
        y = "")
 
-plot2 <- total_water_counts %>%
-  pivot_longer(cols = a:l, names_to = "type", values_to = "count") %>%
+# plot2 <- total_water_counts %>%
+#   pivot_longer(cols = a:l, names_to = "type", values_to = "count") %>%
+#   ggplot(aes(y = type, x = count)) +
+#   geom_col(show.legend = FALSE, fill = "#99CCCC") +
+#   scale_y_discrete(labels= c("a" = expression(atop("Piped water into dwelling,","yard or plot")), 
+#                              "b" = "Public taps or standpipes", 
+#                              "c" = "Tubewell or borehole",
+#                              "d" = "Protected dug well",
+#                              "e" = "Protected spring",
+#                              "f" = "Unprotected Spring",
+#                              "g" = "Rainwater collection",
+#                              "h" = "Bottled water",
+#                              "i" = "Cart with tank",
+#                              "j" = "Tanker-truck",
+#                              "k" = "Surface water",
+#                              "l" = "Other")) +
+#   labs(title = "Water Source Access",
+#        x = "Count"
+#   )
+plot2_2 <- total_water_counts %>%
+  pivot_longer(cols = pipe:other, names_to = "type", values_to = "count") %>%
   ggplot(aes(y = type, x = count)) +
   geom_col(show.legend = FALSE, fill = "#99CCCC") +
-  scale_y_discrete(labels= c("a" = expression(atop("Piped water into dwelling,","yard or plot")), 
-                             "b" = "Public taps or standpipes", 
-                             "c" = "Tubewell or borehole",
-                             "d" = "Protected dug well",
-                             "e" = "Protected spring",
-                             "f" = "Unprotected Spring",
-                             "g" = "Rainwater collection",
-                             "h" = "Bottled water",
-                             "i" = "Cart with tank",
-                             "j" = "Tanker-truck",
-                             "k" = "Surface water",
-                             "l" = "Other")) +
+  scale_y_discrete(labels= c("pipe" = expression(atop("Piped water into dwelling,","yard or plot")), 
+                             "public_tap" = "Public taps or standpipes", 
+                             "well" = "Well",
+                             "spring" = "Spring",
+                             "rain_surface" = "Rain or Surface Water",
+                             "vehicle" = "Cart or Tanker-truck",
+                             "other" = "Other")) +
   labs(title = "Water Source Access",
        x = "Count"
   )
+
+
 
 levels1 <- c("Worse access to sanitary facilities than most households","About the same access to sanitary facilities as most households","Better access to sanitary facilities than most households")
 plot3 <- data %>%
@@ -1895,7 +1881,7 @@ plot4 <- sanitation_2 %>%
 
 #grid.arrange(plot1, plot2, nrow = 1, ncol = 2) # wasn't formatting correctly, print separately instead
 plot1
-plot2
+plot2_2
 grid.arrange(plot3, plot5, nrow = 1, ncol = 2)
 grid.arrange(plot4, nrow = 1, ncol = 1)
 ```
@@ -1911,7 +1897,7 @@ data$Q49b <- ifelse(data$Q49 == "Traditional (such as dung, agricultural residue
 
 data$Q50.1b <- ifelse(data$Q50.1 == "Traditional (such as dung, agricultural residue, and fuelwood)",1, ifelse(data$Q50.1 == "Intermediate (such as charcoal and kerosene)",2, ifelse(data$Q50.1 == "Modern (such as LPG, biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity)",3, ifelse(data$Q50.1 == "No fuel source for lighting, not needed",4, ifelse(data$Q50.1 == "No fuel source for lighting, but needed",5,NA)))))
 
-data$Q43b <- ifelse(data$Q43 == "Appliances (includes refrigerator, dishwasher, clothes washer and dryer)",1, ifelse(data$Q43 == "Cooking",2, ifelse(data$Q43 == "Entertainment,electronics (includes external power adapters, TVs, home office equipment, computers, and small appliances)",3, ifelse(data$Q43 == "Heating",4, ifelse(data$Q43 == "Lighting",5,NA)))))
+data$Q43b <- ifelse(data$Q43 == "Appliances (includes refrigerator, dishwasher, clothes washer and dryer)",1, ifelse(data$Q43 == "Cooking",2, ifelse(data$Q43 == "Entertainment/electronics (includes external power adapters, TVs, home office equipment, computers, and small appliances)",3, ifelse(data$Q43 == "Heating",4, ifelse(data$Q43 == "Lighting",5,NA)))))
 
 data$Q44.1 <- as.numeric(data$Q44.1)
 data$Q45 <- as.numeric(data$Q45)
@@ -1965,7 +1951,7 @@ data$pico_count <- as.numeric(data$pico)
 Energy54pico.ovrlavg <- mean(data$pico_count, na.rm = TRUE) * 1000 
 
 ##"I don't know
-data$dontknow <- grepl("I don't know",data$Q54)
+data$dontknow <- grepl("I don't know  ",data$Q54)
 data$dontknow_count <- as.numeric(data$dontknow)
 Energy54dontknow.ovrlavg <- mean(data$dontknow_count, na.rm = TRUE) * 1000 
 
@@ -1983,7 +1969,7 @@ Energy54other.ovrlavg <- mean(data$other_count, na.rm = TRUE) * 1000
 
 # 7. Affordable and Clean Energy
 
-Of those who reported having access to electricity `r round(Energy54national.ovrlavg,2)` people out of 1000 had access to a national grid connection, `r round(Energy54local.ovrlavg,2)` people out of 1000 had access to a local mini grid connection, `r round(Energy54generator.ovrlavg,2)` people out of 1000 had access to an electric generator, `r round(Energy54generator.ovrlavg,2)` people out of 1000 had access to a rechargable battery, `r round(Energy54drycell.ovrlavg,2)` people out of 1000 had access to a dry-cell battery, `r round(Energy54lantern.ovrlavg,2)` people out of 1000 had access to a solar lantern, `r round(Energy54multilight.ovrlavg,2)` people out of 1000 had access to a solar multi-light product, `r round(Energy54homesystem.ovrlavg,2)` people out of 1000 had a solar home system, `r round(Energy54pico.ovrlavg,2)` people out of 1000 had access to pico-hydro electricity, and `r round(Energy54dontknow.ovrlavg,2)` people out of 1000 responded that they don't know, and `r round(Energy54other.ovrlavg,2)` people out of 1000 responded "Other". 
+Of those who reported having access to electricity `r round(Energy54national.ovrlavg,2)` people out of 1000 had access to a national grid connection, `r round(Energy54local.ovrlavg,2)` people out of 1000 had access to a local mini grid connection, `r round(Energy54generator.ovrlavg,2)` people out of 1000 had access to an electric generator, `r round(Energy54generator.ovrlavg,2)` people out of 1000 had access to a rechargable battery, `r round(Energy54drycell.ovrlavg,2)` people out of 1000 had access to a dry-cell battery, `r round(Energy54lantern.ovrlavg,2)` people out of 1000 had access to a solar lantern, `r round(Energy54multilight.ovrlavg,2)` people out of 1000 had access to a solar multi-light product, `r round(Energy54homesystem.ovrlavg,2)` people out of 1000 had a solar home system, `r round(Energy54pico.ovrlavg,2)` people out of 1000 had access to pico-hydro electricity, and `r round(Energy54dontknow.ovrlavg,2)` people out of 1000 responded that they don't know, and `r round(Energy54other.ovrlavg,2)` people out of 1000 responded "Other".
 
 When asked about primary fuel source for cooking `r round(mean(data$Q48.1b == 1, na.rm = TRUE)*100)`% of participants said traditional (such as dung, agricultural residue, and fuelwood), `r round(mean(data$Q48.1b == 2, na.rm = TRUE)*100)`% said intermediate (such as charcoal and kerosene), and `r round(mean(data$Q48.1b == 3, na.rm = TRUE)*100)`% said modern (such as LPG, Biogas, ethanol gas, plant oils, dimethyl ether (DME), and electricity).
 
@@ -2120,7 +2106,7 @@ prop.bank <- mean(prop.bank$Q151b, na.rm = TRUE)*100
 
 Of all participants `r round(prop.emp)`% are employed. Of those who are employed `r round(mean(data$Q137b == 1, na.rm = TRUE)*100)`% work in local organizations, `r round(mean(data$Q137b == 2, na.rm = TRUE)*100)`% are self-employed, `r round(mean(data$Q137b == 3, na.rm = TRUE)*100)`% work for multinational organizations, and `r round(mean(data$Q137b == 4, na.rm = TRUE)*100)`% work for the government.
 
-Females make on average `r round(avg.8[5,3])` dollars an hour in local organizations, `r round(avg.8[6,3])` if self-employed, `r round(avg.8[7,3])` in multinational organizations, and `r round(avg.8[8,3])` in government organizations. Males make on average `r round(avg.8[1,3])` dollars an hour in local organizations, `r round(avg.8[2,3])` if self-employed, `r round(avg.8[3,3])` in multinational organizations, and `r round(avg.8[4,3])` in government organizations. `r if(t.gen$p.value<=0.05 & t.gen$estimate[1] > t.gen$estimate[2]) {"A difference of means test indicates that men earn significantly more per hour than women"}``r if(t.gen$p.value<=0.05 & t.gen$estimate[1] < t.gen$estimate[2]) {"A difference of means test indicates that women earn significantly more per hour than men"}``r if(t.gen$p.value>0.05) {"However, the difference in hourly wage between men and women is not significant."} `
+Females make on average \$`r round(avg.8[5,3])` an hour in local organizations, \$`r round(avg.8[6,3])` if self-employed, \$`r round(avg.8[7,3])` in multinational organizations, and \$`r round(avg.8[8,3])` in government organizations. Males make on average \$`r round(avg.8[1,3])` an hour in local organizations, \$`r round(avg.8[2,3])` if self-employed, \$`r round(avg.8[3,3])` in multinational organizations, and \$`r round(avg.8[4,3])` in government organizations. `r if(t.gen$p.value<=0.05 & t.gen$estimate[1] > t.gen$estimate[2]) {"A difference of means test indicates that men earn significantly more per hour than women"}``r if(t.gen$p.value<=0.05 & t.gen$estimate[1] < t.gen$estimate[2]) {"A difference of means test indicates that women earn significantly more per hour than men"}``r if(t.gen$p.value>0.05) {"However, the difference in hourly wage between men and women is not significant."} `
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=Q137, fill=Q9b))+
@@ -2170,10 +2156,9 @@ plot3 <- data %>%
 grid.arrange(plot1, plot2, plot3, ncol=3)
 ```
 
-Females 40 years old and under make on average `r round(avg.8.1[3,3])` dollars an hour, while those above 40 make `r round(avg.8.1[4,3])`. `r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."}` Men 40 years old and under make on average `r round(avg.8.1[1,3])` dollars an hour, while those above 40 make `r round(avg.8.1[2,3])`. `r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."}`
+Females 40 years old and under make on average \$`r round(avg.8.1[3,3])` an hour, while those above 40 make \$`r round(avg.8.1[4,3])`. ```r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."} ``` Men 40 years old and under make on average \$`r round(avg.8.1[1,3])` an hour, while those above 40 make \$`r round(avg.8.1[2,3])`. ``` r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."} ```
 
-Females that are disabled make on average `r round(avg.8.2[4,3])` dollars an hour, while those who are not make `r round(avg.8.2[3,3])`. `r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] > t.dis.1$estimate[2]) {"A difference of means test indicates that women that are not disabled earn significantly more per hour than women who are"}``r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] < t.dis.1$estimate[2]) {"A difference of means test indicates that women who are disabled earn significantly more per hour than women who are not"}``r if(t.dis.1$p.value>0.05) {"However, the difference in hourly wage between women that are and are not disabled is not significant."}` Men that are disabled make on average `r round(avg.8.2[2,3])` dollars an hour while those who are not make `r round(avg.8.2[1,3])`. `r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] > t.dis.0$estimate[2]) {"A difference of means test indicates that men that are not disabled earn significantly more per hour than men who are"}``r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] < t.dis.0$estimate[2]) {"A difference of means test indicates that men who are disabled earn significantly more per hour than men who are not"}``r if(t.dis.0$p.value>0.05) {"However, the difference in hourly wage between men that are and are not disabled is not significant."}`
-
+Females that are disabled make on average \$`r round(avg.8.2[4,3])` an hour, while those who are not make \$`r round(avg.8.2[3,3])`. `r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] > t.dis.1$estimate[2]) {"A difference of means test indicates that women that are not disabled earn significantly more per hour than women who are"}``r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] < t.dis.1$estimate[2]) {"A difference of means test indicates that women who are disabled earn significantly more per hour than women who are not"}``r if(t.dis.1$p.value>0.05) {"However, the difference in hourly wage between women that are and are not disabled is not significant."}` Men that are disabled make on average \$`r round(avg.8.2[2,3])` an hour while those who are not make \$`r round(avg.8.2[1,3])`.`r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] > t.dis.0$estimate[2]) {"A difference of means test indicates that men that are not disabled earn significantly more per hour than men who are"}``r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] < t.dis.0$estimate[2]) {"A difference of means test indicates that men who are disabled earn significantly more per hour than men who are not"}``r if(t.dis.0$p.value>0.05) {"However, the difference in hourly wage between men that are and are not disabled is not significant."} `
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=factor(Q6b), y=Q139c, fill=Q9b))+
@@ -2201,7 +2186,7 @@ grid.arrange(plot1, plot2, ncol=2)
 
 ## Workplace Safety and Household Injuries
 
-Of all participants `r round(prop.inj)`% were in households where someone was injured within the last twelve months. `r round(prop.gen[1,2],2)`% of men and `r round(prop.gen[2,2],2)`% of women were in households where someone was injured in the last twelve months. `r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] > prop.gen[2,2]) {"A difference of means test indicates that significantly more men live in households that have injuries at work in the last twelve months than women."}``r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] < prop.gen[2,2]) {"A difference of means test indicates that significantly more women live in households that have injuries at work in the last twelve months than men."}``r if(prop.gen.t$p.value>0.05) {"However, the difference in household injuries between men and women is not significant."} `
+Of all participants `r round(prop.inj)`% were in households where someone was injured within the last twelve months. `r round(prop.gen[1,2],2)`% of men and `r round(prop.gen[2,2],2)`% of women were in households where someone was injured in the last twelve months. `r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] > prop.gen[2,2]) {"A difference of means test indicates that significantly more men live in households that have injuries at work in the last twelve months than women."}``r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] < prop.gen[2,2]) {"A difference of means test indicates that significantly more women live in households that have injuries at work in the last twelve months than men."}``r if(prop.gen.t$p.value>0.05) {"However, the difference in household injuries between men and women is not significant."} ```
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=factor(Q147b), fill=Q9b))+
@@ -2243,9 +2228,7 @@ plot2 <- ggplot(data, aes(x=factor(Q153b), fill = factor(Q153b)))+
 grid.arrange(plot1, plot2, ncol=2)
 ```
 
-
 Participants were asked to compare one member of their household with other members of the community in regards to hazardous jobs. When asked to make this comparison, `r round(mean(data$Q149 == "Less hazardous (dangerous) than other working people's jobs", na.rm = TRUE)*100)`% said the member of their household had less hazardous working conditions than others in the community, `r round(mean(data$Q149 == "About as hazardous (dangerous) as other working people's jobs", na.rm = TRUE)*100)`% said the member of their household had working conditions that were about as hazardous as others in the community, and `r round(mean(data$Q149 == "More hazardous (dangerous) than other working people's jobs", na.rm = TRUE)*100)`% said the member of their household had more hazardous working conditions than others in the community.
-
 
 When asked to compare their household's access to financial services to other households in the community `r round(mean(data$Q155 == "Worse access to financial services than most households", na.rm = TRUE)*100)`% said they had worse access to financial services than most households, `r round(mean(data$Q155 == "About the same access to financial services as most households", na.rm = TRUE)*100)`% said they had about the same access to financial services as most households, and `r round(mean(data$Q155 == "Better access to financial services than most households", na.rm = TRUE)*100)`% said they had better access to financial services than most households.
 
