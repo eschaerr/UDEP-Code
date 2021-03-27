@@ -20,6 +20,27 @@ library(dplyr)
 # Upload the data here
 # read in the new dataset
 data <- read.csv(file = 'UDEP_v1.04.csv', header = TRUE, stringsAsFactors = FALSE)
+# subset data depending on the answers through Q167-Q169
+## in the real setting, the organization will have the same answer for Q166, so this should work
+prepost <- subset(data, Q166=="The organization/intervention has pre-post data")
+comtre <- subset(data, Q166=="The organization/intervention has comparison group data")
+contre <- subset(data, Q166=="The organization/intervention has control group data")
+timeseries <- subset(data, Q166=="The organization/intervention has time series data")
+
+# subset data depending on the answers through Q167-Q169
+data1 <- subset(prepost, Q167 == "Pre")
+data2 <- subset(prepost, Q167== "Post")
+data1 <- subset(comtre, Q168=="Comparison Group")
+data2 <- subset(comtre,Q168=="Treatment Group")
+data1 <- subset(contre, Q169=="Control Group")
+data2 <- subset(contre, Q169=="Treatment Group")
+
+# create a vector that indicates whether it is data1 or data2 
+data1$designtype <- rep(c("data1"), nrow(data1))
+data2$designtype <- rep(c("data2"), nrow(data2))
+
+# integrate data1 and data2
+joineddata <- rbind(data1, data2)
 # read in the old dataset
 #data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
 # names(data)
@@ -2318,4 +2339,42 @@ plot3 <- data %>%
     y = "Count" 
   ) 
 plot3
+```
+# 10. Plots for each design type
+
+## Pre-Post
+```{r}
+```
+## Comparison
+
+```{r}
+```
+
+## Control 
+
+```{r}
+# scatter plot (Income Per Day)
+maledata <- subset(joineddata, Q9b == 0)
+femaledata <- subset(joineddata, Q9b == 1)
+
+
+plot1 <- ggplot(maledata,aes(x=designtype, y=Q28pd)) + 
+    geom_point()+
+    geom_jitter(width = 0.25)+
+    xlab("Group Type") + ylab("Male Income Per Day") + 
+    scale_x_discrete(labels= c("Control Group","Treatment Group"))
+
+plot2 <- ggplot(femaledata,aes(x=designtype, y=Q28pd)) + 
+    geom_point()+
+    geom_jitter(width = 0.25)+
+    xlab("Group Type") + ylab("Female Income Per Day") + 
+    scale_x_discrete(labels= c("Control Group","Treatment Group"))
+
+grid.arrange(plot1, plot2, ncol=2)
+```
+
+## Time Series
+
+```{r}
+
 ```
