@@ -27,20 +27,6 @@ comtre <- subset(data, Q166=="The organization/intervention has comparison group
 contre <- subset(data, Q166=="The organization/intervention has control group data")
 timeseries <- subset(data, Q166=="The organization/intervention has time series data")
 
-# subset data depending on the answers through Q167-Q169
-data1 <- subset(prepost, Q167 == "Pre")
-data2 <- subset(prepost, Q167== "Post")
-data1 <- subset(comtre, Q168=="Comparison Group")
-data2 <- subset(comtre,Q168=="Treatment Group")
-data1 <- subset(contre, Q169=="Control Group")
-data2 <- subset(contre, Q169=="Treatment Group")
-
-# create a vector that indicates whether it is data1 or data2 
-data1$designtype <- rep(c("data1"), nrow(data1))
-data2$designtype <- rep(c("data2"), nrow(data2))
-
-# integrate data1 and data2
-joineddata <- rbind(data1, data2)
 # read in the old dataset
 #data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
 # names(data)
@@ -1789,15 +1775,15 @@ When asked about how frequently a household member had to drink water they felt 
 
 When asked about what water sources they had access to, participants responded that they have access to various sources in the following proportions:
 
--   `r round(mean(water_source2$pipe == 1, na.rm = TRUE)*100)`% of participants said they had access to piped water into their dwelling, yard or plot.
+-    `r round(mean(water_source2$pipe == 1, na.rm = TRUE)*100)`% of participants said they had access to piped water into their dwelling, yard or plot.
 
--   `r round(mean(water_source2$public_tap == 1, na.rm = TRUE)*100)`% said they had access to public taps or standpipes.
+-    `r round(mean(water_source2$public_tap == 1, na.rm = TRUE)*100)`% said they had access to public taps or standpipes.
 
--   `r round(mean(water_source2$well == 1, na.rm = TRUE)*100)`% said they had access to boreholes, tubewells, or a protected dug well.
+-    `r round(mean(water_source2$well == 1, na.rm = TRUE)*100)`% said they had access to boreholes, tubewells, or a protected dug well.
 
--   `r round(mean(water_source2$spring == 1, na.rm = TRUE)*100)`% said they had access to a protected or unprotected spring.
+-    `r round(mean(water_source2$spring == 1, na.rm = TRUE)*100)`% said they had access to a protected or unprotected spring.
 
--   `r round(mean(water_source2$rain_surface == 1, na.rm = TRUE)*100)`% said they had access to rainwater collection or surface water.
+-    `r round(mean(water_source2$rain_surface == 1, na.rm = TRUE)*100)`% said they had access to rainwater collection or surface water.
 
 -   `r round(mean(water_source2$vehicle == 1, na.rm = TRUE)*100)`% said they had access to a cart with tank or tanker-truck.
 
@@ -2127,7 +2113,7 @@ prop.bank <- mean(prop.bank$Q151b, na.rm = TRUE)*100
 
 Of all participants `r round(prop.emp)`% are employed. Of those who are employed `r round(mean(data$Q137b == 1, na.rm = TRUE)*100)`% work in local organizations, `r round(mean(data$Q137b == 2, na.rm = TRUE)*100)`% are self-employed, `r round(mean(data$Q137b == 3, na.rm = TRUE)*100)`% work for multinational organizations, and `r round(mean(data$Q137b == 4, na.rm = TRUE)*100)`% work for the government.
 
-Females make on average \$`r round(avg.8[5,3])` an hour in local organizations, \$`r round(avg.8[6,3])` if self-employed, \$`r round(avg.8[7,3])` in multinational organizations, and \$`r round(avg.8[8,3])` in government organizations. Males make on average \$`r round(avg.8[1,3])` an hour in local organizations, \$`r round(avg.8[2,3])` if self-employed, \$`r round(avg.8[3,3])` in multinational organizations, and \$`r round(avg.8[4,3])` in government organizations. ``` r if(t.gen$p.value<=0.05 & t.gen$estimate[1] > t.gen$estimate[2]) {"A difference of means test indicates that men earn significantly more per hour than women"}``r if(t.gen$p.value<=0.05 & t.gen$estimate[1] < t.gen$estimate[2]) {"A difference of means test indicates that women earn significantly more per hour than men"}``r if(t.gen$p.value>0.05) {"However, the difference in hourly wage between men and women is not significant."} ```
+Females make on average \$`r round(avg.8[5,3])` an hour in local organizations, \$`r round(avg.8[6,3])` if self-employed, \$`r round(avg.8[7,3])` in multinational organizations, and \$`r round(avg.8[8,3])` in government organizations. Males make on average \$`r round(avg.8[1,3])` an hour in local organizations, \$`r round(avg.8[2,3])` if self-employed, \$`r round(avg.8[3,3])` in multinational organizations, and \$`r round(avg.8[4,3])` in government organizations. `r if(t.gen$p.value<=0.05 & t.gen$estimate[1] > t.gen$estimate[2]) {"A difference of means test indicates that men earn significantly more per hour than women"}``r if(t.gen$p.value<=0.05 & t.gen$estimate[1] < t.gen$estimate[2]) {"A difference of means test indicates that women earn significantly more per hour than men"}``r if(t.gen$p.value>0.05) {"However, the difference in hourly wage between men and women is not significant."} `
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=Q137, fill=Q9b))+
@@ -2177,9 +2163,9 @@ plot3 <- data %>%
 grid.arrange(plot1, plot2, plot3, ncol=3)
 ```
 
-Females 40 years old and under make on average \$`r round(avg.8.1[3,3])` an hour, while those above 40 make \$`r round(avg.8.1[4,3])`. ``` r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."} ``` Men 40 years old and under make on average \$`r round(avg.8.1[1,3])` an hour, while those above 40 make \$`r round(avg.8.1[2,3])`. ``` r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."} ```
+Females 40 years old and under make on average \$`r round(avg.8.1[3,3])` an hour, while those above 40 make \$`r round(avg.8.1[4,3])`. ```r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."} ``` Men 40 years old and under make on average \$`r round(avg.8.1[1,3])` an hour, while those above 40 make \$`r round(avg.8.1[2,3])`. ``` r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."} ```
 
-Females that are disabled make on average \$`r round(avg.8.2[4,3])` an hour, while those who are not make \$`r round(avg.8.2[3,3])`. ``` r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] > t.dis.1$estimate[2]) {"A difference of means test indicates that women that are not disabled earn significantly more per hour than women who are"}``r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] < t.dis.1$estimate[2]) {"A difference of means test indicates that women who are disabled earn significantly more per hour than women who are not"}``r if(t.dis.1$p.value>0.05) {"However, the difference in hourly wage between women that are and are not disabled is not significant."} ``` Men that are disabled make on average \$`r round(avg.8.2[2,3])` an hour while those who are not make \$`r round(avg.8.2[1,3])`.``` r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] > t.dis.0$estimate[2]) {"A difference of means test indicates that men that are not disabled earn significantly more per hour than men who are"}``r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] < t.dis.0$estimate[2]) {"A difference of means test indicates that men who are disabled earn significantly more per hour than men who are not"}``r if(t.dis.0$p.value>0.05) {"However, the difference in hourly wage between men that are and are not disabled is not significant."} ```
+Females that are disabled make on average \$`r round(avg.8.2[4,3])` an hour, while those who are not make \$`r round(avg.8.2[3,3])`. `r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] > t.dis.1$estimate[2]) {"A difference of means test indicates that women that are not disabled earn significantly more per hour than women who are"}``r if(t.dis.1$p.value<=0.05 & t.dis.1$estimate[1] < t.dis.1$estimate[2]) {"A difference of means test indicates that women who are disabled earn significantly more per hour than women who are not"}``r if(t.dis.1$p.value>0.05) {"However, the difference in hourly wage between women that are and are not disabled is not significant."}` Men that are disabled make on average \$`r round(avg.8.2[2,3])` an hour while those who are not make \$`r round(avg.8.2[1,3])`.`r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] > t.dis.0$estimate[2]) {"A difference of means test indicates that men that are not disabled earn significantly more per hour than men who are"}``r if(t.dis.0$p.value<=0.05 & t.dis.0$estimate[1] < t.dis.0$estimate[2]) {"A difference of means test indicates that men who are disabled earn significantly more per hour than men who are not"}``r if(t.dis.0$p.value>0.05) {"However, the difference in hourly wage between men that are and are not disabled is not significant."} `
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=factor(Q6b), y=Q139c, fill=Q9b))+
@@ -2207,7 +2193,7 @@ grid.arrange(plot1, plot2, ncol=2)
 
 ## Workplace Safety and Household Injuries
 
-Of all participants `r round(prop.inj)`% were in households where someone was injured within the last twelve months. `r round(prop.gen[1,2],2)`% of men and `r round(prop.gen[2,2],2)`% of women were in households where someone was injured in the last twelve months. \`r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] > prop.gen[2,2]) {"A difference of means test indicates that significantly more men live in households that have injuries at work in the last twelve months than women."}``r if(prop.gen.t$p.value\<=0.05 & prop.gen[1,2] \< prop.gen[2,2]) {"A difference of means test indicates that significantly more women live in households that have injuries at work in the last twelve months than men."}\`\`r if(prop.gen.t\$p.value\>0.05) {"However, the difference in household injuries between men and women is not significant."} \`\`\`
+Of all participants `r round(prop.inj)`% were in households where someone was injured within the last twelve months. `r round(prop.gen[1,2],2)`% of men and `r round(prop.gen[2,2],2)`% of women were in households where someone was injured in the last twelve months. `r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] > prop.gen[2,2]) {"A difference of means test indicates that significantly more men live in households that have injuries at work in the last twelve months than women."}``r if(prop.gen.t$p.value<=0.05 & prop.gen[1,2] < prop.gen[2,2]) {"A difference of means test indicates that significantly more women live in households that have injuries at work in the last twelve months than men."}``r if(prop.gen.t$p.value>0.05) {"However, the difference in household injuries between men and women is not significant."} ```
 
 ```{r message=FALSE, warning=FALSE, fig.height=3,fig.width=8}
 plot1 <- ggplot(data, aes(x=factor(Q147b), fill=Q9b))+
@@ -2340,22 +2326,39 @@ plot3 <- data %>%
   ) 
 plot3
 ```
-
 # 10. Plots for each design type
 
-## Pre-Post
+
+## Pre-Post/Comparison/Control 
 
 ```{r}
-```
+# SET UP
+#######################################################
+######################################################
+# subset data depending on the answers through Q167-Q169
+## in the real setting, the organization will have the same answer for Q166, so this should work
+prepost <- subset(data, Q166=="The organization/intervention has pre-post data")
+comtre <- subset(data, Q166=="The organization/intervention has comparison group data")
+contre <- subset(data, Q166=="The organization/intervention has control group data")
+timeseries <- subset(data, Q166=="The organization/intervention has time series data")
 
-## Comparison
+# subset data depending on the answers through Q167-Q169
+data1 <- subset(prepost, Q167 == "Pre")
+data2 <- subset(prepost, Q167== "Post")
+data1 <- subset(comtre, Q168=="Comparison Group")
+data2 <- subset(comtre,Q168=="Treatment Group")
+data1 <- subset(contre, Q169=="Control Group")
+data2 <- subset(contre, Q169=="Treatment Group")
 
-```{r}
-```
+# create a vector that indicates whether it is data1 or data2 
+data1$designtype <- rep(c("data1"), nrow(data1))
+data2$designtype <- rep(c("data2"), nrow(data2))
 
-## Control
+# integrate data1 and data2
+joineddata <- rbind(data1, data2)
 
-```{r}
+#####################################################
+#####################################################
 # scatter plot (Income Per Day)
 maledata <- subset(joineddata, Q9b == 0)
 femaledata <- subset(joineddata, Q9b == 1)
@@ -2376,8 +2379,30 @@ plot2 <- ggplot(femaledata,aes(x=designtype, y=Q28pd)) +
 grid.arrange(plot1, plot2, ncol=2)
 ```
 
-## Time Series
+# Data Comparsion Analysis
 
 ```{r}
+if(joineddata$Q166=="The organization/intervention has pre-post data"){
+  group1 <- "Pre"
+  group2 <- "Post"
+}else if (joineddata$Q166=="The organization/intervention has comparison group data"){
+  group1 <- "Comparison"
+  group2 <- "Treatment"
+}else if(joineddata$Q166=="The organization/intervention has control group data"){
+  group1 <- "Control"
+  group2 <- "Treatment"
+}
+```
+ 
+
+## Hunger
+```{r}
+Hunger54.ovrlavg <- mean(data$Q54b, na.rm = TRUE) * 100
+Poverty28.gendert <- t.test(Q28pd ~ Q9b, data=data) 
+
+# % of people worried about having enough food
+t.hunger <- t.test(Q54b ~ designtype, data = joineddata)
+text <- ifelse(t.hunger$p.value > 0.05,"However, the difference between the groups is not significant.",ifelse(t.hunger$estimate[1] > t.hunger$estimate[2], paste("A difference of means test indicates that significantly more respondents in the ", group1,"group worried about not having enough food."),paste("A difference of means test indicates that significantly more respondents in the ", group2, "group worried about not having enough food.")))
 
 ```
+`r t.hunger$estimate[1]*100`% of participants in the `r group1*100` group worried about having enough food,whereas `r t.hunger$estimate[2]`% of participants in the `r group2` group worried about having enough food. `r text`
