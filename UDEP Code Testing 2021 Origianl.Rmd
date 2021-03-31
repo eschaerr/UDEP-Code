@@ -2329,8 +2329,6 @@ plot3
 # 10. Plots for each design type
 
 
-## Pre-Post/Comparison/Control 
-
 ```{r}
 # SET UP
 #######################################################
@@ -2359,24 +2357,6 @@ joineddata <- rbind(data1, data2)
 
 #####################################################
 #####################################################
-# scatter plot (Income Per Day)
-maledata <- subset(joineddata, Q9b == 0)
-femaledata <- subset(joineddata, Q9b == 1)
-
-
-plot1 <- ggplot(maledata,aes(x=designtype, y=Q28pd)) + 
-    geom_point()+
-    geom_jitter(width = 0.25)+
-    xlab("Group Type") + ylab("Male Income Per Day") + 
-    scale_x_discrete(labels= c("Control Group","Treatment Group"))
-
-plot2 <- ggplot(femaledata,aes(x=designtype, y=Q28pd)) + 
-    geom_point()+
-    geom_jitter(width = 0.25)+
-    xlab("Group Type") + ylab("Female Income Per Day") + 
-    scale_x_discrete(labels= c("Control Group","Treatment Group"))
-
-grid.arrange(plot1, plot2, ncol=2)
 ```
 
 # Data Comparsion Analysis
@@ -2393,7 +2373,27 @@ if(joineddata$Q166=="The organization/intervention has pre-post data"){
   group2 <- "Treatment"
 }
 ```
- 
+
+## Povery
+```{r}
+# scatter plot (Income Per Day)
+maledata <- subset(joineddata, Q9b == 0)
+femaledata <- subset(joineddata, Q9b == 1)
+
+plot1 <- ggplot(maledata,aes(x=designtype, y=Q28pd)) + 
+    geom_point()+
+    geom_jitter(width = 0.25)+
+    xlab("Group Type") + ylab("Male Income Per Day") + 
+    scale_x_discrete(labels= c("Control Group","Treatment Group"))
+
+plot2 <- ggplot(femaledata,aes(x=designtype, y=Q28pd)) + 
+    geom_point()+
+    geom_jitter(width = 0.25)+
+    xlab("Group Type") + ylab("Female Income Per Day") + 
+    scale_x_discrete(labels= c("Control Group","Treatment Group"))
+
+grid.arrange(plot1, plot2, ncol=2)
+```
 
 ## Hunger
 ```{r}
