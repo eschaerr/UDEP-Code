@@ -2384,13 +2384,13 @@ plot1 <- ggplot(maledata,aes(x=designtype, y=Q28pd)) +
     geom_point()+
     geom_jitter(width = 0.25)+
     xlab("Group Type") + ylab("Male Income Per Day") + 
-    scale_x_discrete(labels= c("Control Group","Treatment Group"))
+    scale_x_discrete(labels= c("Data 1","Data 2"))
 
 plot2 <- ggplot(femaledata,aes(x=designtype, y=Q28pd)) + 
     geom_point()+
     geom_jitter(width = 0.25)+
     xlab("Group Type") + ylab("Female Income Per Day") + 
-    scale_x_discrete(labels= c("Control Group","Treatment Group"))
+    scale_x_discrete(labels= c("Data 1","Data 2"))
 
 grid.arrange(plot1, plot2, ncol=2)
 ```
