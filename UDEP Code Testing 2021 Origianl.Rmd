@@ -2406,3 +2406,67 @@ text <- ifelse(t.hunger$p.value > 0.05,"However, the difference between the grou
 
 ```
 `r t.hunger$estimate[1]*100`% of participants in the `r group1*100` group worried about having enough food,whereas `r t.hunger$estimate[2]`% of participants in the `r group2` group worried about having enough food. `r text`
+
+## Healthy Lives
+### Diseases
+```{r}
+# overall data
+data1HealthyF170.ovrlavg <- mean(data1$Q170b, na.rm = TRUE) * 100
+data2HealthyF170.ovrlavg <- mean(data2$Q170b, na.rm = TRUE) * 100
+DifHealthyF170.num <- data1HealthyF170.ovrlavg - data2HealthyF170.ovrlavg
+# HIV
+data1Healthy65hiv.num <- sum(data1$HIV == TRUE, na.rm=TRUE)
+data2Healthy65hiv.num <- sum(data2$HIV == TRUE, na.rm=TRUE)
+DifHealthy65hiv.num <- data1Healthy65hiv.num-data2Healthy65hiv.num
+# Tuberculosis
+data1Healthy65tub.num <- sum(data1$tuberculosis == TRUE, na.rm=TRUE)
+data2Healthy65tub.num <- sum(data2$tuberculosis == TRUE, na.rm=TRUE)
+DifHealthy65tub.num <- data1Healthy65tub.num-data2Healthy65tub.num
+# Malaria
+data1Healthy65mal.num <- sum(data1$malaria == TRUE, na.rm=TRUE)
+data2Healthy65mal.num <- sum(data2$malaria == TRUE, na.rm=TRUE)
+DifHealthy65mal.num <- data1Healthy65mal.num-data2Healthy65mal.num
+# Hepatitis B
+data1Healthy65hepb.num <- sum(data1$hepatitisb == TRUE, na.rm=TRUE)
+data2Healthy65hepb.num <- sum(data2$hepatitisb == TRUE, na.rm=TRUE)
+DifHealthy65hepb.num <- data1Healthy65hepb.num-data2Healthy65hepb.num
+```
+
+
+There was a `r round(DifHealthyF170.num,2)`% decrease of the numbers of participants who had someone in their household been affected with a disease in the last 12 months.The following are the for specific diseases:
+
+i.  HIV - `r DifHealthy65hiv.num` decrease on HIV.
+
+ii. Tuberculosis - `r DifHealthy65tub.num` decrease on tuberculosis.
+
+iii. Malaria - `r DifHealthy65mal.num` decrease on malaria.
+
+iv. Hepatitis B - `r DifHealthy65hepb.num` decrease on Hepatitis B.
+
+## Gender Equality
+```{r}
+#Physical, sexual, or psychological violence
+levels <- c("Less safe from physical, sexual, or psychological violence than other households","About the same level of safety from physical, sexual, or psychological violence as other households","More safe safe from physical, sexual, or psychological violence than other households")
+
+plot <- joineddata %>%
+  filter(joineddata$Q88 %in% levels) %>%
+  ggplot(aes(x = factor(joineddata$Q88,levels=levels,ordered=TRUE), fill=joineddata$designtype))+
+  geom_bar(show.legend = FALSE, position="dodge") +
+  scale_x_discrete(labels= c("Less safe from physical, sexual, or psychological violence than other households" = "Less","About the same level of safety from physical, sexual, or psychological violence as other households" = "Same","More safe safe from physical, sexual, or psychological violence than other households" = "More")) +
+  labs(
+    title = expression(atop("Comparison on", "Women's Health")),
+    x = "",
+    y = "Count")+
+  scale_fill_manual(values=c("#003399","sandybrown"),
+                         name="Gender",
+                         labels=c("Male", "Female"))
+```
+
+## Reduced Inequalities
+```{r}
+#Homelessness extremes - house with roof and walls vs no place to call home
+
+
+
+ 
+```
