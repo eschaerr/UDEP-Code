@@ -2462,6 +2462,12 @@ plot <- joineddata %>%
                          labels=c("Male", "Female"))
 ```
 
+## Affordable and Clean Energy
+```{r}
+
+
+```
+
 ## Reduced Inequalities
 ```{r}
 #Homelessness extremes - house with roof and walls vs no place to call home
