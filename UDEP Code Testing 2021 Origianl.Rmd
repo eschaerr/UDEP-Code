@@ -2463,6 +2463,7 @@ plot <- joineddata %>%
 
 plot 
 ```
+
 ## Affordable and Clean Energy
 ```{r}
 levels <- c("Worse access to electricity than most households","About the same access to electricity as most households","Better access to electricity than most households")
