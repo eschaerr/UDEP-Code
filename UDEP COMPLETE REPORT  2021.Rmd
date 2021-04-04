@@ -20,12 +20,6 @@ library(dplyr)
 # Upload the data here
 # read in the new dataset
 data <- read.csv(file = 'UDEP_v1.04.csv', header = TRUE, stringsAsFactors = FALSE)
-# subset data depending on the answers through Q167-Q169
-## in the real setting, the organization will have the same answer for Q166, so this should work
-prepost <- subset(data, Q166=="The organization/intervention has pre-post data")
-comtre <- subset(data, Q166=="The organization/intervention has comparison group data")
-contre <- subset(data, Q166=="The organization/intervention has control group data")
-timeseries <- subset(data, Q166=="The organization/intervention has time series data")
 
 # read in the old dataset
 #data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
