@@ -2146,7 +2146,7 @@ plot2 <- data %>%
 plot3 <- data %>%
   # attempt to filter the data to keep the graph in view
   # need a more formulaic way to do this
-  filter(Q139c <= 30) %>%
+ # filter(Q139c <= 30) %>%
   filter(!is.na(Q9b)) %>%
   ggplot( aes(x=Q139c, fill=Q9b))+
   geom_boxplot() +
@@ -2395,18 +2395,24 @@ plot2 <- ggplot(femaledata,aes(x=designtype, y=Q28pd)) +
 grid.arrange(plot1, plot2, ncol=2)
 ```
 
+```{r}
+# my function for printing out the text that I need
+text <- function(test, description) {
+  ifelse(test$p.value > 0.05,"However, the difference between the groups is not significant.",ifelse(test$estimate[1] > test$estimate[2], paste("A difference of means test indicates that significantly more respondents in the ", group1,"group",description,"."),paste("A difference of means test indicates that significantly more respondents in the ", group2, "group",description,".")))
+}
+```
+
+
 ## Hunger
 ```{r}
 Hunger54.ovrlavg <- mean(data$Q54b, na.rm = TRUE) * 100
 #Poverty28.gendert <- t.test(Q28pd ~ Q9b, data=data) 
 
 # % of people worried about having enough food
-t.hunger <- t.test(Q54b ~ designtype, data = joineddata)
-text <- ifelse(t.hunger$p.value > 0.05,"However, the difference between the groups is not significant.",ifelse(t.hunger$estimate[1] > t.hunger$estimate[2], paste("A difference of means test indicates that significantly more respondents in the ", group1,"group worried about not having enough food."),paste("A difference of means test indicates that significantly more respondents in the ", group2, "group worried about not having enough food.")))
+hunger.ttest <- t.test(Q54b ~ designtype, data = joineddata)
 
 ```
-`r t.hunger$estimate[1]*100`% of participants in the `r group1` group worried about having enough food,whereas `r t.hunger$estimate[2]*100`% of participants in the `r group2` group worried about having enough food. `r text`
-
+`r round(hunger.ttest$estimate[1]*100,2)`% of participants in the `r group1` group worried about having enough food,whereas `r round(hunger.ttest$estimate[2]*100,2)`% of participants in the `r group2` group worried about having enough food. `r text(hunger.ttest, "worried about not having enough food.")`
 
 ## Healthy Lives
 ### Diseases
@@ -2445,7 +2451,7 @@ iii. Malaria - `r DifHealthy65mal.num` decrease on malaria.
 iv. Hepatitis B - `r DifHealthy65hepb.num` decrease on Hepatitis B.
 
 ## Education
-```{r}
+```{r warnings = FALSE, error = TRUE}
 # % with some _____ school completed
 primary.ttest <- t.test(Q114b_primary~designtype, data=joineddata)
 tech.ttest <- t.test(Q114b_technical~designtype, data=joineddata)
@@ -2470,18 +2476,16 @@ joineddata %>%
     x = "Education Level",
     y = "Proportion")
 
-text <- ifelse(t.hunger$p.value > 0.05,"However, the difference between the groups is not significant.",ifelse(t.hunger$estimate[1] > t.hunger$estimate[2], paste("A difference of means test indicates that significantly more respondents in the ", group1,"group attained this level of education."),paste("A difference of means test indicates that significantly more respondents in the ", group2, "group attained this level of education.")))
-
 plot
 ```
 
-`r primary.ttest$estimate[1]*100`% of participants in the `r group1` received no education in the last 12 months,whereas `r hunger.ttest$estimate[2]*100`% of participants in the `r group2` received no education. `r text`
+`r none.ttest$estimate[1]*100`% of participants in the `r group1` received no education in the last 12 months,whereas `r none.ttest$estimate[2]*100`% of participants in the `r group2` received no education. `r text(none.ttest, "received no education.")`
 
-`r primary.ttest$estimate[1]*100`% of participants in the `r group1` received a primary education in the last 12 months,whereas `r hunger.ttest$estimate[2]*100`% of participants in the `r group2` received a primary education. `r text`
+`r primary.ttest$estimate[1]*100`% of participants in the `r group1` received a primary education in the last 12 months,whereas `r primary.ttest$estimate[2]*100`% of participants in the `r group2` received a primary education. `r text(primary.ttest, "received a primary education.")`
 
-`r tech.ttest$estimate[1]*100`% of participants in the `r group1` received a technical education in the last 12 months,whereas `r tech.ttest$estimate[2]*100`% of participants in the `r group2` received a technical education. `r text`
+`r tech.ttest$estimate[1]*100`% of participants in the `r group1` received a technical education in the last 12 months,whereas `r tech.ttest$estimate[2]*100`% of participants in the `r group2` received a technical education. `r text(tech.ttest, "received a technical education.")`
 
-`r tertiary.ttest$estimate[1]*100`% of participants in the `r group1` received a tertiary education in the last 12 months,whereas `r tertiary.ttest$estimate[2]*100`% of participants in the `r group2` received a tertiary education. `r text`
+`r tertiary.ttest$estimate[1]*100`% of participants in the `r group1` received a tertiary education in the last 12 months,whereas `r tertiary.ttest$estimate[2]*100`% of participants in the `r group2` received a tertiary education. `r text(tertiary.ttest, "received a tertiary education.")`
 
 
 ## Gender Equality
@@ -2507,23 +2511,18 @@ plot
 
 ## Clean Water and Sanitation
 
-When asked about how frequently a household member had to drink water they felt was unsafe `r round(mean(data$Q191 == "Never (0)", na.rm = TRUE)*100)`% said never, `r round(mean(data$Q191 == "Rarely (1-2 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said rarely (1-2 times in the prior 4 weeks), `r round(mean(data$Q191 == "Sometimes (3-10 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said sometimes (3-10 times in the prior 4 weeks), `r round(mean(data$Q191 == "Often (11-20 times in the prior 4 weeks)", na.rm = TRUE)*100)`% said often (11-20 times in the prior 4 weeks), and `r round(mean(data$Q191 == "Always (above 20 times in prior 4 weeks)", na.rm = TRUE)*100)`% said always (above 20 times in prior 4 weeks).
-
 ```{r}
-primary.ttest <- t.test(Q114b_primary~designtype, data=joineddata)
-tech.ttest <- t.test(Q114b_technical~designtype, data=joineddata)
-tertiary.ttest <- t.test(Q114b_tertiary~designtype, data=joineddata)
-none.ttest <- t.test(Q114b_none~designtype, data=joineddata)
-
-extremes <- joineddata %>%
+water <- joineddata %>%
   mutate(never = ifelse(Q191 == "Never (0)",1,0))%>%
-  mutate(always = ifelse(Q191 == "Always (above 20 times in prior 4 weeks)",1,0))
+  mutate(rarely = ifelse(Q191 == "Rarely (1-2 times in the prior 4 weeks)",1,0)) %>%
+  mutate(often = ifelse(Q191 == "Often (11-20 times in the prior 4 weeks)",1,0)) %>%
+  mutate(always = ifelse(Q191 == "Always (above 20 times in prior 4 weeks)",1,0)) %>%
+  select(designtype, never:always)
   
-never.ttest <- t.test(never ~ designtype,data=extremes)
-always.ttest <- t.test(always ~ designtype, data=extremes)
+never.ttest <- t.test(never ~ designtype,data=water)
+always.ttest <- t.test(always ~ designtype, data=water)
 
-extremes %>%
-  select(designtype, never, always) %>%
+water %>%
   pivot_longer(cols = never:always, names_to = "clean_water_access") %>%
   group_by(designtype, clean_water_access) %>%
   summarize(avg = mean(value,na.rm = TRUE)) %>%
@@ -2533,16 +2532,16 @@ extremes %>%
   scale_fill_manual(values=c("#99CCCC","#BBDDDD"),
                          name="Clean Water Access",
                     labels = c(eval(group1), eval(group2)))+
-  scale_x_discrete(labels = c("Never", "Always"))+
+  scale_x_discrete(labels = c("Never", "Sometimes", "Often", "Always"))+
   labs(
     title = "Change in Clean Water Access",
     x = "",
     y = "Proportion")
 ```
 
+`r never.ttest$estimate[1]*100`% of participants in the `r group1` reported that in the last 4 weeks, neither they nor anyone in their household drank water that they thought was unsafe, whereas `r never.ttest$estimate[2]*100`% of participants in the `r group2` reported that in the last 4 weeks, neither they nor anyone in their household drank water that they thought was unsafe. `r text(never.ttest, "reported that they never drank water that they thought was unsafe.")`
 
-
-
+`r always.ttest$estimate[1]*100`% of participants in the `r group1` reported that in the last 4 weeks, they or someone in their household always drank water that they thought was unsafe, whereas `r always.ttest$estimate[2]*100`% of participants in the `r group2` reported that in the last 4 weeks, they or someone in their household always drank water that they thought was unsafe. `r text(always.ttest, "reported that they always drank water that they thought was unsafe.")`
 
 ## Affordable and Clean Energy
 ```{r}
@@ -2565,6 +2564,33 @@ plot <- joineddata %>%
 
 plot
 ```
+
+## Quality Work
+
+```{r}
+
+# New facet label names for gender variable
+gender.labs <- c("Male", "Female")
+names(gender.labs) <- c("0", "1")
+
+plot3 <- joineddata %>%
+  filter(Q139c <= 30) %>%
+  filter(!is.na(Q9b)) %>%
+  ggplot( aes(x=Q139c, fill=designtype))+
+  geom_boxplot() +
+  ggtitle("Hourly Wage by Gender") + 
+  xlab("Hourly Wage") + ylab("Density") +
+scale_fill_manual(values=c("#99CCCC","#BBDDDD"),
+                         name="Data Design Type",
+                         labels=c(eval(group1), eval(group2))) +
+  facet_grid(facets = ~Q9b,
+             labeller = labeller(Q9b = gender.labs)) +
+  theme(legend.position = "top")
+
+plot3
+
+```
+
 
 ## Reduced Inequalities
 ```{r}
