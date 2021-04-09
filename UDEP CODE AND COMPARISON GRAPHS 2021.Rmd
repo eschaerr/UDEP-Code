@@ -20,12 +20,6 @@ library(dplyr)
 # Upload the data here
 # read in the new dataset
 data <- read.csv(file = 'UDEP_v1.04.csv', header = TRUE, stringsAsFactors = FALSE)
-# subset data depending on the answers through Q167-Q169
-## in the real setting, the organization will have the same answer for Q166, so this should work
-prepost <- subset(data, Q166=="The organization/intervention has pre-post data")
-comtre <- subset(data, Q166=="The organization/intervention has comparison group data")
-contre <- subset(data, Q166=="The organization/intervention has control group data")
-timeseries <- subset(data, Q166=="The organization/intervention has time series data")
 
 # read in the old dataset
 #data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
@@ -1087,7 +1081,7 @@ menwomen_ttest <- t.test(data$Q112_proficient~Q9b,data)
 
 # Education
 
-`r round(mean(data$Q128_proficient, na.rm = TRUE)*100,1)`% of households have somebody with at least some grade school completed.
+`r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed `r menwomendiff`
 
 \
 When asked to compare the most educated person in their household to other members of the community, `r round(mean(data$Q130 == "Less formal education than others", na.rm = TRUE)*100)`% said they had less education than members of the community, `r round(mean(data$Q130 == "About the same amount of formal education as others", na.rm = TRUE)*100)`% said they had about the same amount of education as most households, and `r round(mean(data$Q130 == "More formal education than others", na.rm = TRUE)*100)`% said they had more formal education than others.
@@ -1096,7 +1090,6 @@ When asked to compare the most educated person in their household to other membe
 grid.arrange(plot_edu128, plot1, ncol = 2)
 ```
 
-`r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed `r menwomendiff`
 
 `r round(Education114b_overall,1)`% of all the participants have participated in education or vocational training in the past 12 months. `r round(Education114b_gender_avg[1,2],1)`% of men in the sample have participated and `r round(Education114b_gender_avg[2,2],1)`% of women in the sample have participated. `r # if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] > Education114b_gender_avg[2,2]) {"A difference of means indicates that significantly more men participated in educational or training activites in the past 12 months than women."}` `r # if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] < Education114b_gender_avg[2,2]) {"A difference of means test indicates that significantly more women participated in educational or training activities in the past 12 months than men."}` `r # if(Education114b_overall_gendert$p.value>0.05) {"However, the difference in education/training participation between men and women is not significant."}`
 
@@ -2023,7 +2016,7 @@ grid.arrange(plot2, plot3, plot4, nrow = 2, ncol=2)
 
 Of those who have access to electricity `r round(mean(data$Q43b == 1, na.rm = TRUE)*100)`% use electricity mainly for appliances (includes refrigerator, dishwasher, clothes washer and dryer), `r round(mean(data$Q43b == 2, na.rm = TRUE)*100)`% mainly use it for cooking, `r round(mean(data$Q43b == 3, na.rm = TRUE)*100)`% mainly use it for entertainment and electronics (includes external power adapters, TVs, home office equipment, computers, and small appliances), `r round(mean(data$Q43b == 4, na.rm = TRUE)*100)`% mainly use it for heating, and `r round(mean(data$Q43b == 5, na.rm = TRUE)*100)`% mainly use it for lighting.
 
-On average famalies use electricity `r round(mean(data$Q44.1, na.rm = TRUE))` hours a day. Households also on average lose electricty `r round(mean(data$Q45, na.rm = TRUE))` times a week. The average length of a power outage is `r round(mean(data$Q46.1, na.rm = TRUE))` hours.
+On average families use electricity `r round(mean(data$Q44.1, na.rm = TRUE))` hours a day. Households also on average lose electricty `r round(mean(data$Q45, na.rm = TRUE))` times a week. The average length of a power outage is `r round(mean(data$Q46.1, na.rm = TRUE))` hours.
 
 When asked to compare thier home's access to electricity to other households in the community `r round(mean(data$Q56 == "Worse access to electricity than most households", na.rm = TRUE)*100)`% said they had a home with worse access to electricity than most households, `r round(mean(data$Q56 == "About the same access to electricity as most households", na.rm = TRUE)*100)`% said they had a home with about the same access to electricity as most households, and `r round(mean(data$Q56 == "Better access to electricity than most households", na.rm = TRUE)*100)`% said they had a home with better access to electricity than most households.
 
@@ -2146,7 +2139,7 @@ plot2 <- data %>%
 plot3 <- data %>%
   # attempt to filter the data to keep the graph in view
   # need a more formulaic way to do this
- # filter(Q139c <= 30) %>%
+  filter(Q139c <= 30) %>%
   filter(!is.na(Q9b)) %>%
   ggplot( aes(x=Q139c, fill=Q9b))+
   geom_boxplot() +
@@ -2160,7 +2153,7 @@ plot3 <- data %>%
 
 
 
-grid.arrange(plot1, plot2, plot3, ncol=3)
+grid.arrange(plot1, plot3, ncol=2)
 ```
 
 Females 40 years old and under make on average \$`r round(avg.8.1[3,3])` an hour, while those above 40 make \$`r round(avg.8.1[4,3])`. ```r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."} ``` Men 40 years old and under make on average \$`r round(avg.8.1[1,3])` an hour, while those above 40 make \$`r round(avg.8.1[2,3])`. ``` r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."} ```
@@ -2174,7 +2167,7 @@ plot1 <- ggplot(data, aes(x=factor(Q6b), y=Q139c, fill=Q9b))+
   xlab("Age") + ylab("Hourly Wage") +
   scale_x_discrete(labels= c("40 years old and younger","Above 40 years old")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#BBDDDD","#66B3B3"),
+  scale_fill_manual(values=c("#003399","sandybrown"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2326,8 +2319,8 @@ plot3 <- data %>%
   ) 
 plot3
 ```
-# 10. Plots for each design type
 
+# 10. Plots for each design type
 
 ```{r}
 # SET UP
