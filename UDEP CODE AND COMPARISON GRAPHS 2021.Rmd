@@ -20,6 +20,12 @@ library(dplyr)
 # Upload the data here
 # read in the new dataset
 data <- read.csv(file = 'UDEP_v1.04.csv', header = TRUE, stringsAsFactors = FALSE)
+# subset data depending on the answers through Q167-Q169
+## in the real setting, the organization will have the same answer for Q166, so this should work
+prepost <- subset(data, Q166=="The organization/intervention has pre-post data")
+comtre <- subset(data, Q166=="The organization/intervention has comparison group data")
+contre <- subset(data, Q166=="The organization/intervention has control group data")
+timeseries <- subset(data, Q166=="The organization/intervention has time series data")
 
 # read in the old dataset
 #data <- read.csv(file='UDEPHouseSurveyNov6.csv',header=TRUE, stringsAsFactors=FALSE)
@@ -1081,7 +1087,7 @@ menwomen_ttest <- t.test(data$Q112_proficient~Q9b,data)
 
 # Education
 
-`r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed `r menwomendiff`
+`r round(mean(data$Q128_proficient, na.rm = TRUE)*100,1)`% of households have somebody with at least some grade school completed.
 
 \
 When asked to compare the most educated person in their household to other members of the community, `r round(mean(data$Q130 == "Less formal education than others", na.rm = TRUE)*100)`% said they had less education than members of the community, `r round(mean(data$Q130 == "About the same amount of formal education as others", na.rm = TRUE)*100)`% said they had about the same amount of education as most households, and `r round(mean(data$Q130 == "More formal education than others", na.rm = TRUE)*100)`% said they had more formal education than others.
@@ -1090,6 +1096,7 @@ When asked to compare the most educated person in their household to other membe
 grid.arrange(plot_edu128, plot1, ncol = 2)
 ```
 
+`r round(mean(data$Q112_proficient, na.rm = TRUE)*100,1)`% of respondents have at least some some grade school completed `r menwomendiff`
 
 `r round(Education114b_overall,1)`% of all the participants have participated in education or vocational training in the past 12 months. `r round(Education114b_gender_avg[1,2],1)`% of men in the sample have participated and `r round(Education114b_gender_avg[2,2],1)`% of women in the sample have participated. `r # if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] > Education114b_gender_avg[2,2]) {"A difference of means indicates that significantly more men participated in educational or training activites in the past 12 months than women."}` `r # if(Education114b_overall_gendert$p.value<=0.05 & Education114b_gender_avg[1,2] < Education114b_gender_avg[2,2]) {"A difference of means test indicates that significantly more women participated in educational or training activities in the past 12 months than men."}` `r # if(Education114b_overall_gendert$p.value>0.05) {"However, the difference in education/training participation between men and women is not significant."}`
 
@@ -2016,7 +2023,7 @@ grid.arrange(plot2, plot3, plot4, nrow = 2, ncol=2)
 
 Of those who have access to electricity `r round(mean(data$Q43b == 1, na.rm = TRUE)*100)`% use electricity mainly for appliances (includes refrigerator, dishwasher, clothes washer and dryer), `r round(mean(data$Q43b == 2, na.rm = TRUE)*100)`% mainly use it for cooking, `r round(mean(data$Q43b == 3, na.rm = TRUE)*100)`% mainly use it for entertainment and electronics (includes external power adapters, TVs, home office equipment, computers, and small appliances), `r round(mean(data$Q43b == 4, na.rm = TRUE)*100)`% mainly use it for heating, and `r round(mean(data$Q43b == 5, na.rm = TRUE)*100)`% mainly use it for lighting.
 
-On average families use electricity `r round(mean(data$Q44.1, na.rm = TRUE))` hours a day. Households also on average lose electricty `r round(mean(data$Q45, na.rm = TRUE))` times a week. The average length of a power outage is `r round(mean(data$Q46.1, na.rm = TRUE))` hours.
+On average famalies use electricity `r round(mean(data$Q44.1, na.rm = TRUE))` hours a day. Households also on average lose electricty `r round(mean(data$Q45, na.rm = TRUE))` times a week. The average length of a power outage is `r round(mean(data$Q46.1, na.rm = TRUE))` hours.
 
 When asked to compare thier home's access to electricity to other households in the community `r round(mean(data$Q56 == "Worse access to electricity than most households", na.rm = TRUE)*100)`% said they had a home with worse access to electricity than most households, `r round(mean(data$Q56 == "About the same access to electricity as most households", na.rm = TRUE)*100)`% said they had a home with about the same access to electricity as most households, and `r round(mean(data$Q56 == "Better access to electricity than most households", na.rm = TRUE)*100)`% said they had a home with better access to electricity than most households.
 
@@ -2139,7 +2146,7 @@ plot2 <- data %>%
 plot3 <- data %>%
   # attempt to filter the data to keep the graph in view
   # need a more formulaic way to do this
-  filter(Q139c <= 30) %>%
+ # filter(Q139c <= 30) %>%
   filter(!is.na(Q9b)) %>%
   ggplot( aes(x=Q139c, fill=Q9b))+
   geom_boxplot() +
@@ -2153,7 +2160,7 @@ plot3 <- data %>%
 
 
 
-grid.arrange(plot1, plot3, ncol=2)
+grid.arrange(plot1, plot2, plot3, ncol=3)
 ```
 
 Females 40 years old and under make on average \$`r round(avg.8.1[3,3])` an hour, while those above 40 make \$`r round(avg.8.1[4,3])`. ```r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] > t.age.1$estimate[2]) {"A difference of means test indicates that women 40 years old or below earn significantly more per hour than women above 40"}``r if(t.age.1$p.value<=0.05 & t.age.1$estimate[1] < t.age.1$estimate[2]) {"A difference of means test indicates that women above 40 earn significantly more per hour than women 40 years old or below"}``r if(t.age.1$p.value>0.05) {"However, the difference in hourly wage between women above and below 40 is not significant."} ``` Men 40 years old and under make on average \$`r round(avg.8.1[1,3])` an hour, while those above 40 make \$`r round(avg.8.1[2,3])`. ``` r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] > t.age.0$estimate[2]) {"A difference of means test also indicates that men 40 years old or below earn significantly more per hour than men above 40"}``r if(t.age.0$p.value<=0.05 & t.age.0$estimate[1] < t.age.0$estimate[2]) {"A difference of means test also indicates that men above 40 earn significantly more per hour than men 40 years old or below"}``r if(t.age.0$p.value>0.05) {"Also, the difference in hourly wage between men above and below 40 is not significant."} ```
@@ -2167,7 +2174,7 @@ plot1 <- ggplot(data, aes(x=factor(Q6b), y=Q139c, fill=Q9b))+
   xlab("Age") + ylab("Hourly Wage") +
   scale_x_discrete(labels= c("40 years old and younger","Above 40 years old")) +
   theme(legend.position = c(0.8, 0.8), plot.title=element_text( hjust=1)) +
-  scale_fill_manual(values=c("#003399","sandybrown"),
+  scale_fill_manual(values=c("#BBDDDD","#66B3B3"),
                          name="Gender",
                          breaks=c(0, 1),
                          labels=c("Male", "Female"))
@@ -2319,3 +2326,287 @@ plot3 <- data %>%
   ) 
 plot3
 ```
+# 10. Plots for each design type
+
+
+```{r}
+# SET UP
+#######################################################
+######################################################
+# subset data depending on the answers through Q167-Q169
+## in the real setting, the organization will have the same answer for Q166, so this should work
+prepost <- subset(data, Q166=="The organization/intervention has pre-post data")
+comtre <- subset(data, Q166=="The organization/intervention has comparison group data")
+contre <- subset(data, Q166=="The organization/intervention has control group data")
+timeseries <- subset(data, Q166=="The organization/intervention has time series data")
+
+# subset data depending on the answers through Q167-Q169
+data1 <- subset(prepost, Q167 == "Pre")
+data2 <- subset(prepost, Q167== "Post")
+data1 <- subset(comtre, Q168=="Comparison Group")
+data2 <- subset(comtre,Q168=="Treatment Group")
+data1 <- subset(contre, Q169=="Control Group")
+data2 <- subset(contre, Q169=="Treatment Group")
+
+# create a vector that indicates whether it is data1 or data2 
+data1$designtype <- rep(c("data1"), nrow(data1))
+data2$designtype <- rep(c("data2"), nrow(data2))
+
+# integrate data1 and data2
+joineddata <- rbind(data1, data2)
+
+#####################################################
+#####################################################
+```
+
+# Data Comparsion Analysis
+
+```{r}
+if(joineddata$Q166=="The organization/intervention has pre-post data"){
+  group1 <- "Pre"
+  group2 <- "Post"
+}else if (joineddata$Q166=="The organization/intervention has comparison group data"){
+  group1 <- "Comparison"
+  group2 <- "Treatment"
+}else if(joineddata$Q166=="The organization/intervention has control group data"){
+  group1 <- "Control"
+  group2 <- "Treatment"
+}
+```
+
+## Poverty
+```{r}
+# scatter plot (Income Per Day)
+maledata <- subset(joineddata, Q9b == 0)
+femaledata <- subset(joineddata, Q9b == 1)
+
+plot1 <- ggplot(maledata,aes(x=designtype, y=Q28pd)) + 
+    geom_point()+
+    geom_jitter(width = 0.25)+
+    xlab("Group Type") + ylab("Male Income Per Day") + 
+    scale_x_discrete(labels= c("Data 1","Data 2"))
+
+plot2 <- ggplot(femaledata,aes(x=designtype, y=Q28pd)) + 
+    geom_point()+
+    geom_jitter(width = 0.25)+
+    xlab("Group Type") + ylab("Female Income Per Day") + 
+    scale_x_discrete(labels= c("Data 1","Data 2"))
+
+grid.arrange(plot1, plot2, ncol=2)
+```
+
+```{r}
+# my function for printing out the text that I need
+text <- function(test, description) {
+  ifelse(test$p.value > 0.05,"However, the difference between the groups is not significant.",ifelse(test$estimate[1] > test$estimate[2], paste("A difference of means test indicates that significantly more respondents in the ", group1,"group",description,"."),paste("A difference of means test indicates that significantly more respondents in the ", group2, "group",description,".")))
+}
+```
+
+
+## Hunger
+```{r}
+Hunger54.ovrlavg <- mean(data$Q54b, na.rm = TRUE) * 100
+#Poverty28.gendert <- t.test(Q28pd ~ Q9b, data=data) 
+
+# % of people worried about having enough food
+hunger.ttest <- t.test(Q54b ~ designtype, data = joineddata)
+
+```
+`r round(hunger.ttest$estimate[1]*100,2)`% of participants in the `r group1` group worried about having enough food,whereas `r round(hunger.ttest$estimate[2]*100,2)`% of participants in the `r group2` group worried about having enough food. `r text(hunger.ttest, "worried about not having enough food.")`
+
+## Healthy Lives
+### Diseases
+```{r}
+# overall data
+data1HealthyF170.ovrlavg <- mean(data1$Q170b, na.rm = TRUE) * 100
+data2HealthyF170.ovrlavg <- mean(data2$Q170b, na.rm = TRUE) * 100
+DifHealthyF170.num <- data1HealthyF170.ovrlavg - data2HealthyF170.ovrlavg
+# HIV
+data1Healthy65hiv.num <- sum(data1$HIV == TRUE, na.rm=TRUE)
+data2Healthy65hiv.num <- sum(data2$HIV == TRUE, na.rm=TRUE)
+DifHealthy65hiv.num <- data1Healthy65hiv.num-data2Healthy65hiv.num
+# Tuberculosis
+data1Healthy65tub.num <- sum(data1$tuberculosis == TRUE, na.rm=TRUE)
+data2Healthy65tub.num <- sum(data2$tuberculosis == TRUE, na.rm=TRUE)
+DifHealthy65tub.num <- data1Healthy65tub.num-data2Healthy65tub.num
+# Malaria
+data1Healthy65mal.num <- sum(data1$malaria == TRUE, na.rm=TRUE)
+data2Healthy65mal.num <- sum(data2$malaria == TRUE, na.rm=TRUE)
+DifHealthy65mal.num <- data1Healthy65mal.num-data2Healthy65mal.num
+# Hepatitis B
+data1Healthy65hepb.num <- sum(data1$hepatitisb == TRUE, na.rm=TRUE)
+data2Healthy65hepb.num <- sum(data2$hepatitisb == TRUE, na.rm=TRUE)
+DifHealthy65hepb.num <- data1Healthy65hepb.num-data2Healthy65hepb.num
+```
+
+
+There was a `r round(DifHealthyF170.num,2)`% decrease of the numbers of participants who had someone in their household been affected with a disease in the last 12 months.The following are the for specific diseases:
+
+i.  HIV - `r DifHealthy65hiv.num` decrease on HIV.
+
+ii. Tuberculosis - `r DifHealthy65tub.num` decrease on tuberculosis.
+
+iii. Malaria - `r DifHealthy65mal.num` decrease on malaria.
+
+iv. Hepatitis B - `r DifHealthy65hepb.num` decrease on Hepatitis B.
+
+## Education
+```{r warnings = FALSE, error = TRUE}
+# % with some _____ school completed
+primary.ttest <- t.test(Q114b_primary~designtype, data=joineddata)
+tech.ttest <- t.test(Q114b_technical~designtype, data=joineddata)
+tertiary.ttest <- t.test(Q114b_tertiary~designtype, data=joineddata)
+none.ttest <- t.test(Q114b_none~designtype, data=joineddata)
+
+joineddata %>%
+  group_by(designtype) %>%
+  summarize(primary = mean(Q114b_primary, na.rm = TRUE),
+            tech = mean(Q114b_technical, na.rm = TRUE),
+            tertiary = mean(Q114b_tertiary, na.rm = TRUE),
+            none = mean(Q114b_none, na.rm = TRUE)) %>%
+  pivot_longer(cols = primary:none, names_to = "education_type", values_to = "participation") %>%
+  ggplot(aes(x = education_type, y = participation, fill = designtype)) + 
+  geom_col(position = "dodge") +
+  ylim(0,1) +
+  scale_fill_manual(values=c("#99CCCC","#BBDDDD"),
+                         name="Design Type",
+                    labels = c(eval(group1), eval(group2)))+
+  labs(
+    title = "Change in Education Access",
+    x = "Education Level",
+    y = "Proportion")
+
+plot
+```
+
+`r none.ttest$estimate[1]*100`% of participants in the `r group1` received no education in the last 12 months,whereas `r none.ttest$estimate[2]*100`% of participants in the `r group2` received no education. `r text(none.ttest, "received no education.")`
+
+`r primary.ttest$estimate[1]*100`% of participants in the `r group1` received a primary education in the last 12 months,whereas `r primary.ttest$estimate[2]*100`% of participants in the `r group2` received a primary education. `r text(primary.ttest, "received a primary education.")`
+
+`r tech.ttest$estimate[1]*100`% of participants in the `r group1` received a technical education in the last 12 months,whereas `r tech.ttest$estimate[2]*100`% of participants in the `r group2` received a technical education. `r text(tech.ttest, "received a technical education.")`
+
+`r tertiary.ttest$estimate[1]*100`% of participants in the `r group1` received a tertiary education in the last 12 months,whereas `r tertiary.ttest$estimate[2]*100`% of participants in the `r group2` received a tertiary education. `r text(tertiary.ttest, "received a tertiary education.")`
+
+
+## Gender Equality
+```{r}
+#Physical, sexual, or psychological violence
+levels <- c("Less safe from physical, sexual, or psychological violence than other households","About the same level of safety from physical, sexual, or psychological violence as other households","More safe safe from physical, sexual, or psychological violence than other households")
+
+plot <- joineddata %>%
+  filter(joineddata$Q88 %in% levels) %>%
+  ggplot(aes(x = factor(joineddata$Q88,levels=levels,ordered=TRUE), fill=designtype))+
+  geom_bar(show.legend = TRUE, position="dodge") +
+  scale_x_discrete(labels= c("Less safe from physical, sexual, or psychological violence than other households" = "Less","About the same level of safety from physical, sexual, or psychological violence as other households" = "Same","More safe safe from physical, sexual, or psychological violence than other households" = "More")) +
+    scale_fill_manual(values=c("#99CCCC","#BBDDDD"),
+                         name="Data Design Type",
+                         labels=c(eval(group1), eval(group2)))+
+  labs(
+    title = expression(atop("Comparison on", "Women's Health")),
+    x = "",
+    y = "Count")
+
+plot 
+```
+
+## Clean Water and Sanitation
+
+```{r}
+water <- joineddata %>%
+  mutate(never = ifelse(Q191 == "Never (0)",1,0))%>%
+  mutate(rarely = ifelse(Q191 == "Rarely (1-2 times in the prior 4 weeks)",1,0)) %>%
+  mutate(often = ifelse(Q191 == "Often (11-20 times in the prior 4 weeks)",1,0)) %>%
+  mutate(always = ifelse(Q191 == "Always (above 20 times in prior 4 weeks)",1,0)) %>%
+  select(designtype, never:always)
+  
+never.ttest <- t.test(never ~ designtype,data=water)
+always.ttest <- t.test(always ~ designtype, data=water)
+
+water %>%
+  pivot_longer(cols = never:always, names_to = "clean_water_access") %>%
+  group_by(designtype, clean_water_access) %>%
+  summarize(avg = mean(value,na.rm = TRUE)) %>%
+  ggplot(aes(x = clean_water_access, y = avg, fill = designtype)) + 
+  geom_col(position = "dodge") +
+  ylim(0,1) +
+  scale_fill_manual(values=c("#99CCCC","#BBDDDD"),
+                         name="Clean Water Access",
+                    labels = c(eval(group1), eval(group2)))+
+  scale_x_discrete(labels = c("Never", "Sometimes", "Often", "Always"))+
+  labs(
+    title = "Change in Clean Water Access",
+    x = "",
+    y = "Proportion")
+```
+
+`r never.ttest$estimate[1]*100`% of participants in the `r group1` reported that in the last 4 weeks, neither they nor anyone in their household drank water that they thought was unsafe, whereas `r never.ttest$estimate[2]*100`% of participants in the `r group2` reported that in the last 4 weeks, neither they nor anyone in their household drank water that they thought was unsafe. `r text(never.ttest, "reported that they never drank water that they thought was unsafe.")`
+
+`r always.ttest$estimate[1]*100`% of participants in the `r group1` reported that in the last 4 weeks, they or someone in their household always drank water that they thought was unsafe, whereas `r always.ttest$estimate[2]*100`% of participants in the `r group2` reported that in the last 4 weeks, they or someone in their household always drank water that they thought was unsafe. `r text(always.ttest, "reported that they always drank water that they thought was unsafe.")`
+
+## Affordable and Clean Energy
+```{r}
+levels <- c("Worse access to electricity than most households","About the same access to electricity as most households","Better access to electricity than most households")
+
+plot <- joineddata %>%
+  filter(joineddata$Q56 %in% levels) %>%
+  filter(!is.na(joineddata$Q56)) %>%
+  ggplot(aes(x = factor(joineddata$Q56,levels=levels,ordered=TRUE), fill=joineddata$designtype))+
+  geom_bar(show.legend = TRUE, position="dodge") +
+  scale_x_discrete(labels= c("Worse access to electricity than most households" = "Worse","About the same access to electricity as most households" = "Same","Better access to electricity than most households" = "Better"))+
+  scale_fill_manual(values=c("#99CCCC","#BBDDDD"),
+                         name="Data Design Type",
+                         labels=c(eval(group1), eval(group2)))+
+  labs(
+    title = expression(atop("Community Electricity Accecibility","Comparison")),
+    x = "",
+    y = "Count" 
+  ) 
+
+plot
+```
+
+## Quality Work
+
+```{r}
+
+# New facet label names for gender variable
+gender.labs <- c("Male", "Female")
+names(gender.labs) <- c("0", "1")
+
+plot3 <- joineddata %>%
+  filter(Q139c <= 30) %>%
+  filter(!is.na(Q9b)) %>%
+  ggplot( aes(x=Q139c, fill=designtype))+
+  geom_boxplot() +
+  ggtitle("Hourly Wage by Gender") + 
+  xlab("Hourly Wage") + ylab("Density") +
+scale_fill_manual(values=c("#99CCCC","#BBDDDD"),
+                         name="Data Design Type",
+                         labels=c(eval(group1), eval(group2))) +
+  facet_grid(facets = ~Q9b,
+             labeller = labeller(Q9b = gender.labs)) +
+  theme(legend.position = "top")
+
+plot3
+
+```
+
+
+## Reduced Inequalities
+```{r}
+#Homelessness extremes - house with roof and walls vs no place to call home
+plot <- ggplot(joineddata, aes(x=Q46, fill = designtype))+
+  geom_bar(show.legend = TRUE, position = "dodge") +
+  ggtitle("Housing Situation") + 
+ # scale_fill_manual(values=c("#99CCCC","#99CCCC","#99CCCC","#99CCCC","#99CCCC")) +
+  scale_x_discrete(labels=c("I don't have a place to call home.","I have a home that is missing one or more walls or roof and has a dirt floor."=expression(atop("I have a home that is missing one or","more walls or roof and has a dirt floor")),"I have a home that includes temporary walls or roof and has a dirt floor."=expression(atop("I have a home that includes temporary","walls or roof and has a dirt floor")),"I have a home with solid walls and floor."=expression(atop("I have a home with","solid walls and floor"))))+
+  xlab("") + ylab("Count") +
+  coord_flip()+
+  scale_fill_manual(values=c("#99CCCC","#BBDDDD"),
+                         name="Data Design Type",
+                         labels=c(eval(group1), eval(group2)))
+
+plot
+```
+
+
